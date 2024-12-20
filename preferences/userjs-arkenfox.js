@@ -8,7 +8,7 @@
 
 * README:
 
-  0. Changes made for Brace and Mull are noted with //BRACE and //MULL respectively
+  0. Changes made for Brace and Ermine are noted with //BRACE and //MULL respectively
        * sed -i 's/pref(/user_pref(/' userjs-arkenfox.js
        * sed -i 's/pref(/pref(/' userjs-arkenfox.js
   1. Consider using Tor Browser if it meets your needs or fits your threat model

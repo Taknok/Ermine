@@ -1,4 +1,4 @@
-![Banner](https://divestos.org/images/featureGraphics/Mull.png)
+![Banner](https://divestos.org/images/featureGraphics/Ermine.png)
 
 What's this?
 ------------
@@ -6,7 +6,7 @@ What's this?
 This is a fork of Relan's excellent [fennecbuild repository](https://gitlab.com/relan/fennecbuild).
 It allows compiling the entirety of Fenix without prebuilts along with removal of the proprietary blobs.
 
-This fork is specifically for compiling Mull.
+This fork is specifically for compiling Ermine.
 It enables many features upstreamed by the Tor Uplift project using preferences from the [arkenfox-user.js project](https://github.com/arkenfox/user.js).
 It was originally created as builds of the patchset from [bug 1419581](https://bugzilla.mozilla.org/show_bug.cgi?id=1419581).
 
@@ -14,21 +14,21 @@ This is compiled using fdroidserver.
 You will need to copy the config files from -fdroiddata/ into their respective folders first.
 Then run:
 ```
-fdroid build us.spotco.fennec_dos:VERCODE
+fdroid build com.deeperwire.ermine:VERCODE
 ```
 where VERCODE is a version code number.
-VERCODE is currently prepended with 2 as an epoch for upgrade from old Fennec-based Mull.
+VERCODE is currently prepended with 2 as an epoch for upgrade from old Fennec-based Ermine.
 The second to last number of the VERCODE corresponds to the architecture to compile.
 0 = ARMv7, 1 = x86, 2 = AArch64
 
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
      alt="Get it on F-Droid"
-     height="80">](https://f-droid.org/packages/us.spotco.fennec_dos/)
+     height="80">](https://f-droid.org/packages/com.deeperwire.ermine/)
 
 Known Issues
 ------------
 Please see the list of known issues and workarounds before opening an issue!
-https://divestos.org/index.php?page=broken#mull
+https://divestos.org/index.php?page=broken#ermine
 
 Updating
 --------
@@ -99,6 +99,6 @@ Mozilla Firefox is a trademark of The Mozilla Foundation
 
 Divested Computing Group is not affiliated with Mozilla
 
-Mull is not sponsored or endorsed by Mozilla
+Ermine is not sponsored or endorsed by Mozilla
 
 Firefox source code is available at https://hg.mozilla.org
