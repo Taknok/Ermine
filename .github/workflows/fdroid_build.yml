@@ -1,0 +1,98 @@
+name: Fdroid Build Ermine
+
+on:
+  push:
+    branches:
+      - ermine
+  workflow_run:
+    workflows: ["Rebase"]
+    types:
+      - completed
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    env:
+      ANDROID_COMPILE_SDK: 33
+      ANDROID_BUILD_TOOLS: 33.0.2
+      ANDROID_SDK_TOOLS: 9477386
+      NDK_VERSION: 27.1.12297006
+      APP: "com.deeperwire.ermine"
+
+    steps:
+      - name: Checkout the current branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: latest
+
+      - name: Remove all JDK
+        run: |
+          sudo apt-get remove -y --purge *-jdk openjdk-*
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+           java-version: '17'
+           distribution: 'oracle'
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get --quiet update --yes
+          sudo apt-get --quiet install --yes git
+          sudo apt-get autoremove --purge
+          sudo apt-get clean
+          sudo rm -rf /var/lib/apt/lists/*
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: >
+            platforms;android-${{ env.ANDROID_COMPILE_SDK }}
+            platform-tools
+            build-tools;${{ env.ANDROID_BUILD_TOOLS }}
+            ndk;${{ env.NDK_VERSION }}
+
+      - name: Configure docker
+        run: |
+          sudo systemctl stop docker
+          sudo sed -i "s/}/, \"data-root\": \"\/mnt\/docker\"}/" /etc/docker/daemon.json
+          sudo systemctl start docker
+
+      - name: Getting and patching fdroid
+        run: |
+          sudo mkdir -p /mnt/fdroidserver
+          sudo mkdir -p /mnt/fdroiddata
+          sudo chown $(id -u):$(id -g) /mnt/fdroidserver
+          sudo chown $(id -u):$(id -g) /mnt/fdroiddata
+          git clone https://gitlab.com/fdroid/fdroidserver.git /mnt/fdroidserver
+          git clone https://gitlab.com/fdroid/fdroiddata.git /mnt/fdroiddata
+          sed -i "s/if onserver:/if not onserver:/" /mnt/fdroidserver/fdroidserver/build.py
+          sed -i "s/p = FDroidPopen(\['sudo', 'SUDO_FORCE.*'\])/p = FDroidPopen(\['echo', '1'\])/" /mnt/fdroidserver/fdroidserver/build.py
+          sudo chown -R 1000:1000 /mnt/fdroidserver
+          sudo chown -R 1000:1000 /mnt/fdroiddata
+
+      - name: Overwrite with local files
+        run: |
+          sudo cp ./-fdroiddata/metadata/${{ env.APP }}.yml /mnt/fdroiddata/metadata/${{ env.APP }}.yml
+          sudo chown -R 1000:1000 /mnt/fdroiddata
+
+      - name: Adding swap
+        run: |
+          sudo fallocate -l 6G /swapfile
+          sudo chmod 600 /swapfile
+          sudo mkswap /swapfile
+          sudo swapon /swapfile
+
+      - name: Compiling
+        run: |
+          docker pull registry.gitlab.com/fdroid/docker-executable-fdroidserver:master
+          (while true; do df -h; sleep 60; done) &
+          docker run --rm -u 1000:1000 -v $ANDROID_HOME:/opt/android-sdk -v /mnt/fdroiddata:/repo -v /mnt/fdroidserver:/home/vagrant/fdroidserver -e ANDROID_HOME:/opt/android-sdk registry.gitlab.com/fdroid/docker-executable-fdroidserver:master build --latest --verbose ${{ env.APP }}
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-outputs
+          path: /mnt/fdroiddata/build/srclib/MozFennec/mobile/android/fenix/app/build/outputs/apk/fenix/release/app-*-release-unsigned.apk
