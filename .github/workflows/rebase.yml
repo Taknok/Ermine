@@ -1,0 +1,93 @@
+name: Rebase
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 7 * * 6"
+
+jobs:
+  rebase_local_mull_onto_upstream_mull:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the current branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: mull
+
+      - name: Set up git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Add target repository as remote
+        run: |
+          git remote add upstream https://gitlab.com/divested-mobile/mull-fenix.git
+          git fetch upstream master
+
+      - name: Reset current branch onto target branch
+        run: |
+          git reset --hard upstream/master
+
+      - name: Push updated branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git push --force-with-lease
+
+      - name: Sync tags
+        run: |
+          git fetch upstream --tags
+          git push --tags
+
+  apply_ermine_onto_local_mull:
+    runs-on: ubuntu-latest
+    needs: rebase_local_mull_onto_upstream_mull
+    steps:
+      - name: Checkout the current branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: mull
+
+      - name: Set up git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Calculate latest tag
+        id: tag
+        run: |
+          TAG=$(git describe --tags --abbrev=0)
+          echo "TAG=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout latest tag
+        env:
+          TAG: ${{ steps.tag.outputs.TAG }}
+        run: |
+          git checkout $TAG
+
+      - name: Apply ermine
+        run: |
+          git cherry-pick ..origin/ermine
+
+      - name: Apply ermine
+        run: |
+          ./scripts/ermine.sh $PWD
+          git add -A
+          git commit -m "Ermine"
+
+      - name: Push tags
+        env:
+          TAG: ${{ steps.tag.outputs.TAG }}
+        run: |
+          git tag -a "$TAG-ermine" -m ""
+          git push --tags
+
+      - name: Set latest
+        env:
+          TAG: ${{ steps.tag.outputs.TAG }}
+        run: |
+          git checkout latest
+          git reset --hard "$TAG-ermine"
+          git push --force
