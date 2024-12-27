@@ -74,8 +74,8 @@ sed -i \
 
 xmlstarlet ed --inplace \
   -d '//uses-permission[@android:name="com.android.launcher.permission.INSTALL_SHORTCUT"]' \
-  -d '//activity-alias[@android:name="${applicationId}.App"]/intent-filter' \
-  -d '//activity-alias[@android:name="${applicationId}.AlternativeApp"]/intent-filter' \
+  -u '//activity-alias[@android:name="${applicationId}.App"]/intent-filter/category/@android:name' -v "android.intent.category.INFO" \
+  -u '//activity-alias[@android:name="${applicationId}.AlternativeApp"]/intent-filter/category/@android:name' -v "android.intent.category.INFO" \
   -u '//activity/@android:excludeFromRecents' -v "true" \
   -i '//activity[not(@android:excludeFromRecents)]' -t attr -n "android:excludeFromRecents" -v "true" \
   -u '//activity/@android:noHistory' -v "true" \
