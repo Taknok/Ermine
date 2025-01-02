@@ -4,10 +4,8 @@ on:
   push:
     branches:
       - ermine
-  workflow_run:
-    workflows: ["Rebase"]
-    types:
-      - completed
+    tags:
+      - '*-ermine'
 
 jobs:
   build:
