@@ -67,7 +67,7 @@ jobs:
         run: |
           git checkout $TAG
 
-      - name: Apply ermine
+      - name: Get ermine scripts
         run: |
           git cherry-pick ..origin/ermine
 
@@ -78,16 +78,25 @@ jobs:
           git commit -m "Ermine"
 
       - name: Push tags
+        id: push_tags
         env:
-          TAG: ${{ steps.tag.outputs.TAG }}
+          TAG: ${{ steps.tag.outputs.TAG }}-ermine
         run: |
-          git tag -a "$TAG-ermine" -m ""
-          git push --tags
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Tag $TAG already exists. Skipping push."
+            echo "tag_created=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Creating and pushing tag $TAG."
+            git tag -a "$TAG" -m ""
+            git push --tags
+            echo "tag_created=true" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Set latest
+        if: ${{ steps.push_tags.outputs.tag_created == 'true' }}
         env:
-          TAG: ${{ steps.tag.outputs.TAG }}
+          TAG: ${{ steps.tag.outputs.TAG }}-ermine
         run: |
           git checkout latest
-          git reset --hard "$TAG-ermine"
+          git reset --hard "$TAG"
           git push --force
