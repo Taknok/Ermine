@@ -2,8 +2,6 @@ name: Fdroid Build Ermine
 
 on:
   push:
-    branches:
-      - ermine
     tags:
       - '*-ermine'
 
