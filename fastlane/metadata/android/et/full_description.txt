@@ -1,0 +1,11 @@
+<ul>
+  <li>Lai valik lisamooduleid, sh reklaamiblokeerijaid.</li>
+  <li>Parandatud kaitse jälitamise vastu.</li>
+  <li>Privaatne vaade avaneb ühe puudutusega.</li>
+  <li>Kohandatav avavaade ja aadressiriba asukoht (ülal või all).</li>
+  <li>Tume kujundus.</li>
+  <li>Vahekaartide kogumik.</li>
+  <li>Vahekaartide, järjehoidjate, salasõnade, jmt sünkroniseerimine eri seadmete vahel Firefox Synci abil.</li>
+  <li>Pilt-pildis vaade.</li>
+</ul>
+<p>Fennec F-Droid põhineb Mozilla Firefoxi viimasel versioonil. Suletud komponendid ja telemeetria on eemaldatud, kuid kasutusel on siiski mitmed Mozilla teenused, mis võimaldavad kasutaja mõningast jälitamist.</p>
