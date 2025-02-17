@@ -201,11 +201,15 @@ patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-localize_maven.patch
 # Replace GMS with microG client library
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-liberate.patch"
 
+# Fix v125 compile error
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-fix-125-compile.patch"
+
 # Patch the use of proprietary and tracking libraries
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-liberate.patch"
 
-# Fix v125 compile error
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-fix-125-compile.patch"
+# Disable domains suggestions: the list is very out of date, some of those
+# domains have been squatted and serve ads or malware
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-disable-shipped-domains.patch"
 
 # Fix v125 aar output not including native libraries
 sed -i \
