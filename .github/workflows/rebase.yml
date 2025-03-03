@@ -80,6 +80,10 @@ jobs:
         run: |
           git checkout $TAG
 
+      - name: Get ermine scripts (again)
+        run: |
+          git cherry-pick ..origin/ermine
+
       - name: Apply ermine
         run: |
           ./scripts/ermine.sh $PWD
