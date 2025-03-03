@@ -2,17 +2,37 @@
 
 DIRECTORY="$1"
 
+METADATA="./-fdroiddata/metadata/com.deeperwire.ermine.yml"
+
 # Change repo location
-sed -i '/Repo:/s|: .*|: "https://github.com/Taknok/Ermine.git"|' ./-fdroiddata/metadata/us.spotco.fennec_dos.yml
+sed -i '/Repo:/s|: .*|: "https://github.com/Taknok/Ermine.git"|' $METADATA
 
 # Change for DW
-sed -i '/AuthorName:/s|: .*|: "Deeper Wire"|' ./-fdroiddata/metadata/us.spotco.fennec_dos.yml
-sed -i '/AuthorWebSite:/s|: .*|: "https://deeper-wire.com/"|' ./-fdroiddata/metadata/us.spotco.fennec_dos.yml
-sed -i '/SourceCode:/s|: .*|: "https://github.com/Taknok/Ermine"|' ./-fdroiddata/metadata/us.spotco.fennec_dos.yml
-sed -i '/IssueTracker:/s|: .*|: "https://github.com/Taknok/Ermine"|' ./-fdroiddata/metadata/us.spotco.fennec_dos.yml
+sed -i '/AuthorName:/s|: .*|: "Deeper Wire"|' $METADATA
+sed -i '/AuthorWebSite:/s|: .*|: "https://deeper-wire.com/"|' $METADATA
+sed -i '/SourceCode:/s|: .*|: "https://github.com/Taknok/Ermine"|' $METADATA
+sed -i '/IssueTracker:/s|: .*|: "https://github.com/Taknok/Ermine"|' $METADATA
+
+# Change commit id to tag
+# get all commit and versionName
+python3 -c 'import yaml, re, sys; data = yaml.safe_load(open("./-fdroiddata/metadata/com.deeperwire.ermine.yml")); print("\n".join({f"{i["commit"]} {i["versionName"]}" for i in data["Builds"] if re.fullmatch(r"[0-9a-f]{40}", i["commit"])}))' > tmp.txt
+while read -r SHA1 VERSION; do
+    # Check if a tag exists for this commit
+    TAG_EXISTS=$(git tag --points-at "$SHA1")
+    NEW_TAG="v$VERSION"
+
+    # If no tag exists, create one
+    if [ -z "$TAG_EXISTS" ]; then
+        echo "Creating tag $NEW_TAG for commit $SHA1"
+        git tag "$NEW_TAG" "$SHA1"
+    fi
+    # Replace the SHA-1 commit with the new tag in the YAML file
+    sed -i "s/$SHA1/$NEW_TAG/g" $METADATA
+done < tmp.txt
+rm tmp.txt
 
 # Change tag
-sed -i '/^\s*commit: /s/$/-ermine/' ./-fdroiddata/metadata/us.spotco.fennec_dos.yml
+sed -i '/^\s*commit: /s/$/-ermine/' $METADATA
 
 # Install xmlstarlet for manifest edit
 python3 -c 'import re, sys;
@@ -23,34 +43,55 @@ print(
     r"\1\2\n      - apt-get install -y xmlstarlet\3",
     text,
   flags=re.MULTILINE)
-)' < ./-fdroiddata/metadata/us.spotco.fennec_dos.yml > ./tmp.yml
-mv tmp.yml ./-fdroiddata/metadata/us.spotco.fennec_dos.yml
+)' < $METADATA > ./tmp.yml
+mv tmp.yml $METADATA
 
-echo "Mull"
+echo "Replacing build id"
+sed -i '/# Set up the app ID, version name and version code/,/# Disable crash reporting/c\
+# Set up the app ID, version name and version code\
+sed -i \
+    -e "s|applicationId \"org.mozilla\"|applicationId \"com.deeperwire\"|" \
+    -e "s|applicationIdSuffix \".firefox\"|applicationIdSuffix \".ermine\"|" \
+    -e "s|\"sharedUserId\": \"org.mozilla.firefox.sharedID\"|\"sharedUserId\": \"com.deeperwire.ermine.sharedID\"|" \
+    -e "s/Config.releaseVersionName(project)/'\''$1'\''/" \
+    -e "s/Config.generateFennecVersionCode(arch, aab)/$2/" \
+    app/build.gradle\
+sed -i \
+    -e "/android:targetPackage/s/org.mozilla.firefox/com.deeperwire.ermine/" \
+    app/src/release/res/xml/shortcuts.xml\
+\
+# Disable crash reporting' ./prebuild.sh
+
 echo "Replacing file content"
 find "$DIRECTORY" -type f \
   -not -path "*/scripts/*" \
   -not -path "*/.git*/*" \
-  -exec sed -i 's/Mull/Ermine/g' {} +
+  -not -name "paths.sh" \
+  -exec sed -i 's/Fennec/Ermine/g' {} +
 find "$DIRECTORY" -type f \
   -not -path "*/scripts/*" \
   -not -path "*/.git*/*" \
-  -exec sed -i 's/mull/ermine/g' {} +
+  -exec sed -i 's/fennec_fdroid/ermine/g' {} +
+find "$DIRECTORY" -type f \
+  -not -path "*/scripts/*" \
+  -not -path "*/.git*/*" \
+  -exec sed -i 's/fennec/ermine/g' {} +
 
 find "$DIRECTORY" -type f \
   -not -path "*/scripts/*" \
   -not -path "*/.git*/*" \
-  -exec sed -i 's/us\.spotco/com\.deeperwire/g' {} +
+  -not -path "*.patch" \
+  -exec sed -i 's/org\.mozilla/com\.deeperwire/g' {} +
 
-echo "Replacing file name"
-find "$DIRECTORY" -depth \
-  -not -path "*/.git*/*" \
-  -name "*mull*" \
-  -execdir bash -c 'mv "$1" "${1//mull/ermine}"' _ {} \;
-find "$DIRECTORY" -depth \
-  -not -path "*/.git*/*" \
-  -name "*us.spotco*" \
-  -execdir bash -c 'mv "$1" "${1//us.spotco/com.deeperwire}"' _ {} \;
+# echo "Replacing file name"
+# find "$DIRECTORY" -depth \
+#   -not -path "*/.git*/*" \
+#   -name "*mull*" \
+#   -execdir bash -c 'mv "$1" "${1//fennec/ermine}"' _ {} \;
+# find "$DIRECTORY" -depth \
+#   -not -path "*/.git*/*" \
+#   -name "*us.spotco*" \
+#   -execdir bash -c 'mv "$1" "${1//us.spotco/com.deeperwire}"' _ {} \;
 
 echo "Fennec"
 echo "Replacing file content"
@@ -91,5 +132,5 @@ popd
 EOT
 
 pushd $DIRECTORY
-./gen_wordmark.sh
+# ./gen_wordmark.sh
 popd
