@@ -51,6 +51,9 @@ jobs:
             build-tools;${{ env.ANDROID_BUILD_TOOLS }}
             ndk;${{ env.NDK_VERSION }}
 
+      - name: Set up Docker
+        uses: docker/setup-docker-action@v4
+
       - name: Configure docker
         run: |
           sudo systemctl stop docker
