@@ -6,14 +6,14 @@ on:
     - cron: "0 7 * * 6"
 
 jobs:
-  rebase_local_mull_onto_upstream_mull:
+  rebase_local_fennec_onto_upstream_fennec:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the current branch
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: mull
+          ref: fennec
 
       - name: Set up git
         run: |
@@ -22,7 +22,7 @@ jobs:
 
       - name: Add target repository as remote
         run: |
-          git remote add upstream https://gitlab.com/divested-mobile/mull-fenix.git
+          git remote add upstream https://gitlab.com/relan/fennecbuild.git
           git fetch upstream master
 
       - name: Reset current branch onto target branch
@@ -35,25 +35,38 @@ jobs:
         run: |
           git push --force-with-lease
 
-      - name: Sync tags
-        run: |
-          git fetch upstream --tags
-          git push --tags
+      # no more tags in fennec (when mull did have)
+      # - name: Sync tags
+      #   run: |
+      #     git fetch upstream --tags
+      #     git push --tags
 
-  apply_ermine_onto_local_mull:
+  apply_ermine_onto_local_fennec:
     runs-on: ubuntu-latest
-    needs: rebase_local_mull_onto_upstream_mull
+    needs: rebase_local_fennec_onto_upstream_fennec
     steps:
       - name: Checkout the current branch
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: mull
+          ref: fennec
 
       - name: Set up git
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Get ermine scripts
+        run: |
+          git cherry-pick ..origin/ermine
+
+      - name: Get build metadata
+        run: |
+          curl https://gitlab.com/fdroid/fdroiddata/-/raw/master/metadata/org.mozilla.fennec_fdroid.yml --create-dirs -o ./-fdroiddata/metadata/com.deeperwire.ermine.yml
+
+      - name: Generate missing tags
+        run: |
+          ./scripts/gen_tags.sh
 
       - name: Calculate latest tag
         id: tag
@@ -66,10 +79,6 @@ jobs:
           TAG: ${{ steps.tag.outputs.TAG }}
         run: |
           git checkout $TAG
-
-      - name: Get ermine scripts
-        run: |
-          git cherry-pick ..origin/ermine
 
       - name: Apply ermine
         run: |
