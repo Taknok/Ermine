@@ -67,7 +67,7 @@ find "$DIRECTORY" -type f \
   -not -path "*/scripts/*" \
   -not -path "*/.git*/*" \
   -not -name "paths.sh" \
-  -exec sed -i 's/Fennec/Ermine/g' {} +
+  -exec sed -i '/MozFennec/!s/Fennec/Ermine/g' {} +
 find "$DIRECTORY" -type f \
   -not -path "*/scripts/*" \
   -not -path "*/.git*/*" \
