@@ -1,6 +1,7 @@
 name: Fdroid Build Ermine
 
 on:
+  workflow_dispatch:
   push:
     tags:
       - '*-ermine'
