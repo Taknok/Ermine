@@ -37,7 +37,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get --quiet update --yes
-          sudo apt-get --quiet install --yes git
+          sudo apt-get --quiet install --yes git jq
           sudo apt-get autoremove --purge
           sudo apt-get clean
           sudo rm -rf /var/lib/apt/lists/*
@@ -60,7 +60,7 @@ jobs:
       - name: Configure docker
         run: |
           sudo systemctl stop docker
-          sudo sed -i "s/}/, \"data-root\": \"\/mnt\/docker\"}/" /etc/docker/daemon.json
+          sudo jq '. + {"data-root": "/mnt/docker"}' /etc/docker/daemon.json | sudo tee /etc/docker/daemon.json > /dev/null
           sudo cat /etc/docker/daemon.json
           sudo systemctl start docker
 
