@@ -51,8 +51,11 @@ jobs:
             build-tools;${{ env.ANDROID_BUILD_TOOLS }}
             ndk;${{ env.NDK_VERSION }}
 
-      - name: Set up Docker
-        uses: docker/setup-docker-action@v4
+      - name: Ensure /etc/docker/daemon.json exists
+        run: |
+          if [ ! -f /etc/docker/daemon.json ]; then
+            echo '{}' | sudo tee /etc/docker/daemon.json > /dev/null
+          fi
 
       - name: Configure docker
         run: |
