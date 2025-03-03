@@ -61,6 +61,7 @@ jobs:
         run: |
           sudo systemctl stop docker
           sudo sed -i "s/}/, \"data-root\": \"\/mnt\/docker\"}/" /etc/docker/daemon.json
+          sudo cat /etc/docker/daemon.json
           sudo systemctl start docker
 
       - name: Getting and patching fdroid
