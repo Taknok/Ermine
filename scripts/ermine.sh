@@ -134,5 +134,5 @@ popd
 EOT
 
 pushd $DIRECTORY
-# ./gen_wordmark.sh
+  ./scripts/gen_res.sh
 popd
