@@ -84,6 +84,11 @@ jobs:
         run: |
           git cherry-pick ..origin/ermine
 
+      - name: Install dependencies
+        run: |
+          apt-get update 
+          apt-get install -y inkscape webp optipng
+
       - name: Apply ermine
         run: |
           ./scripts/ermine.sh $PWD
