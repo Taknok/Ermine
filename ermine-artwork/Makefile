@@ -80,51 +80,51 @@ $(resdir)/mipmap-xxxhdpi/ic_launcher_foreground.webp : ic_launcher_foreground.sv
 # Wordmark normal
 
 $(resdir)/drawable-mdpi/ic_logo_wordmark_normal.webp : ic_logo_wordmark_normal.svg
-	$(call rasterize,0:0:300:46,80)
+	$(call rasterize,0:0:188:32,80)
 
 $(resdir)/drawable-hdpi/ic_logo_wordmark_normal.webp : ic_logo_wordmark_normal.svg
-	$(call rasterize,0:0:300:46,120)
+	$(call rasterize,0:0:188:32,120)
 
 $(resdir)/drawable-xhdpi/ic_logo_wordmark_normal.webp : ic_logo_wordmark_normal.svg
-	$(call rasterize,0:0:300:46,160)
+	$(call rasterize,0:0:188:32,160)
 
 $(resdir)/drawable-xxhdpi/ic_logo_wordmark_normal.webp : ic_logo_wordmark_normal.svg
-	$(call rasterize,0:0:300:46,240)
+	$(call rasterize,0:0:188:32,240)
 
 $(resdir)/drawable-xxxhdpi/ic_logo_wordmark_normal.webp : ic_logo_wordmark_normal.svg
-	$(call rasterize,0:0:300:46,320)
+	$(call rasterize,0:0:188:32,320)
 
 # Wordmark private
 
 $(resdir)/drawable-mdpi/ic_logo_wordmark_private.webp : ic_logo_wordmark_private.svg
-	$(call rasterize,0:0:300:46,80)
+	$(call rasterize,0:0:188:32,80)
 
 $(resdir)/drawable-hdpi/ic_logo_wordmark_private.webp : ic_logo_wordmark_private.svg
-	$(call rasterize,0:0:300:46,120)
+	$(call rasterize,0:0:188:32,120)
 
 $(resdir)/drawable-xhdpi/ic_logo_wordmark_private.webp : ic_logo_wordmark_private.svg
-	$(call rasterize,0:0:300:46,160)
+	$(call rasterize,0:0:188:32,160)
 
 $(resdir)/drawable-xxhdpi/ic_logo_wordmark_private.webp : ic_logo_wordmark_private.svg
-	$(call rasterize,0:0:300:46,240)
+	$(call rasterize,0:0:188:32,240)
 
 $(resdir)/drawable-xxxhdpi/ic_logo_wordmark_private.webp : ic_logo_wordmark_private.svg
-	$(call rasterize,0:0:300:46,320)
+	$(call rasterize,0:0:188:32,320)
 
 # Wordmark normal, text-only
 
 $(resdir)/drawable/ic_wordmark_text_normal.webp : ic_logo_wordmark_normal.svg
-	$(call rasterize,64:10:300:35,70)
+	$(call rasterize,64:10:188:32,70)
 
 # Wordmark private, text-only
 
 $(resdir)/drawable/ic_wordmark_text_private.webp : ic_logo_wordmark_private.svg
-	$(call rasterize,64:10:300:35,70)
+	$(call rasterize,64:10:188:32,70)
 
 # Wordmark logo
 
 $(resdir)/drawable/ic_wordmark_logo.webp : ic_launcher_foreground.svg
-	$(call rasterize,28:28:80:80,160)
+	$(call rasterize,0:0:64:64,160)
 
 # Fastlane metadata icon
 
