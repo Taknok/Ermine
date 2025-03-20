@@ -63,19 +63,19 @@ $(resdir)/mipmap-xxxhdpi/ic_launcher.webp : ic_launcher_foreground.svg
 # Adaptive icon foreground
 
 $(resdir)/mipmap-mdpi/ic_launcher_foreground.webp : ic_launcher_foreground.svg
-	$(call rasterize,0:0:188:32,108)
+	$(call rasterize,0:0:64:64,108)
 
 $(resdir)/mipmap-hdpi/ic_launcher_foreground.webp : ic_launcher_foreground.svg
-	$(call rasterize,0:0:188:32,162)
+	$(call rasterize,0:0:64:64,162)
 
 $(resdir)/mipmap-xhdpi/ic_launcher_foreground.webp : ic_launcher_foreground.svg
-	$(call rasterize,0:0:188:32,216)
+	$(call rasterize,0:0:64:64,216)
 
 $(resdir)/mipmap-xxhdpi/ic_launcher_foreground.webp : ic_launcher_foreground.svg
-	$(call rasterize,0:0:188:32,324)
+	$(call rasterize,0:0:64:64,324)
 
 $(resdir)/mipmap-xxxhdpi/ic_launcher_foreground.webp : ic_launcher_foreground.svg
-	$(call rasterize,0:0:188:32,432)
+	$(call rasterize,0:0:64:64,432)
 
 # Wordmark normal
 
@@ -114,12 +114,12 @@ $(resdir)/drawable-xxxhdpi/ic_logo_wordmark_private.webp : ic_logo_wordmark_priv
 # Wordmark normal, text-only
 
 $(resdir)/drawable/ic_wordmark_text_normal.webp : ic_logo_wordmark_normal.svg
-	$(call rasterize,64:10:188:32,70)
+	$(call rasterize,80:0:188:32,70)
 
 # Wordmark private, text-only
 
 $(resdir)/drawable/ic_wordmark_text_private.webp : ic_logo_wordmark_private.svg
-	$(call rasterize,64:10:188:32,70)
+	$(call rasterize,80:0:188:32,70)
 
 # Wordmark logo
 
