@@ -46,36 +46,36 @@ endef
 # Legacy non-adaptive icon
 
 $(resdir)/mipmap-mdpi/ic_launcher.webp : ic_launcher_foreground.svg
-	$(call rasterize,0:0:64:64,48)
+	$(call rasterize,0:0:512:512,48)
 
 $(resdir)/mipmap-hdpi/ic_launcher.webp : ic_launcher_foreground.svg
-	$(call rasterize,0:0:64:64,72)
+	$(call rasterize,0:0:512:512,72)
 
 $(resdir)/mipmap-xhdpi/ic_launcher.webp : ic_launcher_foreground.svg
-	$(call rasterize,0:0:64:64,96)
+	$(call rasterize,0:0:512:512,96)
 
 $(resdir)/mipmap-xxhdpi/ic_launcher.webp : ic_launcher_foreground.svg
-	$(call rasterize,0:0:64:64,144)
+	$(call rasterize,0:0:512:512,144)
 
 $(resdir)/mipmap-xxxhdpi/ic_launcher.webp : ic_launcher_foreground.svg
-	$(call rasterize,0:0:64:64,192)
+	$(call rasterize,0:0:512:512,192)
 
 # Adaptive icon foreground
 
 $(resdir)/mipmap-mdpi/ic_launcher_foreground.webp : ic_launcher_foreground.svg
-	$(call rasterize,0:0:64:64,108)
+	$(call rasterize,0:0:512:512,108)
 
 $(resdir)/mipmap-hdpi/ic_launcher_foreground.webp : ic_launcher_foreground.svg
-	$(call rasterize,0:0:64:64,162)
+	$(call rasterize,0:0:512:512,162)
 
 $(resdir)/mipmap-xhdpi/ic_launcher_foreground.webp : ic_launcher_foreground.svg
-	$(call rasterize,0:0:64:64,216)
+	$(call rasterize,0:0:512:512,216)
 
 $(resdir)/mipmap-xxhdpi/ic_launcher_foreground.webp : ic_launcher_foreground.svg
-	$(call rasterize,0:0:64:64,324)
+	$(call rasterize,0:0:512:512,324)
 
 $(resdir)/mipmap-xxxhdpi/ic_launcher_foreground.webp : ic_launcher_foreground.svg
-	$(call rasterize,0:0:64:64,432)
+	$(call rasterize,0:0:512:512,432)
 
 # Wordmark normal
 
@@ -123,12 +123,16 @@ $(resdir)/drawable/ic_wordmark_text_private.webp : ic_logo_wordmark_private.svg
 
 # Wordmark logo
 
-$(resdir)/drawable/ic_wordmark_logo.webp : ic_launcher_foreground.svg
+$(resdir)/drawable/ic_wordmark_logo.webp : ic_internal.svg
 	$(call rasterize,0:0:64:64,160)
+
+# Notification logo
+$(resdir)/drawable/ic_status_logo.xml : ic_launcher_monochrome.xml
+	cp $< $@
 
 # Fastlane metadata icon
 
-$(flidir)/icon.png : ic_launcher_foreground.svg
+$(flidir)/icon.png : ic_internal.svg
 	$(call rasterize,0:0:64:64,512)
 
 .PNONY: all clean
