@@ -111,10 +111,16 @@ sed -i '/# Add wallpaper URL/d; /\.wallpaper_url/d' ./prebuild.sh
 cat << 'EOT' >> ./prebuild.sh
 
 pushd "$mozilla_release"
+
+# Disable default browser notification
+perl -i -0pe 's/(defaultBrowserNotificationDisplayed by booleanPreference[\s\S]*?default = )false/$1true/g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+
+# Change deeplink scheme
 sed -i \
   -e 's|def deepLinkSchemeValue = "fenix|def deepLinkSchemeValue = "ermine|' \
   mobile/android/fenix/app/build.gradle
 
+# Hide application
 xmlstarlet ed --inplace \
   -d '//uses-permission[@android:name="com.android.launcher.permission.INSTALL_SHORTCUT"]' \
   -u '//activity-alias[@android:name="${applicationId}.App"]/intent-filter/category/@android:name' -v "android.intent.category.INFO" \
