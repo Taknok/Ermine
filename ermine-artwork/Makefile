@@ -127,7 +127,7 @@ $(resdir)/drawable/ic_wordmark_logo.webp : ic_internal.svg
 	$(call rasterize,0:0:64:64,160)
 
 # Notification logo
-$(resdir)/drawable/ic_status_logo.xml : ic_launcher_monochrome.xml
+$(resdir)/drawable/ic_status_logo.xml : ic_status_logo.xml
 	cp $< $@
 
 # Fastlane metadata icon
