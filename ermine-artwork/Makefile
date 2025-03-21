@@ -26,6 +26,7 @@ images := $(foreach x,hdpi mdpi xhdpi xxhdpi xxxhdpi, \
           $(resdir)/drawable/ic_wordmark_text_normal.webp \
           $(resdir)/drawable/ic_wordmark_text_private.webp \
           $(resdir)/drawable/ic_wordmark_logo.webp \
+          $(resdir)/drawable/ic_status_logo.xml \
           $(flidir)/icon.png
 
 all: $(images)
