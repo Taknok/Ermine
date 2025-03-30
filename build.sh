@@ -29,11 +29,12 @@ source "$(dirname "$0")/paths.sh"
 # Set up Android SDK
 sdkmanager 'build-tools;35.0.0' # for GeckoView
 sdkmanager 'ndk;26.2.11394342' # for Glean
+sdkmanager 'ndk;28.0.13004108' # for Application Services
 
 # Set up Rust
 # shellcheck disable=SC1090,SC1091
 source "$HOME/.cargo/env"
-cargo install --force --vers 0.26.0 cbindgen
+cargo install --force --vers 0.28.0 cbindgen
 
 # Build LLVM
 pushd "$llvm"
@@ -80,9 +81,12 @@ gradle :tooling-nimbus-gradle:publishToMavenLocal
 popd
 
 pushd "$mozilla_release"
-MOZ_CHROME_MULTILOCALE=$(< "$patches/locales")
-export MOZ_CHROME_MULTILOCALE
 ./mach build
+./mach package
+read -ra locales < "$patches/locales"
+./mach package-multi-locale --locales "${locales[@]}"
+MOZ_CHROME_MULTILOCALE=${locales[*]}
+export MOZ_CHROME_MULTILOCALE
 gradle :geckoview:publishReleasePublicationToMavenLocal
 gradle :exoplayer2:publishReleasePublicationToMavenLocal
 popd

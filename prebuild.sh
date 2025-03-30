@@ -43,7 +43,7 @@ function localize_maven {
 "$rustup"/rustup-init.sh -y --no-update-default-toolchain
 # shellcheck disable=SC1090,SC1091
 source "$HOME/.cargo/env"
-rustup default 1.83.0
+rustup default 1.85.0
 
 #
 # Fenix
@@ -88,11 +88,6 @@ find "$patches/fenix-overlay" -type f | while read -r src; do
     mkdir -p "$(dirname "$dst")"
     cp "$src" "$dst"
 done
-sed -i \
-    -e 's/googleg_standard_color_18/ic_download/' \
-    app/src/main/java/org/mozilla/fenix/components/menu/compose/ExtensionsSubmenu.kt \
-    app/src/main/java/org/mozilla/fenix/components/menu/compose/MenuItem.kt \
-    app/src/main/java/org/mozilla/fenix/compose/list/ListItem.kt
 
 # Enable about:config
 sed -i \
@@ -176,8 +171,10 @@ popd
 #
 
 pushd "$application_services"
+# Remove Mozilla repositories substitution and explicitly add the required ones
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/a-c-localize_maven.patch"
 # Break the dependency on older A-C
-sed -i -e '/android-components = /s/"133\.0"/"136.0"/' gradle/libs.versions.toml
+sed -i -e '/android-components = /s/"135\.0\.1"/"137.0"/' gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 sed -i -e '/content {/,/}/d' build.gradle
