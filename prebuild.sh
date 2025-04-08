@@ -223,6 +223,9 @@ patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-liberate.patch"
 # Fix v125 compile error
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-fix-125-compile.patch"
 
+# Add UnifiedPush support
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/unifiedpush.patch"
+
 # Patch the use of proprietary and tracking libraries
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-liberate.patch"
 
