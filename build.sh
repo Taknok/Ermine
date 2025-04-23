@@ -27,7 +27,7 @@ source "$(dirname "$0")/paths.sh"
 # plugins (Glean).
 
 # Set up Android SDK
-sdkmanager 'build-tools;35.0.0' # for GeckoView
+sdkmanager 'build-tools;35.0.1' # for GeckoView
 sdkmanager 'ndk;26.2.11394342' # for Glean
 sdkmanager 'ndk;28.0.13004108' # for Application Services
 
