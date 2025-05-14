@@ -14,6 +14,6 @@ while read -r SHA1 VERSION; do
         git tag "$NEW_TAG" "$SHA1"
     fi
     # Replace the SHA-1 commit with the new tag in the YAML file
-    sed -i "s/$SHA1/$NEW_TAG/g" $METADATA
+    sed -i "s/$SHA1/$NEW_TAG/g" ./-fdroiddata/metadata/com.deeperwire.ermine.yml
 done < tmp.txt
 rm tmp.txt
