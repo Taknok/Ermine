@@ -44,6 +44,9 @@ jobs:
   apply_ermine_onto_local_fennec:
     runs-on: ubuntu-latest
     needs: rebase_local_fennec_onto_upstream_fennec
+    outputs:
+      tag_created: ${{ steps.push_tags.outputs.tag_created }}
+      TAG: ${{ steps.tag.outputs.TAG }}
     steps:
       - name: Checkout the current branch
         uses: actions/checkout@v4
@@ -86,7 +89,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt-get update 
+          sudo apt-get update
           sudo apt-get install -y inkscape webp optipng
 
       - name: Apply ermine
@@ -118,3 +121,10 @@ jobs:
           git checkout latest
           git reset --hard "$TAG"
           git push --force
+
+  trigger_build:
+    needs: apply_ermine_onto_local_fennec
+    if: ${{ needs.apply_ermine_onto_local_fennec.outputs.tag_created == 'true' }}
+    uses: ./.github/workflows/_build.yml
+    with:
+      ref: ${{ needs.apply_ermine_onto_local_fennec.outputs.TAG }}-ermine
