@@ -15,7 +15,7 @@ jobs:
       ANDROID_COMPILE_SDK: 33
       ANDROID_BUILD_TOOLS: 33.0.2
       ANDROID_SDK_TOOLS: 9477386
-      NDK_VERSION: 27.1.12297006
+      NDK_VERSION: 28.0.13004108
       APP: "com.deeperwire.ermine"
 
     steps:
@@ -100,4 +100,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build-outputs
+          if-no-files-found: error
           path: /mnt/fdroiddata/build/srclib/MozFennec/mobile/android/fenix/app/build/outputs/apk/fenix/release/app-*-release-unsigned.apk
