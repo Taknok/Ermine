@@ -1,10 +1,11 @@
 name: Fdroid Build Ermine
 
 on:
-  workflow_dispatch:
-  push:
-    tags:
-      - '*-ermine'
+  workflow_call:
+    inputs:
+      ref:
+        required: true
+        type: string
 
 jobs:
   build:
@@ -22,7 +23,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: latest
+          ref: ${{ inputs.ref }}
 
       - name: Remove all JDK
         run: |
