@@ -136,6 +136,7 @@ xmlstarlet ed --inplace \
   -d '//activity[@android:name=".IntentReceiverActivity"]/intent-filter/action[@android:name="android.intent.action.VIEW"]' \
   -d '//receiver[@android:name="org.mozilla.gecko.search.SearchWidgetProvider"]' \
   -d '//intent-filter[@android:name="android.intent.action.SEND"]' \
+  -d '//service[@android:name=".media.MediaSessionService"]' \
   mobile/android/fenix/app/src/main/AndroidManifest.xml
 popd
 EOT

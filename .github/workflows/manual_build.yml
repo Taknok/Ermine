@@ -1,0 +1,15 @@
+name: Manual Fdroid Build Ermine
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'commit, tag or branch to build'
+        required: true
+        default: 'latest'
+
+jobs:
+  build:
+    uses: ./.github/workflows/_build.yml
+    with:
+      ref: ${{ inputs.ref }}
