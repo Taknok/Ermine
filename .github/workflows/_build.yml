@@ -51,9 +51,7 @@ jobs:
               /opt/hostedtoolcache/CodeQL \
               /usr/local/share/powershell \
               /usr/local/share/chromium \
-              /usr/local/lib/android/* \
               /usr/local/lib/node_modules
-          sudo chmod 777 /usr/local/lib/android
           sudo docker image prune --all --force
           df -h
 
