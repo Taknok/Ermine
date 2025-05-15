@@ -12,10 +12,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 420
     env:
-      ANDROID_COMPILE_SDK: 33
-      ANDROID_BUILD_TOOLS: 33.0.2
+      ANDROID_COMPILE_SDK: 34
+      ANDROID_BUILD_TOOLS: 35.0.1
       ANDROID_SDK_TOOLS: 9477386
       NDK_VERSION: 28.0.13004108
+      NDK_GLEAN_VERSION: 26.2.11394342
       APP: "com.deeperwire.ermine"
 
     steps:
@@ -47,12 +48,10 @@ jobs:
               /usr/share/dotnet \
               /usr/local/graalvm \
               /usr/local/.ghcup \
-               /opt/hostedtoolcache/CodeQL \
+              /opt/hostedtoolcache/CodeQL \
               /usr/local/share/powershell \
               /usr/local/share/chromium \
-              /usr/local/lib/android/* \
               /usr/local/lib/node_modules
-          sudo chmod 777 /usr/local/lib/android
           sudo docker image prune --all --force
           df -h
 
@@ -77,7 +76,9 @@ jobs:
             platforms;android-${{ env.ANDROID_COMPILE_SDK }}
             platform-tools
             build-tools;${{ env.ANDROID_BUILD_TOOLS }}
+            build-tools;34.0.0
             ndk;${{ env.NDK_VERSION }}
+            ndk;${{ env.NDK_GLEAN_VERSION }}
 
       - name: Ensure /etc/docker/daemon.json exists
         run: |
@@ -98,8 +99,8 @@ jobs:
           sudo mkdir -p /mnt/fdroiddata
           sudo chown $(id -u):$(id -g) /mnt/fdroidserver
           sudo chown $(id -u):$(id -g) /mnt/fdroiddata
-          git clone https://gitlab.com/fdroid/fdroidserver.git /mnt/fdroidserver
-          git clone https://gitlab.com/fdroid/fdroiddata.git /mnt/fdroiddata
+          git clone --depth 1 https://gitlab.com/fdroid/fdroidserver.git /mnt/fdroidserver
+          git clone --depth 1 https://gitlab.com/fdroid/fdroiddata.git /mnt/fdroiddata
           sed -i "s/if onserver:/if not onserver:/" /mnt/fdroidserver/fdroidserver/build.py
           sed -i "s/p = FDroidPopen(\['sudo', 'SUDO_FORCE.*'\])/p = FDroidPopen(\['echo', '1'\])/" /mnt/fdroidserver/fdroidserver/build.py
           sudo chown -R 1000:1000 /mnt/fdroidserver
@@ -121,11 +122,11 @@ jobs:
         run: |
           docker pull registry.gitlab.com/fdroid/docker-executable-fdroidserver:master
           (while true; do df -h; sleep 60; done) &
-          docker run --rm -u 1000:1000 -v $ANDROID_HOME:/opt/android-sdk -v /mnt/fdroiddata:/repo -v /mnt/fdroidserver:/home/vagrant/fdroidserver -e ANDROID_HOME:/opt/android-sdk registry.gitlab.com/fdroid/docker-executable-fdroidserver:master build --latest --verbose ${{ env.APP }}
+          sudo docker run --rm -u 1000:1000 -v $ANDROID_HOME:/opt/android-sdk -v /mnt/fdroiddata:/repo -v /mnt/fdroidserver:/home/vagrant/fdroidserver -e ANDROID_HOME:/opt/android-sdk registry.gitlab.com/fdroid/docker-executable-fdroidserver:master build --latest --verbose ${{ env.APP }}
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: build-outputs
           if-no-files-found: error
-          path: /mnt/fdroiddata/build/srclib/MozFennec/mobile/android/fenix/app/build/outputs/apk/fenix/release/app-*-release-unsigned.apk
+          path: /mnt/fdroiddata/build/srclib/MozFennec/mobile/android/fenix/app/build/outputs/*
