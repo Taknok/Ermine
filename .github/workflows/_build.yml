@@ -10,7 +10,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 360
+    timeout-minutes: 420
     env:
       ANDROID_COMPILE_SDK: 33
       ANDROID_BUILD_TOOLS: 33.0.2
@@ -25,9 +25,36 @@ jobs:
           fetch-depth: 0
           ref: ${{ inputs.ref }}
 
-      - name: Remove all JDK
+      - name: Clean workspace
         run: |
-          sudo apt-get remove -y --purge *-jdk openjdk-*
+          df -h
+          sudo apt-get purge -y 
+              *-jdk \
+              openjdk-* \
+              '^dotnet-.*' \
+              '^llvm-.*' \
+              'php.*' \
+              '^mongodb-.*' \
+              '^mysql-.*' \
+              azure-cli \
+              hhvm \
+              google-chrome-stable \
+              firefox \
+              powershell \
+              mono-devel\
+              microsoft-edge-stable \
+              libgl1-mesa-dri
+          sudo rm -rf \
+              /usr/share/dotnet
+              /usr/local/graalvm \
+              /usr/local/.ghcup \
+               /opt/hostedtoolcache/CodeQL \
+              /usr/local/share/powershell \
+              /usr/local/share/chromium \
+              /usr/local/lib/android \
+              /usr/local/lib/node_modules
+          sudo docker image prune --all --force
+          df -h
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
