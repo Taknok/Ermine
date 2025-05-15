@@ -28,7 +28,7 @@ jobs:
       - name: Clean workspace
         run: |
           df -h
-          sudo apt-get purge -y 
+          sudo apt-get purge -y \
               *-jdk \
               openjdk-* \
               '^dotnet-.*' \
