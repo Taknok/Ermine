@@ -44,7 +44,7 @@ jobs:
               microsoft-edge-stable \
               libgl1-mesa-dri
           sudo rm -rf \
-              /usr/share/dotnet
+              /usr/share/dotnet \
               /usr/local/graalvm \
               /usr/local/.ghcup \
                /opt/hostedtoolcache/CodeQL \
