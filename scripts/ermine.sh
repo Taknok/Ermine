@@ -141,6 +141,8 @@ xmlstarlet ed --inplace \
 popd
 EOT
 
+sed -i 's/\bgradle assembleRelease\b/gradle assembleRelease bundleRelease/' ./build.sh
+
 pushd $DIRECTORY
   ./scripts/gen_res.sh
 popd
