@@ -37,7 +37,6 @@ jobs:
               '^mongodb-.*' \
               '^mysql-.*' \
               azure-cli \
-              hhvm \
               google-chrome-stable \
               firefox \
               powershell \
