@@ -13,9 +13,10 @@ jobs:
     timeout-minutes: 420
     env:
       ANDROID_COMPILE_SDK: 33
-      ANDROID_BUILD_TOOLS: 33.0.2
+      ANDROID_BUILD_TOOLS: 35.0.1
       ANDROID_SDK_TOOLS: 9477386
       NDK_VERSION: 28.0.13004108
+      NDK_GLEAN_VERSION: 26.2.11394342
       APP: "com.deeperwire.ermine"
 
     steps:
@@ -78,6 +79,7 @@ jobs:
             platform-tools
             build-tools;${{ env.ANDROID_BUILD_TOOLS }}
             ndk;${{ env.NDK_VERSION }}
+            ndk;${{ env.NDK_GLEAN_VERSION }}
 
       - name: Ensure /etc/docker/daemon.json exists
         run: |
@@ -98,8 +100,8 @@ jobs:
           sudo mkdir -p /mnt/fdroiddata
           sudo chown $(id -u):$(id -g) /mnt/fdroidserver
           sudo chown $(id -u):$(id -g) /mnt/fdroiddata
-          git clone https://gitlab.com/fdroid/fdroidserver.git /mnt/fdroidserver
-          git clone https://gitlab.com/fdroid/fdroiddata.git /mnt/fdroiddata
+          git clone --depth 1 https://gitlab.com/fdroid/fdroidserver.git /mnt/fdroidserver
+          git clone --depth 1 https://gitlab.com/fdroid/fdroiddata.git /mnt/fdroiddata
           sed -i "s/if onserver:/if not onserver:/" /mnt/fdroidserver/fdroidserver/build.py
           sed -i "s/p = FDroidPopen(\['sudo', 'SUDO_FORCE.*'\])/p = FDroidPopen(\['echo', '1'\])/" /mnt/fdroidserver/fdroidserver/build.py
           sudo chown -R 1000:1000 /mnt/fdroidserver
