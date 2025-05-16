@@ -129,4 +129,4 @@ jobs:
         with:
           name: build-outputs
           if-no-files-found: error
-          path: /mnt/fdroiddata/build/srclib/MozFennec/mobile/android/fenix/app/build/outputs/apk/fenix/release/app-*-release-unsigned.apk
+          path: /mnt/fdroiddata/build/srclib/MozFennec/mobile/android/fenix/app/build/outputs/*
