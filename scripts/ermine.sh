@@ -110,8 +110,6 @@ sed -i '/# Add wallpaper URL/d; /\.wallpaper_url/d' ./prebuild.sh
 
 cat << 'EOT' >> ./prebuild.sh
 
-sed -i 's/\bgradle assembleRelease\b/gradle assembleRelease bundleRelease/' ./build.sh
-
 pushd "$mozilla_release"
 
 # Disable default browser notification
@@ -142,6 +140,8 @@ xmlstarlet ed --inplace \
   mobile/android/fenix/app/src/main/AndroidManifest.xml
 popd
 EOT
+
+sed -i 's/\bgradle assembleRelease\b/gradle assembleRelease bundleRelease/' ./build.sh
 
 pushd $DIRECTORY
   ./scripts/gen_res.sh
