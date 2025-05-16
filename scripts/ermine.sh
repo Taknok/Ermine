@@ -110,6 +110,8 @@ sed -i '/# Add wallpaper URL/d; /\.wallpaper_url/d' ./prebuild.sh
 
 cat << 'EOT' >> ./prebuild.sh
 
+sed -i 's/\bgradle assembleRelease\b/gradle assembleRelease bundleRelease/' ./build.sh
+
 pushd "$mozilla_release"
 
 # Disable default browser notification
