@@ -459,27 +459,6 @@ diff -r c3bba5162c98 mobile/android/fenix/build.gradle
      }
  
      tasks.withType(KotlinCompile).configureEach {
-diff -r c3bba5162c98 mobile/android/fenix/mozilla-lint-rules/build.gradle
---- a/mobile/android/fenix/mozilla-lint-rules/build.gradle	Mon Apr 21 16:33:21 2025 +0000
-+++ b/mobile/android/fenix/mozilla-lint-rules/build.gradle	Wed Apr 23 09:00:07 2025 +0000
-@@ -6,14 +6,9 @@
- apply plugin: 'kotlin'
- 
- repositories {
--        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
--            maven {
--                url = repository
--                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
--                    allowInsecureProtocol = true
--                }
--            }
--        }
-+    mavenLocal()
-+    maven { url "https://plugins.gradle.org/m2/" }
-+    google()
- }
- 
- dependencies {
 diff -r c3bba5162c98 mobile/android/fenix/plugins/apksize/build.gradle
 --- a/mobile/android/fenix/plugins/apksize/build.gradle	Mon Apr 21 16:33:21 2025 +0000
 +++ b/mobile/android/fenix/plugins/apksize/build.gradle	Wed Apr 23 09:00:07 2025 +0000

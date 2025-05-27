@@ -43,7 +43,7 @@ function localize_maven {
 "$rustup"/rustup-init.sh -y --no-update-default-toolchain
 # shellcheck disable=SC1090,SC1091
 source "$HOME/.cargo/env"
-rustup default 1.85.0
+rustup default 1.86.0
 
 #
 # Fenix
@@ -55,7 +55,7 @@ pushd "$fenix"
 sed -i \
     -e 's|\.firefox|.fennec_fdroid|' \
     -e "s/Config.releaseVersionName(project)/'$1'/" \
-    -e "s/Config.generateFennecVersionCode(arch, isAppBundle )/$2/" \
+    -e "s/Config.generateFennecVersionCode(abi, isAppBundle )/$2/" \
     app/build.gradle
 sed -i \
     -e '/android:targetPackage/s/firefox/fennec_fdroid/' \
@@ -148,6 +148,11 @@ popd
 # Glean
 #
 
+pushd "$glean_as"
+echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
+localize_maven
+popd
+
 pushd "$glean"
 echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
 localize_maven
@@ -163,8 +168,14 @@ find "$patches/a-c-overlay" -type f | while read -r src; do
 done
 # Add the added search engines as `general` engines
 sed -i \
-    -e '41i \ \ \ \ "brave",\n\ \ \ \ "ddghtml",\n\ \ \ \ "ddglite",\n\ \ \ \ "metager",\n\ \ \ \ "mojeek",\n\ \ \ \ "qwantlite",\n\ \ \ \ "startpage",' \
-     components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
+    -e '/GENERAL_SEARCH_ENGINE_IDS = setOf/a\    "brave",' \
+    -e '/GENERAL_SEARCH_ENGINE_IDS = setOf/a\    "ddghtml",' \
+    -e '/GENERAL_SEARCH_ENGINE_IDS = setOf/a\    "ddglite",' \
+    -e '/GENERAL_SEARCH_ENGINE_IDS = setOf/a\    "metager",' \
+    -e '/GENERAL_SEARCH_ENGINE_IDS = setOf/a\    "mojeek",' \
+    -e '/GENERAL_SEARCH_ENGINE_IDS = setOf/a\    "qwantlite",' \
+    -e '/GENERAL_SEARCH_ENGINE_IDS = setOf/a\    "startpage",' \
+    components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
 popd
 
 #
@@ -175,7 +186,7 @@ pushd "$application_services"
 # Remove Mozilla repositories substitution and explicitly add the required ones
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/a-c-localize_maven.patch"
 # Break the dependency on older A-C
-sed -i -e '/android-components = /s/"135\.0\.1"/"138.0"/' gradle/libs.versions.toml
+sed -i -e '/android-components = /s/"139\.0\.20250417022706"/"139.0"/' gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 sed -i -e '/content {/,/}/d' build.gradle

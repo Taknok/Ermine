@@ -27,8 +27,7 @@ source "$(dirname "$0")/paths.sh"
 # plugins (Glean).
 
 # Set up Android SDK
-sdkmanager 'build-tools;35.0.1' # for GeckoView
-sdkmanager 'ndk;26.2.11394342' # for Glean
+sdkmanager 'build-tools;36.0.0' # for GeckoView
 sdkmanager 'ndk;28.0.13004108' # for Application Services
 
 # Set up Rust
@@ -68,7 +67,7 @@ gradle -x javaDocReleaseGeneration \
     :play-services-tasks:publishToMavenLocal
 popd
 
-pushd "$glean"
+pushd "$glean_as"
 export TARGET_CFLAGS=-DNDEBUG
 gradle publishToMavenLocal
 popd
@@ -78,6 +77,10 @@ export NSS_DIR="$application_services/libs/desktop/linux-x86-64/nss"
 export NSS_STATIC=1
 ./libs/verify-android-environment.sh
 gradle :tooling-nimbus-gradle:publishToMavenLocal
+popd
+
+pushd "$glean"
+gradle publishToMavenLocal
 popd
 
 pushd "$mozilla_release"

@@ -19,10 +19,10 @@ index 3ad67a3e9..4969f4cdd 100644
      }
  }
 diff --git a/tools/nimbus-gradle-plugin/settings.gradle b/tools/nimbus-gradle-plugin/settings.gradle
-index 9f90ad25b..d6d5ecbe5 100644
+index 7d907f0..8679108 100644
 --- a/tools/nimbus-gradle-plugin/settings.gradle
 +++ b/tools/nimbus-gradle-plugin/settings.gradle
-@@ -17,14 +17,7 @@ buildscript {
+@@ -21,14 +21,7 @@ buildscript {
          gradle.ext.mozconfig = gradle.root.mozconfig
  
          repositories {
