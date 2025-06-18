@@ -103,6 +103,7 @@ jobs:
           git clone --depth 1 https://gitlab.com/fdroid/fdroiddata.git /mnt/fdroiddata
           sed -i "s/if onserver:/if not onserver:/" /mnt/fdroidserver/fdroidserver/build.py
           sed -i "s/p = FDroidPopen(\['sudo', 'SUDO_FORCE.*'\])/p = FDroidPopen(\['echo', '1'\])/" /mnt/fdroidserver/fdroidserver/build.py
+          sed -i -E "s/^(\s*)if server:/\1vcs.gotorevision(build.commit, refresh)\n\1if server:/" /mnt/fdroidserver/fdroidserver/build.py
           sudo chown -R 1000:1000 /mnt/fdroidserver
           sudo chown -R 1000:1000 /mnt/fdroiddata
 
