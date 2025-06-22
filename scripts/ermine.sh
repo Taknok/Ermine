@@ -46,8 +46,8 @@ mv tmp.yml $METADATA
 
 echo "Replacing build id"
 sed -i '/-e '\''s|\\.firefox|.fennec_fdroid|'\'' \\/c\
-    -e '\''s|applicationId "org.mozilla"|applicationId "com.deeperwire"|'\'' \
-    -e '\''s|applicationIdSuffix \".firefox\"|applicationIdSuffix \".ermine\"|'\'' \
+    -e '\''s|applicationId "org.mozilla"|applicationId "com.deeperwire"|'\'' \\\
+    -e '\''s|applicationIdSuffix \".firefox\"|applicationIdSuffix \".ermine\"|'\'' \\\
     -e '\''s|\"sharedUserId\": \"org.mozilla.firefox.sharedID\"|\"sharedUserId\": \"com.deeperwire.ermine.sharedID\"|'\'' \\' ./prebuild.sh
 
 sed -i "s|/android:targetPackage/s/firefox/fennec_fdroid/|/android:targetPackage/s/org.mozilla.firefox/com.deeperwire.ermine/|" prebuild.sh
