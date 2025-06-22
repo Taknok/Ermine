@@ -44,6 +44,14 @@ print(
 )' < $METADATA > ./tmp.yml
 mv tmp.yml $METADATA
 
+echo "Replacing build id"
+sed -i '/-e '\''s|\\.firefox|.fennec_fdroid|'\'' \\/c\
+    -e '\''s|applicationId "org.mozilla"|applicationId "com.deeperwire"|'\'' \
+    -e '\''s|applicationIdSuffix \".firefox\"|applicationIdSuffix \".ermine\"|'\'' \
+    -e '\''s|\"sharedUserId\": \"org.mozilla.firefox.sharedID\"|\"sharedUserId\": \"com.deeperwire.ermine.sharedID\"|'\'' \\' ./prebuild.sh
+
+sed -i "s|/android:targetPackage/s/firefox/fennec_fdroid/|/android:targetPackage/s/org.mozilla.firefox/com.deeperwire.ermine/|" prebuild.sh
+
 echo "Replacing file content"
 find "$DIRECTORY" -type f \
   -not -path "*/scripts/*" \
@@ -79,15 +87,6 @@ find "$DIRECTORY" -type f \
 #   -not -path "*/.git*/*" \
 #   -name "*us.spotco*" \
 #   -execdir bash -c 'mv "$1" "${1//us.spotco/com.deeperwire}"' _ {} \;
-
-echo "Replacing build id"
-sed -i '/-e '\''s|\\.firefox|.fennec_fdroid|'\'' \\/c\
-    -e '\''s|applicationId "org.mozilla"|applicationId "com.deeperwire"|'\'' \
-    -e '\''s|applicationIdSuffix \".firefox\"|applicationIdSuffix \".ermine\"|'\'' \
-    -e '\''s|\"sharedUserId\": \"org.mozilla.firefox.sharedID\"|\"sharedUserId\": \"com.deeperwire.ermine.sharedID\"|'\'' \\' ./prebuild.sh
-
-sed -i "s|/android:targetPackage/s/firefox/fennec_fdroid/|/android:targetPackage/s/org.mozilla.firefox/com.deeperwire.ermine/|" prebuild.sh
-
 
 echo "Adding compilation options"
 sed -i '/cat << EOF > mozconfig/a \
