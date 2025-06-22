@@ -57,7 +57,7 @@ sed -i \
     -e 's|applicationIdSuffix ".firefox"|applicationIdSuffix ".ermine"|' \
     -e 's|"sharedUserId": "org.mozilla.firefox.sharedID"|"sharedUserId": "com.deeperwire.ermine.sharedID"|' \
     -e "s/Config.releaseVersionName(project)/'$1'/" \
-    -e "s/Config.generateFennecVersionCode(arch, aab)/$2/" \
+    -e "s/Config.generateFennecVersionCode(abi, isAppBundle )/$2/" \
     app/build.gradle
 sed -i \
     -e '/android:targetPackage/s/org.mozilla.firefox/com.deeperwire.ermine/' \
