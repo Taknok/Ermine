@@ -20,6 +20,7 @@
 readonly patches=$(dirname "$(realpath "$0")")
 readonly android_components=$(realpath ../srclib/MozFennec/mobile/android/android-components)
 readonly application_services=$(realpath ../srclib/MozAppServices)
+readonly bundletool=$(realpath ../srclib/bundletool)
 readonly glean_as=$(realpath ../srclib/MozGleanAS)
 readonly glean=$(realpath ../srclib/MozGlean)
 readonly fenix=$(realpath ../srclib/MozFennec/mobile/android/fenix)

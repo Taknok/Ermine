@@ -186,7 +186,7 @@ pushd "$application_services"
 # Remove Mozilla repositories substitution and explicitly add the required ones
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/a-c-localize_maven.patch"
 # Break the dependency on older A-C
-sed -i -e '/android-components = /s/"139\.0\.20250417022706"/"139.0.4"/' gradle/libs.versions.toml
+sed -i -e '/android-components = /s/"139\.0\.20250417022706"/"140.0"/' gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 sed -i -e '/content {/,/}/d' build.gradle
@@ -204,6 +204,14 @@ popd
 
 pushd "$wasi"
 patch -p1 --no-backup-if-mismatch --quiet < "$mozilla_release/taskcluster/scripts/misc/wasi-sdk.patch"
+popd
+
+#
+# Bundletool
+#
+
+pushd "$bundletool"
+localize_maven
 popd
 
 #
@@ -249,8 +257,22 @@ python3 "$toolchain_utils/llvm_tools/patch_manager.py" \
     --patch_metadata_file "$llvm_android/patches/PATCHES.json" \
     --src_path "$llvm"
 
-# Configure
+# Point to our build of Bundletool
+sed -i \
+    -e "/bundletool_path = /s|toolchains_base_dir|\"$bundletool/build/libs\"|" \
+    build/moz.configure/android-sdk.configure
+
+# Fail on use of prebuilt binary
+sed -i 's|https://github.com|hxxps://github.com|' python/mozboot/mozboot/android.py
+
+# Make the build system think we installed the emulator and an AVD
+mkdir -p "$ANDROID_HOME/emulator"
+mkdir -p "$HOME/.mozbuild/android-device/avd"
+
+# Do not check the "emulator" utility which is obviously absent in the empty directory we created above
 sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.configure
+
+# Configure
 cat << EOF > mozconfig
 ac_add_options --disable-crashreporter
 ac_add_options --disable-debug

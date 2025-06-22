@@ -28,12 +28,13 @@ source "$(dirname "$0")/paths.sh"
 
 # Set up Android SDK
 sdkmanager 'build-tools;36.0.0' # for GeckoView
+sdkmanager 'platforms;android-36' # for GeckoView
 sdkmanager 'ndk;28.0.13004108' # for Application Services
 
 # Set up Rust
 # shellcheck disable=SC1090,SC1091
 source "$HOME/.cargo/env"
-cargo install --force --vers 0.28.0 cbindgen
+cargo install --force --vers 0.29.0 cbindgen
 
 # Build LLVM
 pushd "$llvm"
@@ -81,6 +82,10 @@ popd
 
 pushd "$glean"
 gradle publishToMavenLocal
+popd
+
+pushd "$bundletool"
+gradle assemble
 popd
 
 pushd "$mozilla_release"
