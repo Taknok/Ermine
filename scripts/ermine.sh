@@ -81,20 +81,13 @@ find "$DIRECTORY" -type f \
 #   -execdir bash -c 'mv "$1" "${1//us.spotco/com.deeperwire}"' _ {} \;
 
 echo "Replacing build id"
-sed -i '/# Set up the app ID, version name and version code/,/# Disable crash reporting/c\
-# Set up the app ID, version name and version code\
-sed -i \\\
-    -e '\''s|applicationId \"org.mozilla\"|applicationId \"com.deeperwire\"|'\'' \\\
-    -e '\''s|applicationIdSuffix \".firefox\"|applicationIdSuffix \".ermine\"|'\'' \\\
-    -e '\''s|\"sharedUserId\": \"org.mozilla.firefox.sharedID\"|\"sharedUserId\": \"com.deeperwire.ermine.sharedID\"|'\'' \\\
-    -e \"s/Config.releaseVersionName(project)/'\''$1'\''/\" \\\
-    -e \"s/Config.generateFennecVersionCode(abi, isAppBundle )/$2/\" \\\
-    app/build.gradle\
-sed -i \\\
-    -e '\''/android:targetPackage/s/org.mozilla.firefox/com.deeperwire.ermine/'\'' \\\
-    app/src/release/res/xml/shortcuts.xml\
-\
-# Disable crash reporting' ./prebuild.sh
+sed -i '/-e '\''s|\\.firefox|.fennec_fdroid|'\'' \\/c\
+    -e '\''s|applicationId "org.mozilla"|applicationId "com.deeperwire"|'\'' \
+    -e '\''s|applicationIdSuffix \".firefox\"|applicationIdSuffix \".ermine\"|'\'' \
+    -e '\''s|\"sharedUserId\": \"org.mozilla.firefox.sharedID\"|\"sharedUserId\": \"com.deeperwire.ermine.sharedID\"|'\'' \\' ./prebuild.sh
+
+sed -i "s|/android:targetPackage/s/firefox/fennec_fdroid/|/android:targetPackage/s/org.mozilla.firefox/com.deeperwire.ermine/|" prebuild.sh
+
 
 echo "Adding compilation options"
 sed -i '/cat << EOF > mozconfig/a \
