@@ -113,7 +113,7 @@ jobs:
 
       - name: Overwrite with local files
         run: |
-          if [ -f "./-fdroiddata/metadata/${{ env.APP }}" ]; then
+          if [ -f "./-fdroiddata/metadata/${{ env.APP }}.yml" ]; then
             echo "Copy local metadata"
             sudo cp ./-fdroiddata/metadata/${{ env.APP }}.yml /mnt/fdroiddata/metadata/${{ env.APP }}.yml
             sudo chown -R 1000:1000 /mnt/fdroiddata
