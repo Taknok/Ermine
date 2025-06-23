@@ -7,9 +7,13 @@ on:
         description: 'commit, tag or branch to build'
         required: true
         default: 'latest'
+      app:
+        description: 'App to build'
+        default: 'com.deeperwire.ermine'
 
 jobs:
   build:
     uses: ./.github/workflows/_build.yml
     with:
       ref: ${{ inputs.ref }}
+      app: ${{ inputs.app }}
