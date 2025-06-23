@@ -113,8 +113,10 @@ jobs:
 
       - name: Overwrite with local files
         run: |
-          sudo cp ./-fdroiddata/metadata/${{ env.APP }}.yml /mnt/fdroiddata/metadata/${{ env.APP }}.yml
-          sudo chown -R 1000:1000 /mnt/fdroiddata
+          if [ -f "./-fdroiddata/metadata/${{ env.APP }}" ]; then
+            sudo cp ./-fdroiddata/metadata/${{ env.APP }}.yml /mnt/fdroiddata/metadata/${{ env.APP }}.yml
+            sudo chown -R 1000:1000 /mnt/fdroiddata
+          fi
 
       - name: Adding swap
         run: |
