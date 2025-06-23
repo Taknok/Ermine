@@ -7,6 +7,9 @@ on:
       ref:
         required: true
         type: string
+      app:
+        type: string
+        default: "com.deeperwire.ermine"
 
 jobs:
   build:
@@ -18,7 +21,7 @@ jobs:
       ANDROID_SDK_TOOLS: 9477386
       NDK_VERSION: 28.0.13004108
       NDK_GLEAN_VERSION: 26.2.11394342
-      APP: "com.deeperwire.ermine"
+      APP: ${{ inputs.app }}
 
     steps:
       - name: Checkout the current branch
