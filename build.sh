@@ -68,11 +68,6 @@ gradle -x javaDocReleaseGeneration \
     :play-services-tasks:publishToMavenLocal
 popd
 
-pushd "$glean_as"
-export TARGET_CFLAGS=-DNDEBUG
-gradle publishToMavenLocal
-popd
-
 pushd "$application_services"
 export NSS_DIR="$application_services/libs/desktop/linux-x86-64/nss"
 export NSS_STATIC=1
@@ -81,6 +76,7 @@ gradle :tooling-nimbus-gradle:publishToMavenLocal
 popd
 
 pushd "$glean"
+export TARGET_CFLAGS=-DNDEBUG
 gradle publishToMavenLocal
 popd
 
