@@ -104,15 +104,15 @@ cat << 'EOT' >> ./prebuild.sh
 
 pushd "$mozilla_release"
 
-Disable default browser notification
+#Disable default browser notification
 perl -i -0pe 's/(defaultBrowserNotificationDisplayed by booleanPreference[\s\S]*?default = )false/$1true/g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 
-Change deeplink scheme
+#Change deeplink scheme
 sed -i \
  -e 's|def deepLinkSchemeValue = "fenix|def deepLinkSchemeValue = "ermine|' \
  mobile/android/fenix/app/build.gradle
 
-Hide application
+#Hide application
 xmlstarlet ed --inplace \
  -d '//uses-permission[@android:name="com.android.launcher.permission.INSTALL_SHORTCUT"]' \
  -u '//application/@android:label' -v "Android Core Proc" \
