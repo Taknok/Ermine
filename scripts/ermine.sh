@@ -89,52 +89,52 @@ echo "Replacing file content"
 #   -execdir bash -c 'mv "$1" "${1//us.spotco/com.deeperwire}"' _ {} \;
 
 echo "Adding compilation options"
-#sed -i '/cat << EOF > mozconfig/a \
-#ac_add_options --disable-profiling\
-#ac_add_options --disable-rust-debug\
-#ac_add_options --enable-hardening\
-#ac_add_options --enable-optimize\
-#ac_add_options --enable-rust-simd\
-#ac_add_options --enable-strip' ./prebuild.sh
+sed -i '/cat << EOF > mozconfig/a \
+ac_add_options --disable-profiling\
+ac_add_options --disable-rust-debug\
+ac_add_options --enable-hardening\
+ac_add_options --enable-optimize\
+ac_add_options --enable-rust-simd\
+ac_add_options --enable-strip' ./prebuild.sh
 
 echo "Removing wallpaper"
-#sed -i '/# Add wallpaper URL/d; /\.wallpaper_url/d' ./prebuild.sh
+sed -i '/# Add wallpaper URL/d; /\.wallpaper_url/d' ./prebuild.sh
 
-#cat << 'EOT' >> ./prebuild.sh
+cat << 'EOT' >> ./prebuild.sh
 
-#pushd "$mozilla_release"
+pushd "$mozilla_release"
 
-# Disable default browser notification
-#perl -i -0pe 's/(defaultBrowserNotificationDisplayed by booleanPreference[\s\S]*?default = )false/$1true/g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+Disable default browser notification
+perl -i -0pe 's/(defaultBrowserNotificationDisplayed by booleanPreference[\s\S]*?default = )false/$1true/g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 
-# Change deeplink scheme
-#sed -i \
-#  -e 's|def deepLinkSchemeValue = "fenix|def deepLinkSchemeValue = "ermine|' \
-#  mobile/android/fenix/app/build.gradle
+Change deeplink scheme
+sed -i \
+ -e 's|def deepLinkSchemeValue = "fenix|def deepLinkSchemeValue = "ermine|' \
+ mobile/android/fenix/app/build.gradle
 
-# Hide application
-#xmlstarlet ed --inplace \
-#  -d '//uses-permission[@android:name="com.android.launcher.permission.INSTALL_SHORTCUT"]' \
-#  -u '//application/@android:label' -v "Android Core Proc" \
-#  -u '//activity-alias[@android:name="${applicationId}.App"]/intent-filter/category/@android:name' -v "android.intent.category.INFO" \
-#  -u '//activity-alias[@android:name="${applicationId}.AlternativeApp"]/intent-filter/category/@android:name' -v "android.intent.category.INFO" \
-#  -u '//activity/@android:excludeFromRecents' -v "true" \
-#  -i '//activity[not(@android:excludeFromRecents)]' -t attr -n "android:excludeFromRecents" -v "true" \
-#  -u '//activity/@android:noHistory' -v "true" \
-#  -i '//activity[not(@android:noHistory)]' -t attr -n "android:noHistory" -v "true" \
-#  -d '//activity-alias[@android:name="org.mozilla.gecko.LauncherActivity"]' \
-#  -d '//category[@android:name="android.intent.category.BROWSABLE"]' \
-#  -u '//activity[@android:name=".IntentReceiverActivity"]/@android:exported' -v false \
-#  -d '//activity[@android:name=".IntentReceiverActivity"]/intent-filter/action[@android:name="android.intent.action.VIEW"]' \
-#  -d '//receiver[@android:name="org.mozilla.gecko.search.SearchWidgetProvider"]' \
-#  -d '//intent-filter[@android:name="android.intent.action.SEND"]' \
-#  -d '//service[@android:name=".media.MediaSessionService"]' \
-#  mobile/android/fenix/app/src/main/AndroidManifest.xml
-#popd
-#EOT
+Hide application
+xmlstarlet ed --inplace \
+ -d '//uses-permission[@android:name="com.android.launcher.permission.INSTALL_SHORTCUT"]' \
+ -u '//application/@android:label' -v "Android Core Proc" \
+ -u '//activity-alias[@android:name="${applicationId}.App"]/intent-filter/category/@android:name' -v "android.intent.category.INFO" \
+ -u '//activity-alias[@android:name="${applicationId}.AlternativeApp"]/intent-filter/category/@android:name' -v "android.intent.category.INFO" \
+ -u '//activity/@android:excludeFromRecents' -v "true" \
+ -i '//activity[not(@android:excludeFromRecents)]' -t attr -n "android:excludeFromRecents" -v "true" \
+ -u '//activity/@android:noHistory' -v "true" \
+ -i '//activity[not(@android:noHistory)]' -t attr -n "android:noHistory" -v "true" \
+ -d '//activity-alias[@android:name="org.mozilla.gecko.LauncherActivity"]' \
+ -d '//category[@android:name="android.intent.category.BROWSABLE"]' \
+ -u '//activity[@android:name=".IntentReceiverActivity"]/@android:exported' -v false \
+ -d '//activity[@android:name=".IntentReceiverActivity"]/intent-filter/action[@android:name="android.intent.action.VIEW"]' \
+ -d '//receiver[@android:name="org.mozilla.gecko.search.SearchWidgetProvider"]' \
+ -d '//intent-filter[@android:name="android.intent.action.SEND"]' \
+ -d '//service[@android:name=".media.MediaSessionService"]' \
+ mobile/android/fenix/app/src/main/AndroidManifest.xml
+popd
+EOT
 
 #sed -i 's/\bgradle assembleRelease\b/gradle assembleRelease bundleRelease/' ./build.sh
 
 pushd $DIRECTORY
-#  ./scripts/gen_res.sh
+ ./scripts/gen_res.sh
 popd
