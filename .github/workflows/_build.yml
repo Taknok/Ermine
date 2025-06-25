@@ -10,6 +10,10 @@ on:
       app:
         type: string
         default: "com.deeperwire.ermine"
+      version:
+        required: true
+        type: string
+
 
 jobs:
   build:
@@ -130,7 +134,7 @@ jobs:
         run: |
           docker pull registry.gitlab.com/fdroid/docker-executable-fdroidserver:master
           (while true; do df -h; sleep 60; done) &
-          sudo docker run --rm -u 1000:1000 -v $ANDROID_HOME:/opt/android-sdk -v /mnt/fdroiddata:/repo -v /mnt/fdroidserver:/home/vagrant/fdroidserver -e ANDROID_HOME:/opt/android-sdk registry.gitlab.com/fdroid/docker-executable-fdroidserver:master build --latest --verbose ${{ env.APP }}
+          sudo docker run --rm -u 1000:1000 -v $ANDROID_HOME:/opt/android-sdk -v /mnt/fdroiddata:/repo -v /mnt/fdroidserver:/home/vagrant/fdroidserver -e ANDROID_HOME:/opt/android-sdk registry.gitlab.com/fdroid/docker-executable-fdroidserver:master build --verbose ${{ env.APP }}:${{ inputs.version }}
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
