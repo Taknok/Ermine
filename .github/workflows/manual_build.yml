@@ -10,10 +10,28 @@ on:
       app:
         description: 'App to build'
         default: 'com.deeperwire.ermine'
+      version:
+        description: 'The fdroid app version to build'
+        default: 'latest'
 
 jobs:
+  compute:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Compute version
+        id: version
+        run: |
+          if [ ${{ inputs.version }} == "latest" ]; then
+            versionCode=$(yq '.Builds[-1].versionCode' builds.yaml)
+          else
+            versionCode="${{ inputs.version }}"
+          fi
+          echo "VERSIONCODE=$versionCode" >> "$GITHUB_OUTPUT"
+
   build:
+    needs: compute
     uses: ./.github/workflows/_build.yml
     with:
       ref: ${{ inputs.ref }}
       app: ${{ inputs.app }}
+      version: ${{ steps.version.outputs.VERSIONCODE }}
