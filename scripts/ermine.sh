@@ -53,40 +53,40 @@ sed -i '/-e '\''s|\\.firefox|.fennec_fdroid|'\'' \\/c\
 sed -i "s|/android:targetPackage/s/firefox/fennec_fdroid/|/android:targetPackage/s/org.mozilla.firefox/com.deeperwire.ermine/|" prebuild.sh
 
 echo "Replacing file content"
-#find "$DIRECTORY" -type f \
-#  -not -path "*/scripts/*" \
-#  -not -path "*/.git*/*" \
-#  -not -name "paths.sh" \
-#  -exec sed -i '/MozFennec/!s/Fennec/Ermine/g' {} +
-#find "$DIRECTORY" -type f \
-#  -not -path "*/scripts/*" \
-#  -not -path "*/.git*/*" \
-#  -exec sed -i 's/fennec_fdroid/ermine/g' {} +
-#find "$DIRECTORY" -type f \
-#  -not -path "*/scripts/*" \
-#  -not -path "*/.git*/*" \
-#  -exec sed -i 's/fennec/ermine/g' {} +
+find "$DIRECTORY" -type f \
+ -not -path "*/scripts/*" \
+ -not -path "*/.git*/*" \
+ -not -name "paths.sh" \
+ -exec sed -i '/MozFennec/!s/Fennec/Ermine/g' {} +
+find "$DIRECTORY" -type f \
+ -not -path "*/scripts/*" \
+ -not -path "*/.git*/*" \
+ -exec sed -i 's/fennec_fdroid/ermine/g' {} +
+find "$DIRECTORY" -type f \
+ -not -path "*/scripts/*" \
+ -not -path "*/.git*/*" \
+ -exec sed -i 's/fennec/ermine/g' {} +
 
-#find "$DIRECTORY" -type f \
-#  -not -path "*/scripts/*" \
-#  -not -path "*/.git*/*" \
-#  -not -path "*.patch" \
-#  -exec sed -i 's/org\.mozilla/com\.deeperwire/g' {} +
+find "$DIRECTORY" -type f \
+ -not -path "*/scripts/*" \
+ -not -path "*/.git*/*" \
+ -not -path "*.patch" \
+ -exec sed -i 's/org\.mozilla/com\.deeperwire/g' {} +
 
-#find "$DIRECTORY" -type f \
-#  -not -path "*/scripts/*" \
-#  -not -path "*/.git*/*" \
-#  -exec sed -i 's/fennec_dos/ermine/g' {} +
+find "$DIRECTORY" -type f \
+ -not -path "*/scripts/*" \
+ -not -path "*/.git*/*" \
+ -exec sed -i 's/fennec_dos/ermine/g' {} +
 
-# echo "Replacing file name"
-# find "$DIRECTORY" -depth \
-#   -not -path "*/.git*/*" \
-#   -name "*fennec_dos*" \
-#   -execdir bash -c 'mv "$1" "${1//fennec_dos/ermine}"' _ {} \;
-# find "$DIRECTORY" -depth \
-#   -not -path "*/.git*/*" \
-#   -name "*us.spotco*" \
-#   -execdir bash -c 'mv "$1" "${1//us.spotco/com.deeperwire}"' _ {} \;
+echo "Replacing file name"
+find "$DIRECTORY" -depth \
+  -not -path "*/.git*/*" \
+  -name "*fennec_dos*" \
+  -execdir bash -c 'mv "$1" "${1//fennec_dos/ermine}"' _ {} \;
+find "$DIRECTORY" -depth \
+  -not -path "*/.git*/*" \
+  -name "*us.spotco*" \
+  -execdir bash -c 'mv "$1" "${1//us.spotco/com.deeperwire}"' _ {} \;
 
 echo "Adding compilation options"
 sed -i '/cat << EOF > mozconfig/a \
