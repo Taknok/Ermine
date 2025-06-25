@@ -17,6 +17,8 @@ on:
 jobs:
   compute:
     runs-on: ubuntu-latest
+    outputs:
+      VERSIONCODE: ${{ steps.version.outputs.VERSIONCODE }}
     steps:
       - name: Compute version
         id: version
@@ -34,4 +36,4 @@ jobs:
     with:
       ref: ${{ inputs.ref }}
       app: ${{ inputs.app }}
-      version: ${{ steps.version.outputs.VERSIONCODE }}
+      version: ${{ needs.compute.outputs.VERSIONCODE }}
