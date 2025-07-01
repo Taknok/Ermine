@@ -51,7 +51,7 @@ jobs:
     outputs:
       tag_created: ${{ steps.push_tags.outputs.tag_created }}
       TAG: ${{ steps.tag.outputs.TAG }}
-      VERSION:: ${{ steps.version.outputs.VERSION }}
+      VERSION: ${{ steps.version.outputs.VERSION }}
     steps:
       - name: Checkout the current branch
         uses: actions/checkout@v4
@@ -86,7 +86,6 @@ jobs:
 
       - name: Generate missing tags
         run: |
-          echo "${{ steps.version.outputs.VERSION }}"
           ./scripts/gen_tags.sh
 
       - name: Calculate latest tag
