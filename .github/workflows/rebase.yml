@@ -47,6 +47,7 @@ jobs:
     outputs:
       tag_created: ${{ steps.push_tags.outputs.tag_created }}
       TAG: ${{ steps.tag.outputs.TAG }}
+      VERSION:: ${{ steps.version.outputs.VERSION }}
     steps:
       - name: Checkout the current branch
         uses: actions/checkout@v4
@@ -66,6 +67,18 @@ jobs:
       - name: Get build metadata
         run: |
           curl https://gitlab.com/fdroid/fdroiddata/-/raw/master/metadata/org.mozilla.fennec_fdroid.yml --create-dirs -o ./-fdroiddata/metadata/com.deeperwire.ermine.yml
+
+      - name: Set version from yaml if not provided
+        id: version
+        run: |
+          if [ -z "${{ github.event.inputs.version }}" ]; then
+            VERSION=$(yq '.Configs | last | .versionCode' ./-fdroiddata/metadata/com.deeperwire.ermine.yml)
+            echo "Using version from YAML: $VERSION"
+          else
+            VERSION="${{ github.event.inputs.version }}"
+            echo "Using provided version: $VERSION"
+          fi
+          echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Generate missing tags
         run: |
@@ -128,3 +141,4 @@ jobs:
     uses: ./.github/workflows/_build.yml
     with:
       ref: ${{ needs.apply_ermine_onto_local_fennec.outputs.TAG }}-ermine
+      version: ${{ needs.apply_ermine_onto_local_fennec.outputs.VERSION }}
