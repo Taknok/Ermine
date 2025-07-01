@@ -2,6 +2,10 @@ name: Rebase
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        required: true
+        type: string
   schedule:
     - cron: "0 7 * * 6"
 
