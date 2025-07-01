@@ -86,6 +86,7 @@ jobs:
 
       - name: Generate missing tags
         run: |
+          echo "${{ steps.version.outputs.VERSION }}"
           ./scripts/gen_tags.sh
 
       - name: Calculate latest tag
