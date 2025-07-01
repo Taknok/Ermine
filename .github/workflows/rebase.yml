@@ -76,7 +76,7 @@ jobs:
         id: version
         run: |
           if [ -z "${{ github.event.inputs.version }}" ]; then
-            VERSION=$(yq '.Configs | last | .versionCode' ./-fdroiddata/metadata/com.deeperwire.ermine.yml)
+            VERSION=$(yq '.Configs.[-1].versionCode' ./-fdroiddata/metadata/com.deeperwire.ermine.yml)
             echo "Using version from YAML: $VERSION"
           else
             VERSION="${{ github.event.inputs.version }}"
