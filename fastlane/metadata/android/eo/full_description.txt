@@ -8,4 +8,4 @@
 <li>eblo samtempigi langetojn, legosignojn, pasvortojn, ktp. inter pluraj aparatoj per Spegulado («Firefox Sync»)</li>
 <li>eblo bildo en bildo</li>
 </ul>
-<p>Fennec F-Droid estas bazita sur la plej aktuala eldono de Mozilla Firefox. Ĝi estas senigita de fermitkodaj binaraĵoj kaj telemezurado, tamen plue konektiĝas kun Mozilla-servoj, kiuj povas spuri uzantojn.</p>
+<p>Ermine F-Droid estas bazita sur la plej aktuala eldono de Mozilla Firefox. Ĝi estas senigita de fermitkodaj binaraĵoj kaj telemezurado, tamen plue konektiĝas kun Mozilla-servoj, kiuj povas spuri uzantojn.</p>
