@@ -1,0 +1,11 @@
+<ul>
+<li>Malaking koleksyon ng mga addon, kasama ang mga ad blocker.</li>
+<li>Pinahusay na proteksyon sa pagsubaybay.</li>
+<li>Available sa isang pindot ang Pribadong mode.</li>
+<li>Nako-customize na start screen na layout at posisyon navigation bar (itaas o ibaba).</li>
+<li>Madilim na tema.</li>
+<li>Koleksyon ng mga tab.</li>
+<li>Pag-sync ng mga tab, bookmark, password, atbp. sa mga maraming device sa pamamagitan ng Firefox Sync.</li>
+<li>Picture-in-picture mode.</li>
+</ul>
+<p>Ang Fennec F-Droid ay nakabase sa napapanahong bersyon ng Mozilla Firefox. May mga proprietary na bahagi na tinanggal, ngunit kumokonekta pa rin sa ilang mga serbisyo ng Mozilla na maaaring subaybayan ang mga user.</p>
