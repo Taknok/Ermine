@@ -190,6 +190,8 @@ localize_maven
 sed -i -e '/^    mavenLocal/{n;d}' tools/nimbus-gradle-plugin/build.gradle
 # Fail on use of prebuilt binary
 sed -i 's|https://|hxxps://|' tools/nimbus-gradle-plugin/src/main/groovy/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.groovy
+# Fail on remote configuration download
+sed -i -e 's|https://|hxxps://|' components/remote_settings/src/*.rs
 popd
 
 
@@ -232,6 +234,9 @@ patch -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-liberate.patch"
 # Disable domains suggestions: the list is very out of date, some of those
 # domains have been squatted and serve ads or malware
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-disable-shipped-domains.patch"
+
+# Disable search engines configuration fetching from a Mozilla server
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-disable-remote-search-configuration.patch"
 
 # Fix v125 aar output not including native libraries
 sed -i \
