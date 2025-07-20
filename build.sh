@@ -91,14 +91,14 @@ read -ra locales < "$patches/locales"
 ./mach package-multi-locale --locales "${locales[@]}"
 MOZ_CHROME_MULTILOCALE=${locales[*]}
 export MOZ_CHROME_MULTILOCALE
-gradle :geckoview:publishReleasePublicationToMavenLocal
-gradle :exoplayer2:publishReleasePublicationToMavenLocal
+gradle -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal
+gradle -x javadocRelease :exoplayer2:publishReleasePublicationToMavenLocal
 popd
 
 pushd "$android_components"
 # Publish concept-fetch (required by A-S) with auto-publication disabled,
 # otherwise automatically triggered publication of A-S will fail
-gradle :concept-fetch:publishToMavenLocal
+gradle :components:concept-fetch:publishToMavenLocal
 # Enable the auto-publication workflow now that concept-fetch is published
 echo "autoPublish.application-services.dir=$application_services" >> local.properties
 gradle publishToMavenLocal
