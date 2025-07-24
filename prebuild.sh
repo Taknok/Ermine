@@ -253,8 +253,8 @@ sed -i \
     mobile/android/gradle.py
 
 # Patch the LLVM source code
-# Search clang- in https://android.googlesource.com/platform/ndk/+/refs/tags/ndk-r27/ndk/toolchains.py
-LLVM_SVN='522817'
+# Search clang- in https://android.googlesource.com/platform/ndk/+/refs/tags/ndk-r28b/ndk/toolchains.py
+LLVM_SVN='530567'
 python3 "$toolchain_utils/llvm_tools/patch_manager.py" \
     --svn_version "$LLVM_SVN" \
     --patch_metadata_file "$llvm_android/patches/PATCHES.json" \
