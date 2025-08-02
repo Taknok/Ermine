@@ -80,10 +80,6 @@ export NSS_STATIC=1
 gradle :tooling-nimbus-gradle:publishToMavenLocal
 popd
 
-pushd "$bundletool"
-gradle assemble
-popd
-
 pushd "$mozilla_release"
 ./mach build
 ./mach package

@@ -204,18 +204,13 @@ patch -p1 --no-backup-if-mismatch --quiet < "$mozilla_release/taskcluster/script
 popd
 
 #
-# Bundletool
-#
-
-pushd "$bundletool"
-localize_maven
-popd
-
-#
 # GeckoView
 #
 
 pushd "$mozilla_release"
+# Remove unneeded dependecies
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-dependencies.patch"
+
 # Remove Mozilla repositories substitution and explicitly add the required ones
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-localize_maven.patch"
 
@@ -260,20 +255,12 @@ python3 "$toolchain_utils/llvm_tools/patch_manager.py" \
     --patch_metadata_file "$llvm_android/patches/PATCHES.json" \
     --src_path "$llvm"
 
-# Point to our build of Bundletool
-sed -i \
-    -e "/bundletool_path = /s|toolchains_base_dir|\"$bundletool/build/libs\"|" \
-    build/moz.configure/android-sdk.configure
-
 # Fail on use of prebuilt binary
 sed -i 's|https://github.com|hxxps://github.com|' python/mozboot/mozboot/android.py
 
 # Make the build system think we installed the emulator and an AVD
 mkdir -p "$ANDROID_HOME/emulator"
 mkdir -p "$HOME/.mozbuild/android-device/avd"
-
-# Do not check the "emulator" utility which is obviously absent in the empty directory we created above
-sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.configure
 
 # Configure
 cat << EOF > mozconfig

@@ -1,0 +1,54 @@
+diff --git a/build/moz.configure/android-sdk.configure b/build/moz.configure/android-sdk.configure
+index e474b72e3642..8540768625d7 100644
+--- a/build/moz.configure/android-sdk.configure
++++ b/build/moz.configure/android-sdk.configure
+@@ -239,41 +239,6 @@ def android_emulator(sdk_root, android_os_info, want_bootstrap, avd_manifest):
+     )
+ 
+ 
+-@depends(toolchains_base_dir, "--help")
+-@imports(_from="os.path", _import="isdir")
+-def bundletool_default_path(toolchains_base_dir, _):
+-    return os.path.join(toolchains_base_dir, "bundletool.jar")
+-
+-
+-option(
+-    env="ANDROID_BUNDLETOOL_PATH",
+-    nargs=1,
+-    help="Optional path to a bundletool.jar (like ~/.mozbuild/bundletool.jar). If unset, the default location is used",
+-)
+-
+-
+-@depends("ANDROID_BUNDLETOOL_PATH", bundletool_default_path, want_bootstrap)
+-@checking("for Bundletool")
+-@imports(_from="os.path", _import="exists")
+-@imports(_from="mozboot.android", _import="ensure_bundletool")
+-def android_bundletool(bundletool_path, bundletool_default_path, want_bootstrap):
+-    if bundletool_path:
+-        return [bundletool_path[0]]
+-
+-    if exists(bundletool_default_path):
+-        return [bundletool_default_path]
+-
+-    if not want_bootstrap("android-sdk"):
+-        die(
+-            "You must install Bundletool.  Try |mach bootstrap|.  (Looked for %s)"
+-            % bundletool_default_path
+-        )
+-
+-    ensure_bundletool()
+-
+-    return [bundletool_default_path]
+-
+-
+ @depends(toolchains_base_dir, "--help")
+ @imports(_from="os.path", _import="isdir")
+ def avd_default_path(toolchains_base_dir, _):
+@@ -353,7 +318,6 @@ set_config("ANDROID_SDK_ROOT", android_sdk_root)
+ 
+ check_android_tools("zipalign", android_build_tools)
+ check_android_tools("adb", android_platform_tools)
+-check_android_tools("emulator", android_emulator)
+ check_file("android.jar", android_platforms)
+ 
+ set_config("ANDROID_BUILD_TOOLS_VERSION", android_sdk_version.build_tools_version)
