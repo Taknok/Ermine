@@ -504,93 +504,6 @@ index 000000000000..7efa1c6804c6
 +public interface OnAttributionChangedListener {
 +    void onAttributionChanged(AdjustAttribution attribution);
 +}
-diff --git a/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/FakeReviewManager.java b/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/FakeReviewManager.java
-new file mode 100644
-index 000000000000..0e6e73cc6248
---- /dev/null
-+++ b/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/FakeReviewManager.java
-@@ -0,0 +1,24 @@
-+/* This Source Code Form is subject to the terms of the Mozilla Public
-+ * License, v. 2.0. If a copy of the MPL was not distributed with this
-+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-+
-+package com.google.android.play.core.review;
-+
-+import android.app.Activity;
-+import android.content.Context;
-+import com.google.android.gms.tasks.Task;
-+
-+public class FakeReviewManager implements ReviewManager {
-+
-+    public FakeReviewManager(Context context) {
-+    }
-+
-+    public Task<Void> launchReviewFlow(Activity activity, ReviewInfo reviewInfo) {
-+        return null;
-+    }
-+
-+    public Task<ReviewInfo> requestReviewFlow() {
-+        return null;
-+    }
-+
-+}
-diff --git a/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/ReviewInfo.java b/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/ReviewInfo.java
-new file mode 100644
-index 000000000000..04cbef9f1395
---- /dev/null
-+++ b/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/ReviewInfo.java
-@@ -0,0 +1,10 @@
-+/* This Source Code Form is subject to the terms of the Mozilla Public
-+ * License, v. 2.0. If a copy of the MPL was not distributed with this
-+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-+
-+package com.google.android.play.core.review;
-+
-+import android.os.Parcelable;
-+
-+public abstract class ReviewInfo extends Object implements Parcelable {
-+}
-diff --git a/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/ReviewManager.java b/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/ReviewManager.java
-new file mode 100644
-index 000000000000..dd2c36c50411
---- /dev/null
-+++ b/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/ReviewManager.java
-@@ -0,0 +1,14 @@
-+/* This Source Code Form is subject to the terms of the Mozilla Public
-+ * License, v. 2.0. If a copy of the MPL was not distributed with this
-+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-+
-+package com.google.android.play.core.review;
-+
-+import android.app.Activity;
-+import com.google.android.gms.tasks.Task;
-+
-+public interface ReviewManager {
-+
-+    abstract Task<Void> launchReviewFlow(Activity activity, ReviewInfo reviewInfo);
-+    abstract Task<ReviewInfo> requestReviewFlow();
-+}
-diff --git a/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/ReviewManagerFactory.java b/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/ReviewManagerFactory.java
-new file mode 100644
-index 000000000000..9bc9c5841f23
---- /dev/null
-+++ b/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/ReviewManagerFactory.java
-@@ -0,0 +1,15 @@
-+/* This Source Code Form is subject to the terms of the Mozilla Public
-+ * License, v. 2.0. If a copy of the MPL was not distributed with this
-+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-+
-+package com.google.android.play.core.review;
-+
-+import android.content.Context;
-+
-+public class ReviewManagerFactory {
-+
-+    static public ReviewManager create(Context context) {
-+        return new FakeReviewManager(context);
-+    }
-+
-+}
 diff --git a/mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java b/mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java
 new file mode 100644
 index 000000000000..4d5fd8153d21
@@ -763,6 +676,26 @@ index 3a29b0a03cb3..5c223d6744e9 100644
  
          screenOrientationFeature.set(
              feature = ScreenOrientationFeature(
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
+index 2c8c8a5e8cb3..b1846b939b3b 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
+@@ -10,7 +10,6 @@ import android.content.Context
+ import androidx.compose.runtime.Composable
+ import androidx.compose.ui.platform.LocalContext
+ import androidx.core.app.NotificationManagerCompat
+-import com.google.android.play.core.review.ReviewManagerFactory
+ import mozilla.components.feature.addons.AddonManager
+ import mozilla.components.feature.addons.amo.AMOAddonsProvider
+ import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
+@@ -222,7 +221,6 @@ class Components(private val context: Context) {
+ 
+     val playStoreReviewPromptController by lazyMonitored {
+         PlayStoreReviewPromptController(
+-            manager = ReviewManagerFactory.create(context),
+             numberOfAppLaunches = { settings.numberOfAppLaunches },
+         )
+     }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 index 6875486c726e..e6c6619e511f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
@@ -784,6 +717,44 @@ index 6875486c726e..e6c6619e511f 100644
 +                        SupportUtils.EFF_URL,
                      ),
                  )
+ 
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/PlayStoreReviewPromptController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/PlayStoreReviewPromptController.kt
+index c65df5de4a7f..56e27281266c 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/PlayStoreReviewPromptController.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/PlayStoreReviewPromptController.kt
+@@ -6,8 +6,6 @@ package org.mozilla.fenix.components
+ 
+ import android.app.Activity
+ import androidx.annotation.VisibleForTesting
+-import com.google.android.play.core.review.ReviewInfo
+-import com.google.android.play.core.review.ReviewManager
+ import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.withContext
+ import org.mozilla.fenix.GleanMetrics.ReviewPrompt
+@@ -17,24 +15,11 @@ import java.util.Locale
+ 
+ /** Wraps the Play Store In-App Review API. */
+ class PlayStoreReviewPromptController(
+-    private val manager: ReviewManager,
+     private val numberOfAppLaunches: () -> Int,
+ ) {
+ 
+     /** Launch the in-app review flow, unless we've hit the quota. */
+     suspend fun tryPromptReview(activity: Activity) {
+-        val flow = withContext(Dispatchers.IO) { manager.requestReviewFlow() }
+-
+-        flow.addOnCompleteListener {
+-            if (it.isSuccessful) {
+-                manager.launchReviewFlow(activity, it.result)
+-                recordReviewPromptEvent(
+-                    it.result.toString(),
+-                    numberOfAppLaunches(),
+-                    Date(),
+-                )
+-            }
+-        }
+     }
+ }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
 index e1c3ed4d040f..8ecab89d49b7 100644
