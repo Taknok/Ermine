@@ -20,11 +20,15 @@ jobs:
     outputs:
       VERSIONCODE: ${{ steps.version.outputs.VERSIONCODE }}
     steps:
+      - name: Checkout the current branch
+        uses: actions/checkout@v4
+        with:
+          ref: latest
+
       - name: Compute version
         id: version
         run: |
           if [ "${{ inputs.version }}" == "latest" ]; then
-            git checkout latest
             versionCode=$(yq '.Builds[-1].versionCode' ./-fdroiddata/metadata/com.deeperwire.ermine.yml)
           else
             versionCode="${{ inputs.version }}"
