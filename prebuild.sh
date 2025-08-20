@@ -43,7 +43,7 @@ function localize_maven {
 "$rustup"/rustup-init.sh -y --no-update-default-toolchain
 # shellcheck disable=SC1090,SC1091
 source "$HOME/.cargo/env"
-rustup default 1.87.0
+rustup default 1.88.0
 
 #
 # Fenix
@@ -181,7 +181,7 @@ pushd "$application_services"
 # Remove Mozilla repositories substitution and explicitly add the required ones
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/a-c-localize_maven.patch"
 # Break the dependency on older A-C
-sed -i -e '/android-components = /s/"139\.0\.4"/"141.0.2"/' gradle/libs.versions.toml
+sed -i -e '/android-components = /s/"140\.0"/"142.0"/' gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 sed -i -e '/content {/,/}/d' build.gradle
