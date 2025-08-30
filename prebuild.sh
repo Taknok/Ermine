@@ -55,7 +55,7 @@ pushd "$fenix"
 sed -i \
     -e 's|\.firefox|.fennec_fdroid|' \
     -e "s/Config.releaseVersionName(project)/'$1'/" \
-    -e "s/Config.generateFennecVersionCode(abi, isAppBundle )/$2/" \
+    -e "s/Config.generateFennecVersionCode(abi)/$2/" \
     app/build.gradle
 sed -i \
     -e '/android:targetPackage/s/firefox/fennec_fdroid/' \
@@ -181,7 +181,7 @@ pushd "$application_services"
 # Remove Mozilla repositories substitution and explicitly add the required ones
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/a-c-localize_maven.patch"
 # Break the dependency on older A-C
-sed -i -e '/android-components = /s/"140\.0"/"142.0"/' gradle/libs.versions.toml
+sed -i -e '/android-components = /s/"140\.0"/"142.0.1"/' gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 sed -i -e '/content {/,/}/d' build.gradle
