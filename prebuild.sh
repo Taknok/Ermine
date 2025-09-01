@@ -271,12 +271,10 @@ mkdir -p "$HOME/.mozbuild/android-device/avd"
 cat << EOF > mozconfig
 ac_add_options --disable-crashreporter
 ac_add_options --disable-debug
-ac_add_options --disable-nodejs
 ac_add_options --disable-tests
 ac_add_options --disable-updater
 ac_add_options --enable-application=mobile/android
 ac_add_options --enable-release
-ac_add_options --enable-minify=properties # JS minification breaks addons
 ac_add_options --enable-update-channel=release
 ac_add_options --target=$target
 ac_add_options --with-android-ndk="$ANDROID_NDK"
