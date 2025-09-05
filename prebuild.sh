@@ -306,6 +306,10 @@ pref("media.gmp-manager.url.override", "data:text/plain,");
 
 // Disable openh264 if it is already downloaded
 pref("media.gmp-gmpopenh264.enabled", false);
+
+// Disable RemoteSettingsCrashPull
+pref("browser.crashReports.crashPull", false, locked);
+pref("browser.crashReports.requestedNeverShowAgain", true, locked);
 EOF
 
 popd
