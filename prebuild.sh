@@ -238,6 +238,9 @@ patch -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-disable-shipped-doma
 # Disable search engines configuration fetching from a Mozilla server
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-disable-remote-search-configuration.patch"
 
+# Remove the use of RemoteSettingsCrashPull, the part of the crash reporter
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-disable-crashpull.patch"
+
 # Fix v125 aar output not including native libraries
 sed -i \
     -e 's/singleVariant("debug")/singleVariant("release")/' \
