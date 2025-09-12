@@ -1,16 +1,16 @@
 diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
-index 447a52b8a4b3..bb388193a3a5 100644
+index f005b5872f0b..c0c960f3e2f3 100644
 --- a/gradle/libs.versions.toml
 +++ b/gradle/libs.versions.toml
 @@ -105,6 +105,7 @@ adjust = "5.4.1"
  okhttp = "4.12.0"
  okio = "3.15.0"
- sentry = "8.17.0"
+ sentry = "8.20.0"
 +unifiedpush = "3.0.7"
  
  commons-exec = "1.3"
  tomlj = "1.1.0"
-@@ -239,6 +240,7 @@ thirdparty-okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.r
+@@ -240,6 +241,7 @@ thirdparty-okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.r
  thirdparty-okhttp-urlconnection = { group = "com.squareup.okhttp3", name = "okhttp-urlconnection", version.ref = "okhttp" }
  thirdparty-okio = { group = "com.squareup.okio", name = "okio", version.ref = "okio" }
  thirdparty-sentry = { group = "io.sentry", name = "sentry-android", version.ref = "sentry" }
@@ -270,7 +270,7 @@ index 12e4343bec3d..b939f3215195 100644
      implementation libs.androidx.work.runtime
      implementation libs.androidx.lifecycle.process
 diff --git a/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/FxaPushSupportFeature.kt b/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/FxaPushSupportFeature.kt
-index 92634857c598..918fd64145e4 100644
+index d922dadc4ae2..b162534c8292 100644
 --- a/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/FxaPushSupportFeature.kt
 +++ b/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/FxaPushSupportFeature.kt
 @@ -17,6 +17,11 @@ import kotlinx.coroutines.GlobalScope
@@ -293,7 +293,7 @@ index 92634857c598..918fd64145e4 100644
 -import mozilla.components.feature.push.AutoPushSubscription
 -import mozilla.components.feature.push.PushScope
  import mozilla.components.service.fxa.manager.FxaAccountManager
- import mozilla.components.service.fxa.manager.ext.withConstellation
+ import mozilla.components.service.fxa.manager.ext.withConstellationIfExists
  import mozilla.components.support.base.log.logger.Logger
 @@ -46,7 +48,7 @@ internal const val PREF_FXA_SCOPE = "fxa_push_scope"
   *
@@ -449,12 +449,12 @@ index 9bd630332df3..da6dd707af1e 100644
  
      @Before
 diff --git a/mobile/android/android-components/components/feature/accounts-push/src/test/java/mozilla/components/feature/accounts/push/ConstellationObserverTest.kt b/mobile/android/android-components/components/feature/accounts-push/src/test/java/mozilla/components/feature/accounts/push/ConstellationObserverTest.kt
-index 0b1fc0e3f06e..8ee6b9c9bd7a 100644
+index c8aeccb132c0..7ff584763dfe 100644
 --- a/mobile/android/android-components/components/feature/accounts-push/src/test/java/mozilla/components/feature/accounts/push/ConstellationObserverTest.kt
 +++ b/mobile/android/android-components/components/feature/accounts-push/src/test/java/mozilla/components/feature/accounts/push/ConstellationObserverTest.kt
-@@ -7,13 +7,13 @@ package mozilla.components.feature.accounts.push
+@@ -6,13 +6,13 @@ package mozilla.components.feature.accounts.push
+ 
  import android.content.Context
- import kotlinx.coroutines.ExperimentalCoroutinesApi
  import mozilla.components.concept.base.crash.CrashReporting
 +import mozilla.components.concept.push.PushSubscription
  import mozilla.components.concept.sync.ConstellationState
@@ -467,7 +467,7 @@ index 0b1fc0e3f06e..8ee6b9c9bd7a 100644
  import mozilla.components.support.test.any
  import mozilla.components.support.test.eq
  import mozilla.components.support.test.mock
-@@ -148,7 +148,7 @@ class ConstellationObserverTest {
+@@ -146,7 +146,7 @@ class ConstellationObserverTest {
          verify(verifier).increment()
      }
  
@@ -476,7 +476,7 @@ index 0b1fc0e3f06e..8ee6b9c9bd7a 100644
          scope = "testScope",
          endpoint = "https://example.com/foobar",
          publicKey = "",
-@@ -160,7 +160,7 @@ class ConstellationObserverTest {
+@@ -158,7 +158,7 @@ class ConstellationObserverTest {
      private fun whenSubscribe(): OngoingStubbing<Unit>? {
          return `when`(push.subscribe(any(), nullable(), any(), any())).thenAnswer {
              // Invoke the `onSubscribe` lambda with a fake subscription.
@@ -489,13 +489,13 @@ diff --git a/mobile/android/android-components/components/feature/accounts-push/
 similarity index 87%
 rename from mobile/android/android-components/components/feature/accounts-push/src/test/java/mozilla/components/feature/accounts/push/AutoPushObserverTest.kt
 rename to mobile/android/android-components/components/feature/accounts-push/src/test/java/mozilla/components/feature/accounts/push/FxaPushObserverTest.kt
-index 4fd2002fb16a..cf8123c97049 100644
+index 0ebac535e42a..2bd9a55f42cc 100644
 --- a/mobile/android/android-components/components/feature/accounts-push/src/test/java/mozilla/components/feature/accounts/push/AutoPushObserverTest.kt
 +++ b/mobile/android/android-components/components/feature/accounts-push/src/test/java/mozilla/components/feature/accounts/push/FxaPushObserverTest.kt
-@@ -5,12 +5,12 @@
+@@ -4,12 +4,12 @@
+ 
  package mozilla.components.feature.accounts.push
  
- import kotlinx.coroutines.ExperimentalCoroutinesApi
 +import mozilla.components.concept.push.PushSubscription
  import mozilla.components.concept.sync.ConstellationState
  import mozilla.components.concept.sync.Device
@@ -506,17 +506,17 @@ index 4fd2002fb16a..cf8123c97049 100644
  import mozilla.components.service.fxa.manager.FxaAccountManager
  import mozilla.components.support.test.any
  import mozilla.components.support.test.mock
-@@ -26,7 +26,7 @@ import org.mockito.Mockito.`when`
+@@ -24,7 +24,7 @@ import org.mockito.Mockito.verifyNoInteractions
+ import org.mockito.Mockito.`when`
  import org.mockito.stubbing.OngoingStubbing
  
- @ExperimentalCoroutinesApi // for runTestOnMain
 -class AutoPushObserverTest {
 +class FxaPushObserverTest {
      @get:Rule
      val coroutinesTestRule = MainCoroutineRule()
  
-@@ -38,7 +38,7 @@ class AutoPushObserverTest {
-     @ExperimentalCoroutinesApi
+@@ -35,7 +35,7 @@ class AutoPushObserverTest {
+ 
      @Test
      fun `messages are forwarded to account manager`() = runTestOnMain {
 -        val observer = AutoPushObserver(manager, mock(), "test")
@@ -524,7 +524,7 @@ index 4fd2002fb16a..cf8123c97049 100644
  
          `when`(manager.authenticatedAccount()).thenReturn(account)
          `when`(account.deviceConstellation()).thenReturn(constellation)
-@@ -51,7 +51,7 @@ class AutoPushObserverTest {
+@@ -48,7 +48,7 @@ class AutoPushObserverTest {
  
      @Test
      fun `account manager is not invoked if no account is available`() = runTestOnMain {
@@ -533,7 +533,7 @@ index 4fd2002fb16a..cf8123c97049 100644
  
          observer.onMessageReceived("test", "foobar".toByteArray())
  
-@@ -62,7 +62,7 @@ class AutoPushObserverTest {
+@@ -59,7 +59,7 @@ class AutoPushObserverTest {
  
      @Test
      fun `messages are not forwarded to account manager if they are for a different scope`() = runTestOnMain {
@@ -542,8 +542,8 @@ index 4fd2002fb16a..cf8123c97049 100644
  
          observer.onMessageReceived("test", "foobar".toByteArray())
  
-@@ -73,7 +73,7 @@ class AutoPushObserverTest {
-     @ExperimentalCoroutinesApi
+@@ -69,7 +69,7 @@ class AutoPushObserverTest {
+ 
      @Test
      fun `subscription changes are forwarded to account manager`() = runTestOnMain {
 -        val observer = AutoPushObserver(manager, pushFeature, "test")
@@ -551,7 +551,7 @@ index 4fd2002fb16a..cf8123c97049 100644
  
          whenSubscribe()
  
-@@ -93,7 +93,7 @@ class AutoPushObserverTest {
+@@ -89,7 +89,7 @@ class AutoPushObserverTest {
  
      @Test
      fun `do nothing if there is no account manager`() = runTestOnMain {
@@ -560,7 +560,7 @@ index 4fd2002fb16a..cf8123c97049 100644
  
          whenSubscribe()
  
-@@ -105,7 +105,7 @@ class AutoPushObserverTest {
+@@ -101,7 +101,7 @@ class AutoPushObserverTest {
  
      @Test
      fun `subscription changes are not forwarded to account manager if they are for a different scope`() = runTestOnMain {
@@ -569,7 +569,7 @@ index 4fd2002fb16a..cf8123c97049 100644
  
          `when`(manager.authenticatedAccount()).thenReturn(account)
          `when`(account.deviceConstellation()).thenReturn(constellation)
-@@ -120,8 +120,8 @@ class AutoPushObserverTest {
+@@ -116,8 +116,8 @@ class AutoPushObserverTest {
      private fun whenSubscribe(): OngoingStubbing<Unit>? {
          return `when`(pushFeature.subscribe(any(), nullable(), any(), any())).thenAnswer {
              // Invoke the `onSubscribe` lambda with a fake subscription.
@@ -824,10 +824,10 @@ index e4bf8170af35..eaeb45c31426 100644
          endpoint = subscriptionInfo.endpoint,
          authKey = subscriptionInfo.keys.auth,
 diff --git a/mobile/android/android-components/components/feature/push/src/test/java/mozilla/components/feature/push/AutoPushFeatureTest.kt b/mobile/android/android-components/components/feature/push/src/test/java/mozilla/components/feature/push/AutoPushFeatureTest.kt
-index f6d49600f69d..9990aea482dc 100644
+index fd2c115f6610..b71cb485e4c7 100644
 --- a/mobile/android/android-components/components/feature/push/src/test/java/mozilla/components/feature/push/AutoPushFeatureTest.kt
 +++ b/mobile/android/android-components/components/feature/push/src/test/java/mozilla/components/feature/push/AutoPushFeatureTest.kt
-@@ -20,7 +20,9 @@ import mozilla.appservices.push.SubscriptionInfo
+@@ -19,7 +19,9 @@ import mozilla.appservices.push.SubscriptionInfo
  import mozilla.appservices.push.SubscriptionResponse
  import mozilla.components.concept.base.crash.CrashReporting
  import mozilla.components.concept.push.PushError
@@ -837,7 +837,7 @@ index f6d49600f69d..9990aea482dc 100644
  import mozilla.components.feature.push.AutoPushFeature.Companion.PREFERENCE_NAME
  import mozilla.components.feature.push.AutoPushFeature.Companion.PREF_TOKEN
  import mozilla.components.support.test.any
-@@ -56,7 +58,7 @@ class AutoPushFeatureTest {
+@@ -54,7 +56,7 @@ class AutoPushFeatureTest {
      @Test
      fun `initialize starts push service`() {
          val service: PushService = mock()
@@ -846,7 +846,7 @@ index f6d49600f69d..9990aea482dc 100644
          val feature = AutoPushFeature(testContext, service, config)
          feature.connection = connection
  
-@@ -126,7 +128,7 @@ class AutoPushFeatureTest {
+@@ -124,7 +126,7 @@ class AutoPushFeatureTest {
          val encryptedMessage: Map<String, String> = mock()
          val owner: LifecycleOwner = mock()
          val lifecycle: Lifecycle = mock()
@@ -855,7 +855,7 @@ index f6d49600f69d..9990aea482dc 100644
          whenever(owner.lifecycle).thenReturn(lifecycle)
          whenever(lifecycle.currentState).thenReturn(Lifecycle.State.STARTED)
          whenever(connection.decrypt(any()))
-@@ -172,7 +174,7 @@ class AutoPushFeatureTest {
+@@ -170,7 +172,7 @@ class AutoPushFeatureTest {
  
      @Test
      fun `subscribe invokes error callback`() = runTestOnMain {
@@ -864,7 +864,7 @@ index f6d49600f69d..9990aea482dc 100644
          var invoked = false
          var errorInvoked = false
          val feature = AutoPushFeature(testContext, mock(), mock(), coroutineContext)
-@@ -319,7 +321,7 @@ class AutoPushFeatureTest {
+@@ -317,7 +319,7 @@ class AutoPushFeatureTest {
          val connection: PushManagerInterface = mock()
          val owner: LifecycleOwner = mock()
          val lifecycle: Lifecycle = mock()
@@ -873,7 +873,7 @@ index f6d49600f69d..9990aea482dc 100644
          val feature = AutoPushFeature(testContext, mock(), mock(), coroutineContext)
          whenever(connection.verifyConnection()).thenReturn(emptyList())
          feature.connection = connection
-@@ -446,7 +448,7 @@ class AutoPushFeatureTest {
+@@ -444,7 +446,7 @@ class AutoPushFeatureTest {
  
      @Test
      fun `asserts PushConfig's default values`() {
@@ -2501,7 +2501,7 @@ index 000000000000..3f67ea5ac1bf
 @@ -0,0 +1 @@
 +sdk=35
 diff --git a/mobile/android/fenix/.buildconfig.yml b/mobile/android/fenix/.buildconfig.yml
-index 0620fba71e2a..0bc8fec59f97 100644
+index 4d40600921c1..bf84bd36c5bf 100644
 --- a/mobile/android/fenix/.buildconfig.yml
 +++ b/mobile/android/fenix/.buildconfig.yml
 @@ -44,6 +44,7 @@ projects:
@@ -2513,10 +2513,10 @@ index 0620fba71e2a..0bc8fec59f97 100644
      - components:feature-qr
      - components:feature-readerview
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index 029784efad3b..8e5aff69687c 100644
+index 17f4dab078da..27ca7d09201d 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -600,6 +600,7 @@ dependencies {
+@@ -591,6 +591,7 @@ dependencies {
      implementation project(':components:feature-media')
      implementation project(':components:feature-prompts')
      implementation project(':components:feature-push')
@@ -2525,7 +2525,7 @@ index 029784efad3b..8e5aff69687c 100644
      implementation project(':components:feature-pwa')
      implementation project(':components:feature-qr')
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-index f257944aff17..973fe20e488b 100644
+index 9572ba20614b..065ce489744b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 @@ -38,6 +38,11 @@ object FeatureFlags {
@@ -2541,10 +2541,10 @@ index f257944aff17..973fe20e488b 100644
       * Enables the Unified Trust Panel.
       */
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index b07cadf1e67a..f3f04ed2e7db 100644
+index 5340aa5258e1..942978ad5704 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -38,7 +38,6 @@ import mozilla.components.browser.storage.sync.GlobalPlacesDependencyProvider
+@@ -39,7 +39,6 @@ import mozilla.components.browser.storage.sync.GlobalPlacesDependencyProvider
  import mozilla.components.concept.base.crash.Breadcrumb
  import mozilla.components.concept.engine.webextension.WebExtension
  import mozilla.components.concept.engine.webextension.isUnsupported
@@ -2552,7 +2552,7 @@ index b07cadf1e67a..f3f04ed2e7db 100644
  import mozilla.components.concept.storage.FrecencyThresholdOption
  import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
  import mozilla.components.feature.addons.update.GlobalAddonDependencyProvider
-@@ -488,9 +487,6 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -482,9 +481,6 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
          components.push.feature?.let {
              logger.info("AutoPushFeature is configured, initializing it...")
  
@@ -2739,7 +2739,7 @@ index f99ef999cfa7..dc3990dd6fe7 100644
 +    }
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/push/PushFxaIntegration.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/push/PushFxaIntegration.kt
-index 3df203e6e7fa..fb3be1c80df2 100644
+index f25cf4442ef1..73f4abcee164 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/push/PushFxaIntegration.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/push/PushFxaIntegration.kt
 @@ -8,13 +8,14 @@ import kotlinx.coroutines.CoroutineScope
@@ -2757,7 +2757,7 @@ index 3df203e6e7fa..fb3be1c80df2 100644
 -import mozilla.components.feature.push.AutoPushFeature
 -import mozilla.components.feature.push.PushScope
  import mozilla.components.service.fxa.manager.FxaAccountManager
- import mozilla.components.service.fxa.manager.ext.withConstellation
+ import mozilla.components.service.fxa.manager.ext.withConstellationIfExists
  import org.mozilla.fenix.components.BackgroundServices
 @@ -54,7 +55,7 @@ import org.mozilla.fenix.components.Push
   * assurances, and most importantly, maintainable.
@@ -2835,11 +2835,11 @@ index 6681840f107b..1e1e56295a0e 100644
      publicKey = this.publicKey.toDecodedByteArray(),
      endpoint = this.endpoint,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index 9113dc53a9e6..38ce52a7d14c 100644
+index b2b40dd764d0..1b6ea7c0d815 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-@@ -75,6 +75,12 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
-             onPreferenceChangeListener = SharedPreferenceUpdater()
+@@ -106,6 +106,12 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+             }
          }
  
 +        requirePreference<SwitchPreference>(R.string.pref_key_enable_unifiedpush).apply {
@@ -2848,9 +2848,9 @@ index 9113dc53a9e6..38ce52a7d14c 100644
 +            onPreferenceChangeListener = SharedPreferenceUpdater()
 +        }
 +
-         requirePreference<SwitchPreference>(R.string.pref_key_use_new_bookmarks_ui).apply {
-             isVisible = true
-             isChecked = context.settings().useNewBookmarks
+         requirePreference<SwitchPreference>(R.string.pref_key_enable_address_sync).apply {
+             isVisible = Config.channel.isNightlyOrDebug
+             isChecked = context.settings().isAddressSyncEnabled
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 index 03d80ed014b6..588e0c64b658 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
@@ -2925,10 +2925,10 @@ index 03d80ed014b6..588e0c64b658 100644
      }
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 3fa564af49e6..8265fdc8064f 100644
+index f0eeec863de1..547d3c5a8a7e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1971,6 +1971,22 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2036,6 +2036,22 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          }
      }
  
@@ -2952,20 +2952,20 @@ index 3fa564af49e6..8265fdc8064f 100644
       * Indicates if the onboarding feature is enabled.
       */
 diff --git a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-index 5123f89ee524..bf902250c9ee 100644
+index af818da52083..c40d5165ac1a 100644
 --- a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
 +++ b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-@@ -422,6 +422,8 @@
-     <string name="pref_key_enable_composable_toolbar" translatable="false">pref_key_enable_composable_toolbar</string>"
-     <string name="pref_key_enable_toolbar_redesign" translatable="false">pref_key_enable_toolbar_redesign</string>"
-     <string name="pref_key_enable_address_sync" translatable="false">pref_key_enable_address_sync</string>"
+@@ -406,6 +406,8 @@
+     <string name="pref_key_pocket_sponsored_stories_profile_migrated" translatable="false">pref_key_pocket_sponsored_stories_profile_migrated</string>
+ 
+     <!-- Secret Info Setting Keys -->
 +    <string name="pref_key_enable_unifiedpush" translatable="false">pref_key_enable_unifiedpush</string>
 +    <string name="pref_key_use_unifiedpush" translatable="false">pref_key_use_unifiedpush</string>
+     <string name="pref_key_secret_debug_info" translatable="false">pref_key_secret_debug_info</string>
+     <string name="pref_key_start_profiler" translatable="false">pref_key_start_profiler</string>
  
-     <!-- Logins -->
-     <string name="pref_key_enable_compose_logins" translatable="false">pref_key_enable_compose_logins</string>
 diff --git a/mobile/android/fenix/app/src/main/res/values/static_strings.xml b/mobile/android/fenix/app/src/main/res/values/static_strings.xml
-index 6c72f164a8f1..000ca751eff8 100644
+index 3a076bed00eb..cc844c02ea09 100644
 --- a/mobile/android/fenix/app/src/main/res/values/static_strings.xml
 +++ b/mobile/android/fenix/app/src/main/res/values/static_strings.xml
 @@ -69,6 +69,8 @@
@@ -2974,14 +2974,14 @@ index 6c72f164a8f1..000ca751eff8 100644
      <string name="preferences_sync_debug_permanent_auth_error_button_title">Simulate permanent account auth error</string>
 +    <!-- Label for enabling UnifiedPush -->
 +    <string name="preferences_debug_settings_unifiedpush" translatable="false">Enable UnifiedPush</string>
-     <!-- Label for enabling the Compose Bookmarks -->
-     <string name="preferences_debug_settings_compose_bookmarks" translatable="false">Enable Compose Bookmarks</string>
      <!-- Label for enabling the Homepage Search Bar -->
+     <string name="preferences_debug_settings_homepage_searchbar" translatable="false">Enable Homepage Search Bar</string>
+     <!-- Label for overriding user specified homepage sections -->
 diff --git a/mobile/android/fenix/app/src/main/res/values/strings.xml b/mobile/android/fenix/app/src/main/res/values/strings.xml
-index 6d382c55d7cd..5c9ccd0f9330 100644
+index f5a0f2bb6a52..2f2ec09fd11c 100644
 --- a/mobile/android/fenix/app/src/main/res/values/strings.xml
 +++ b/mobile/android/fenix/app/src/main/res/values/strings.xml
-@@ -881,6 +881,13 @@
+@@ -836,6 +836,13 @@
      <!-- Message to indicate users that we are quitting the application to apply the changes -->
      <string name="quit_application">Quitting the application to apply changes…</string>
  
@@ -3014,7 +3014,7 @@ index 5058f40c0bd7..65fd02deb0be 100644
              android:key="@string/pref_key_leakcanary"
              android:title="@string/preference_leakcanary"
 diff --git a/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
-index 5a6ebd979c51..ec7264df92f4 100644
+index 51860233019d..e7aad5a3808b 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
 @@ -15,6 +15,11 @@
