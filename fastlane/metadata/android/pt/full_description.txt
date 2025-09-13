@@ -8,4 +8,4 @@
 <li>Sincronização de guias, favoritos, senhas, etc. em vários dispositivos via Firefox Sync.</li>
 <li>Modo imagem em imagem.</li>
 </ul>
-<p>O Fennec F-Droid é baseado na versão mais recente do Mozilla Firefox. Ele tem bits proprietários e telemetria removidos, mas ainda se conecta a vários serviços da Mozilla que podem rastrear usuários.</p>
+<p>O Ermine F-Droid é baseado na versão mais recente do Mozilla Firefox. Ele tem bits proprietários e telemetria removidos, mas ainda se conecta a vários serviços da Mozilla que podem rastrear usuários.</p>
