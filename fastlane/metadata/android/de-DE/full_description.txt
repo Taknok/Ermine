@@ -8,4 +8,4 @@
   <li>Synchronisierung von Tabs, Lesezeichen, Passwörtern usw. auf mehreren Geräten über Firefox Sync.</li>
   <li>Bild-im-Bild-Modus.</li>
 </ul>
-<p>Fennec F-Droid basiert auf der neuesten Version von Mozilla Firefox. Proprietäre Bits und Telemetrie wurden entfernt, er verbindet sich aber weiterhin mit verschiedenen Mozilla-Diensten, die Benutzer verfolgen können.</p>
+<p>Fennec F-Droid Browser basiert auf der neuesten Version von Mozilla Firefox. Proprietäre Bits und Telemetrie wurden entfernt, er verbindet sich aber weiterhin mit verschiedenen Mozilla-Diensten, die Benutzer verfolgen können.</p>
