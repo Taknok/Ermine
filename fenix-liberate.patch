@@ -91,7 +91,7 @@ index 17f4dab078da..d0311ba1c2cf 100644
      // Required for in-app reviews
 -    implementation libs.play.review
 -    implementation libs.play.review.ktx
-+    implementation 'org.microg.gms:play-services-ads-identifier:0.3.9.250932'
++    implementation 'org.microg.gms:play-services-ads-identifier:0.3.9.250932-dirty'
  
      androidTestImplementation(libs.androidx.espresso.contrib) {
          exclude module: 'protobuf-lite'

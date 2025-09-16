@@ -199,13 +199,20 @@ sed -i 's|https://|hxxps://|' tools/nimbus-gradle-plugin/src/main/groovy/org/moz
 sed -i -e 's|https://|hxxps://|' components/remote_settings/src/*.rs
 popd
 
-
 #
 # WASI SDK
 #
 
 pushd "$wasi"
 patch -p1 --no-backup-if-mismatch --quiet < "$mozilla_release/taskcluster/scripts/misc/wasi-sdk.patch"
+popd
+
+#
+# GmsCore
+#
+
+pushd "$gmscore"
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/gmscore-credprops.patch"
 popd
 
 #

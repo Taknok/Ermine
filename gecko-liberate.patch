@@ -7,7 +7,7 @@ index a04e43ca39a0..0d9515f9fc2a 100644
      implementation libs.androidx.core
  
 -    implementation libs.play.services.fido
-+    implementation "org.microg.gms:play-services-fido:0.3.9.250932"
++    implementation "org.microg.gms:play-services-fido:0.3.9.250932-dirty"
      implementation "org.yaml:snakeyaml:2.2"
  
      implementation libs.androidx.lifecycle.common
