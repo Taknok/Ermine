@@ -27,6 +27,15 @@ fi
 # shellcheck source=paths.sh
 source "$(dirname "$0")/paths.sh"
 
+function downgrade_agp {
+    # Downgrade Android Gradle Plugin, see https://gitlab.com/fdroid/admin/-/issues/593
+    sed -i \
+        -e '/^android-gradle-plugin /s/"8\.1[2-9]\.."/"8.11.2"/' \
+        -e '/^android-plugin /s/"8\.1[2-9]\.."/"8.11.2"/' \
+        -e '/^lint /s/"31\.1[2-9]\.."/"31.11.2"/' \
+        gradle/libs.versions.toml
+}
+
 function localize_maven {
     # Replace custom Maven repositories with mavenLocal()
     find ./* -name '*.gradle' -type f -print0 | xargs -0 \
@@ -191,6 +200,7 @@ echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 sed -i -e '/content {/,/}/d' build.gradle
 localize_maven
+downgrade_agp
 # Fix stray
 sed -i -e '/^    mavenLocal/{n;d}' tools/nimbus-gradle-plugin/build.gradle
 # Fail on use of prebuilt binary
@@ -247,6 +257,8 @@ patch -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-disable-remote-searc
 
 # Remove the use of RemoteSettingsCrashPull, the part of the crash reporter
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-disable-crashpull.patch"
+
+downgrade_agp
 
 # Fix v125 aar output not including native libraries
 sed -i \
