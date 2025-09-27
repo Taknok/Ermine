@@ -8,4 +8,4 @@
   <li>Synkronisering av flikar, bokmärken, lösenord osv. för flertalet enheter via Firefox Sync.</li>
   <li>Bild-i-Bild-läge.</li>
 </ul>
-<p>Fennec F-Droid är baserad på den senaste utgåvan av Mozilla Firefox. Den har sina proprietära delar och telemetri borttaget, men den ansluter fortfarande till diverse Mozilla-tjänster som kan spåra användare.</p>
+<p>Ermine F-Droid är baserad på den senaste utgåvan av Mozilla Firefox. Den har sina proprietära delar och telemetri borttaget, men den ansluter fortfarande till diverse Mozilla-tjänster som kan spåra användare.</p>
