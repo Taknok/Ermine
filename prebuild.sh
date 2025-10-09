@@ -48,11 +48,16 @@ function localize_maven {
     done
 }
 
+function apply_patch {
+    echo "Apply $1"
+    patch -p1 --no-backup-if-mismatch --quiet < "$1"
+}
+
 # Set up Rust
 "$rustup"/rustup-init.sh -y --no-update-default-toolchain
 # shellcheck disable=SC1090,SC1091
 source "$HOME/.cargo/env"
-rustup default 1.86.0
+rustup default 1.89.0
 
 #
 # Fenix
@@ -83,6 +88,9 @@ sed -i -e 's/Firefox Daylight/Fennec/; s/Firefox/Fennec/g' \
 # Fenix uses reflection to create a instance of profile based on the text of
 # the label, see
 # app/src/main/java/org/mozilla/fenix/perf/ProfilerStartDialogFragment.kt#185
+sed -i \
+    -e 's/ProfilerSettings.Firefox/ProfilerSettings.Fennec/' \
+    app/src/main/java/org/mozilla/fenix/perf/ProfilerStartDialogFragment.kt
 sed -i \
     -e '/Firefox(.*, .*)/s/Firefox/Fennec/' \
     -e 's/firefox_threads/fennec_threads/' \
@@ -188,9 +196,9 @@ popd
 
 pushd "$application_services"
 # Remove Mozilla repositories substitution and explicitly add the required ones
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/a-c-localize_maven.patch"
+apply_patch "$patches/a-c-localize_maven.patch"
 # Break the dependency on older A-C
-sed -i -e '/android-components = /s/"141\.0\.1"/"143.0.3"/' gradle/libs.versions.toml
+sed -i -e '/android-components = /s/"142\.0\.1"/"144.0"/' gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 sed -i -e '/content {/,/}/d' build.gradle
@@ -209,7 +217,7 @@ popd
 #
 
 pushd "$wasi"
-patch -p1 --no-backup-if-mismatch --quiet < "$mozilla_release/taskcluster/scripts/misc/wasi-sdk.patch"
+apply_patch "$mozilla_release/taskcluster/scripts/misc/wasi-sdk.patch"
 popd
 
 #
@@ -217,7 +225,7 @@ popd
 #
 
 pushd "$gmscore"
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/gmscore-credprops.patch"
+apply_patch "$patches/gmscore-credprops.patch"
 popd
 
 #
@@ -226,32 +234,32 @@ popd
 
 pushd "$mozilla_release"
 # Remove unneeded dependecies
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-dependencies.patch"
+apply_patch "$patches/gecko-dependencies.patch"
 
 # Remove Mozilla repositories substitution and explicitly add the required ones
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-localize_maven.patch"
+apply_patch "$patches/gecko-localize_maven.patch"
 
 # Replace GMS with microG client library
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-liberate.patch"
+apply_patch "$patches/gecko-liberate.patch"
 
 # Fix v125 compile error
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-fix-125-compile.patch"
+apply_patch "$patches/gecko-fix-125-compile.patch"
 
 # Add UnifiedPush support
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/unifiedpush.patch"
+apply_patch "$patches/unifiedpush.patch"
 
 # Patch the use of proprietary and tracking libraries
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-liberate.patch"
+apply_patch "$patches/fenix-liberate.patch"
 
 # Disable domains suggestions: the list is very out of date, some of those
 # domains have been squatted and serve ads or malware
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-disable-shipped-domains.patch"
+apply_patch "$patches/fenix-disable-shipped-domains.patch"
 
 # Disable search engines configuration fetching from a Mozilla server
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-disable-remote-search-configuration.patch"
+apply_patch "$patches/fenix-disable-remote-search-configuration.patch"
 
 # Remove the use of RemoteSettingsCrashPull, the part of the crash reporter
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-disable-crashpull.patch"
+apply_patch "$patches/fenix-disable-crashpull.patch"
 
 downgrade_agp
 
