@@ -251,10 +251,6 @@ apply_patch "$patches/unifiedpush.patch"
 # Patch the use of proprietary and tracking libraries
 apply_patch "$patches/fenix-liberate.patch"
 
-# Disable domains suggestions: the list is very out of date, some of those
-# domains have been squatted and serve ads or malware
-apply_patch "$patches/fenix-disable-shipped-domains.patch"
-
 # Disable search engines configuration fetching from a Mozilla server
 apply_patch "$patches/fenix-disable-remote-search-configuration.patch"
 
