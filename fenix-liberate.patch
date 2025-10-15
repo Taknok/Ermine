@@ -98,7 +98,7 @@ index 1f2622788971..7f08bcc0f812 100644
      implementation libs.protobuf.javalite
      implementation libs.sentry
  
-+    implementation 'org.microg.gms:play-services-ads-identifier:0.3.9.250932-dirty'
++    implementation 'org.microg.gms:play-services-ads-identifier:0.3.10.250932'
 +
      debugImplementation libs.androidx.compose.ui.tooling
      debugImplementation libs.leakcanary

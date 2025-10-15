@@ -7,7 +7,7 @@ index c47f4cfe6e47..b7b3d68701fc 100644
      implementation libs.androidx.lifecycle.common
      implementation libs.androidx.lifecycle.process
 -    implementation libs.play.services.fido
-+    implementation "org.microg.gms:play-services-fido:0.3.9.250932-dirty"
++    implementation "org.microg.gms:play-services-fido:0.3.10.250932"
      implementation "org.yaml:snakeyaml:2.2"
  
      if (mozconfig.substs.MOZ_ANDROID_HLS_SUPPORT) {

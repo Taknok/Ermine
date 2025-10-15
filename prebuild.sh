@@ -221,14 +221,6 @@ apply_patch "$mozilla_release/taskcluster/scripts/misc/wasi-sdk.patch"
 popd
 
 #
-# GmsCore
-#
-
-pushd "$gmscore"
-apply_patch "$patches/gmscore-credprops.patch"
-popd
-
-#
 # GeckoView
 #
 
