@@ -29,7 +29,6 @@ source "$(dirname "$0")/paths.sh"
 # Set up Android SDK
 sdkmanager 'build-tools;36.0.0' # for GeckoView
 sdkmanager 'platforms;android-36' # for GeckoView
-sdkmanager 'ndk;28.1.13356709' # for MozGleanAS
 
 # Set up Rust
 # shellcheck disable=SC1090,SC1091
