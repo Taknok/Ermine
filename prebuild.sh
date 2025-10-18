@@ -225,6 +225,7 @@ popd
 #
 
 pushd "$mozilla_release"
+
 # Remove unneeded dependecies
 apply_patch "$patches/gecko-dependencies.patch"
 
@@ -236,6 +237,10 @@ apply_patch "$patches/gecko-liberate.patch"
 
 # Fix v125 compile error
 apply_patch "$patches/gecko-fix-125-compile.patch"
+
+# Work-around upstream bug to fix compilation with WASI SDK 20, see
+# https://bugzilla.mozilla.org/show_bug.cgi?id=1994063
+apply_patch "$patches/gecko-unbreak-wasi-sdk-20-clang.patch"
 
 # Add UnifiedPush support
 apply_patch "$patches/unifiedpush.patch"
