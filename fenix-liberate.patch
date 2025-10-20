@@ -1068,6 +1068,39 @@ index 66038d7e984f..15b16a590657 100644
          }
  
          startMetricsIfEnabled(
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
+index c518b78ce9c5..1f58b5799649 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
+@@ -292,28 +292,6 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+             isVisible = Config.channel.isNightlyOrDebug
+         }
+ 
+-        requirePreference<SwitchPreference>(R.string.pref_key_remote_server_prod).apply {
+-            isVisible = true
+-            isChecked = context.settings().useProductionRemoteSettingsServer
+-            onPreferenceChangeListener = object : SharedPreferenceUpdater() {
+-                override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
+-                    val service =
+-                        context.components.remoteSettingsService.value.remoteSettingsService
+-                    service.updateConfig(
+-                        RemoteSettingsServerConfig(
+-                            server = if (newValue as? Boolean == true) {
+-                                RemoteSettingsServer.Prod.into()
+-                            } else {
+-                                RemoteSettingsServer.Stage.into()
+-                            },
+-                        ).into(),
+-                    )
+-                    service.sync()
+-                    return super.onPreferenceChange(preference, newValue)
+-                }
+-            }
+-        }
+-
+         requirePreference<SwitchPreference>(R.string.pref_key_use_remote_search_configuration).apply {
+             isVisible = true
+             isChecked = context.settings().useRemoteSearchConfiguration
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 index e8c579377d73..21921a399860 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
