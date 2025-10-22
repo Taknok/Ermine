@@ -210,6 +210,8 @@ sed -i -e '/^    mavenLocal/{n;d}' tools/nimbus-gradle-plugin/build.gradle
 sed -i 's|https://|hxxps://|' tools/nimbus-gradle-plugin/src/main/groovy/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.groovy
 # Fail on remote configuration download
 sed -i -e 's|https://|hxxps://|' components/remote_settings/src/*.rs
+# Revert x86-32 removal
+git show 9f180e7da884fa27395041a0141b965fb78a7ec6 | patch -p1 -R --no-backup-if-mismatch --quiet
 popd
 
 #
