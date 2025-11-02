@@ -987,39 +987,6 @@ index 8d46a483fcff..cef6afd4d01e 100644
          }
  
          startMetricsIfEnabled(
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index 40212e28e9e0..6f8455fa6f8a 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-@@ -297,28 +297,6 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
-             isVisible = Config.channel.isNightlyOrDebug
-         }
- 
--        requirePreference<SwitchPreference>(R.string.pref_key_remote_server_prod).apply {
--            isVisible = true
--            isChecked = context.settings().useProductionRemoteSettingsServer
--            onPreferenceChangeListener = object : SharedPreferenceUpdater() {
--                override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
--                    val service =
--                        context.components.remoteSettingsService.value.remoteSettingsService
--                    service.updateConfig(
--                        RemoteSettingsServerConfig(
--                            server = if (newValue as? Boolean == true) {
--                                RemoteSettingsServer.Prod.into()
--                            } else {
--                                RemoteSettingsServer.Stage.into()
--                            },
--                        ).into(),
--                    )
--                    service.sync()
--                    return super.onPreferenceChange(preference, newValue)
--                }
--            }
--        }
--
-         requirePreference<SwitchPreference>(R.string.pref_key_use_remote_search_configuration).apply {
-             isVisible = true
-             isChecked = context.settings().useRemoteSearchConfiguration
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 index 6ca1dca238cb..169849c0d1aa 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
@@ -1213,18 +1180,6 @@ index 159944ab7d38..d3480d93a5b2 100644
          <androidx.preference.Preference
              android:key="@string/pref_key_about"
              app:iconSpaceReserved="false"
-diff --git a/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
-index e8059b6aea0b..a0747129882e 100644
---- a/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
-+++ b/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
-@@ -138,6 +138,7 @@
-     <SwitchPreference
-         android:key="@string/pref_key_remote_server_prod"
-         app:iconSpaceReserved="false"
-+        app:isPreferenceVisible="false"
-         android:title="@string/preferences_debug_settings_remote_settings_server"
-         />
-     <SwitchPreference
 diff --git a/mobile/android/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
 index dfe2d28572f2..54a99d9e1dc5 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml

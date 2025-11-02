@@ -191,8 +191,14 @@ echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
 popd
 
 pushd "$application_services"
+rm -vrf components/remote_settings/dumps/*/attachments/search-config-icons/*
+find "$patches/a-s-overlay" -type f | while read -r src; do
+    cp "$src" "${src#"$patches/a-s-overlay/"}"
+done
 # Remove Mozilla repositories substitution and explicitly add the required ones
 apply_patch "$patches/a-c-localize_maven.patch"
+# Configure default search engines
+apply_patch "$patches/a-c-configure-default-search-engines.patch"
 # Break the dependency on older A-C
 sed -i -e '/android-components = /s/"143\.0"/"145.0"/' gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
@@ -203,8 +209,6 @@ localize_maven
 sed -i -e '/^    mavenLocal/{n;d}' tools/nimbus-gradle-plugin/build.gradle
 # Fail on use of prebuilt binary
 sed -i 's|https://|hxxps://|' tools/nimbus-gradle-plugin/src/main/groovy/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.groovy
-# Fail on remote configuration download
-sed -i -e 's|https://|hxxps://|' components/remote_settings/src/*.rs
 popd
 
 #
@@ -245,6 +249,10 @@ apply_patch "$patches/fenix-liberate.patch"
 
 # Disable search engines configuration fetching from a Mozilla server
 apply_patch "$patches/fenix-disable-remote-search-configuration.patch"
+sed -i 's|https://firefox.settings.services.allizom.org/v1/buckets/main/collections/search-config/records||g' toolkit/components/search/SearchUtils.sys.mjs
+sed -i 's|https://firefox.settings.services.allizom.org/v1/buckets/main-preview/collections/search-config/records||g' toolkit/components/search/SearchUtils.sys.mjs
+sed -i 's|https://firefox.settings.services.mozilla.com/v1/buckets/main/collections/search-config/records||g' toolkit/components/search/SearchUtils.sys.mjs
+sed -i 's|https://firefox.settings.services.mozilla.com/v1/buckets/main-preview/collections/search-config/records||g' toolkit/components/search/SearchUtils.sys.mjs
 
 # Remove the use of RemoteSettingsCrashPull, the part of the crash reporter
 apply_patch "$patches/fenix-disable-crashpull.patch"

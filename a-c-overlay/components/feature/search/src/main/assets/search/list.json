@@ -1,7 +1,7 @@
 {
   "default": {
     "searchDefault": "DuckDuckGo",
-    "searchOrder": ["Bing", "Brave", "DuckDuckGo", "DuckDuckGo HTML", "DuckDuckGo Lite", "Ecosia", "Google", "Metager", "Mojeek", "Qwant", "Qwant Lite", "Startpage", "Wikipedia"],
+    "searchOrder": ["Bing", "Brave", "DuckDuckGo", "DuckDuckGo (HTML)", "DuckDuckGo (Lite)", "Ecosia", "Google", "MetaGer", "Mojeek", "Qwant", "Qwant (Lite)", "Startpage", "Wikipedia"],
     "visibleDefaultEngines": [
       "bing", "brave", "ddg", "ddghtml", "ddglite", "ecosia", "google", "metager", "mojeek", "qwant", "qwantlite", "startpage", "wikipedia"
     ]
