@@ -8,4 +8,4 @@
 <li>Firefox Sync aracılığıyla birden fazla cihazda sekmelerin, yer imlerinin, parolaların vb. senkronizasyonu.</li>
 <li>Resim içinde resim modu.</li>
 </ul>
-<p>Fennec F-Droid, en son Mozilla Firefox sürümüne dayanmaktadır. Tescilli bitler ve telemetri kaldırılmıştır, ancak yine de kullanıcıları izleyebilen çeşitli Mozilla hizmetlerine bağlanır.</p>
+<p>Fennec F-Droid tarayıcısı, en son Mozilla Firefox sürümüne dayanmaktadır. Tescilli bitler ve telemetri kaldırılmıştır, ancak yine de kullanıcıları izleyebilen çeşitli Mozilla hizmetlerine bağlanır.</p>
