@@ -8,4 +8,4 @@
   <li>Vahekaartide, järjehoidjate, salasõnade, jmt sünkroniseerimine eri seadmete vahel Firefox Synci abil.</li>
   <li>Pilt-pildis vaade.</li>
 </ul>
-<p>Fennec F-Droid põhineb Mozilla Firefoxi viimasel versioonil. Suletud komponendid ja telemeetria on eemaldatud, kuid kasutusel on siiski mitmed Mozilla teenused, mis võimaldavad kasutaja mõningast jälitamist.</p>
+<p>Fenneci brauser F-Droidis põhineb Mozilla Firefoxi viimasel versioonil. Suletud komponendid ja telemeetria on eemaldatud, kuid kasutusel on siiski mitmed Mozilla teenused, mis võimaldavad kasutaja mõningast jälitamist.</p>
