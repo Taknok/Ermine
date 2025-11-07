@@ -194,6 +194,11 @@ popd
 # Application Services
 #
 
+pushd "$application_services/components/external/glean"
+apply_patch "$patches/glean-uniffi-bindgen.patch"
+echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
+popd
+
 pushd "$application_services"
 # Remove Mozilla repositories substitution and explicitly add the required ones
 apply_patch "$patches/a-c-localize_maven.patch"

@@ -72,6 +72,10 @@ export TARGET_CFLAGS=-DNDEBUG
 gradle publishToMavenLocal
 popd
 
+pushd "$application_services/components/external/glean"
+gradle publishToMavenLocal
+popd
+
 pushd "$application_services"
 export NSS_DIR="$application_services/libs/desktop/linux-x86-64/nss"
 export NSS_STATIC=1
