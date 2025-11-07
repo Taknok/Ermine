@@ -1,9 +1,9 @@
 diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
-index 2fbb96d4e1bd..3f5e9bee132c 100644
+index 52e9a741e922..981d304d339b 100644
 --- a/gradle/libs.versions.toml
 +++ b/gradle/libs.versions.toml
-@@ -69,6 +69,8 @@ semanticdb-javac = "0.11.0"
- semanticdb-kotlinc = "0.6.0"
+@@ -69,6 +69,8 @@ semanticdb-javac = "0.11.1"
+ semanticdb-kotlinc = "0.7.0"
  tomlj = "1.1.1"
  
 +unifiedpush = "3.1.0"
@@ -11,7 +11,7 @@ index 2fbb96d4e1bd..3f5e9bee132c 100644
  # Linters
  detekt = "1.23.8"
  google-java-format = "1.28.0"
-@@ -271,6 +273,7 @@ okhttp-urlconnection = { group = "com.squareup.okhttp3", name = "okhttp-urlconne
+@@ -270,6 +272,7 @@ okhttp-urlconnection = { group = "com.squareup.okhttp3", name = "okhttp-urlconne
  okio = { group = "com.squareup.okio", name = "okio", version.ref = "okio" }
  sentry = { group = "io.sentry", name = "sentry-android", version.ref = "sentry" }
  zxing = { group = "com.google.zxing", name = "core", version.ref = "zxing" }
@@ -256,17 +256,17 @@ index f8fad03aed47..071dec9c7f4d 100644
      }
  }
 diff --git a/mobile/android/android-components/components/feature/accounts-push/build.gradle b/mobile/android/android-components/components/feature/accounts-push/build.gradle
-index ed3026775ccf..8d50f4791e32 100644
+index 619c8026064d..19334b12da2b 100644
 --- a/mobile/android/android-components/components/feature/accounts-push/build.gradle
 +++ b/mobile/android/android-components/components/feature/accounts-push/build.gradle
-@@ -50,6 +50,7 @@ dependencies {
+@@ -36,6 +36,7 @@ dependencies {
      testRuntimeOnly libs.junit.vintage
      testImplementation libs.kotlinx.coroutines.test
      testImplementation libs.robolectric
 +    implementation project(':components:feature-unifiedpush')
  }
  
- apply from: '../../../android-lint.gradle'
+ apply from: '../../../common-config.gradle'
 diff --git a/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/FxaPushSupportFeature.kt b/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/FxaPushSupportFeature.kt
 index 7992e782db94..f5ead8686e20 100644
 --- a/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/FxaPushSupportFeature.kt
@@ -941,7 +941,7 @@ index 000000000000..c492a3879873
 +
 diff --git a/mobile/android/android-components/components/feature/unifiedpush/build.gradle b/mobile/android/android-components/components/feature/unifiedpush/build.gradle
 new file mode 100644
-index 000000000000..516095077d58
+index 000000000000..80b2c95cea58
 --- /dev/null
 +++ b/mobile/android/android-components/components/feature/unifiedpush/build.gradle
 @@ -0,0 +1,52 @@
@@ -994,7 +994,7 @@ index 000000000000..516095077d58
 +    testImplementation libs.robolectric
 +}
 +
-+apply from: '../../../android-lint.gradle'
++apply from: '../../../common-config.gradle'
 +apply from: '../../../publish.gradle'
 +ext.configurePublish(config.componentsGroupId, project.name, project.ext.description)
 diff --git a/mobile/android/android-components/components/feature/unifiedpush/proguard-rules.pro b/mobile/android/android-components/components/feature/unifiedpush/proguard-rules.pro
@@ -2500,10 +2500,10 @@ index 1753bcbd86ff..6cb5632fe911 100644
  - apks:
    - abi: arm64-v8a
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index 1f2622788971..b00f946e80f3 100644
+index af2ddca5a621..8bdcdc0a615c 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -745,6 +745,7 @@ dependencies {
+@@ -743,6 +743,7 @@ dependencies {
      androidTestUtil libs.androidx.test.orchestrator
  
      lintChecks project(':components:tooling-lint')
@@ -2512,10 +2512,10 @@ index 1f2622788971..b00f946e80f3 100644
  
  protobuf {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-index d61408f9c44c..1572f4accabe 100644
+index f89328f00e04..196bcc825e58 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-@@ -38,6 +38,11 @@ object FeatureFlags {
+@@ -40,6 +40,11 @@ object FeatureFlags {
       */
      const val META_ATTRIBUTION_ENABLED = true
  
@@ -2528,7 +2528,7 @@ index d61408f9c44c..1572f4accabe 100644
       * Disables the Onboarding feature for debug builds by default. Set this to `true` if you need
       * to access the Onboarding feature for development purposes.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 29cd599a82b3..efd298713943 100644
+index bd75990cd850..12f6bd31f059 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 @@ -37,7 +37,7 @@ import mozilla.components.browser.storage.sync.GlobalPlacesDependencyProvider
@@ -2540,7 +2540,7 @@ index 29cd599a82b3..efd298713943 100644
  import mozilla.components.concept.storage.FrecencyThresholdOption
  import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
  import mozilla.components.feature.addons.update.GlobalAddonDependencyProvider
-@@ -497,7 +497,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -518,7 +518,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
              logger.info("AutoPushFeature is configured, initializing it...")
  
              // Install the AutoPush singleton to receive messages.
@@ -2565,7 +2565,7 @@ index 68190994b3a0..5a08b7622fbe 100644
          }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt
-index f99ef999cfa7..dc3990dd6fe7 100644
+index f99ef999cfa7..91fee3bfec5f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt
 @@ -4,35 +4,109 @@
@@ -2613,7 +2613,7 @@ index f99ef999cfa7..dc3990dd6fe7 100644
 +    private val logger = Logger("Push")
 +
 +    val feature: Pusher?
-+        get() = strictMode.resetAfter(StrictMode.allowThreadDiskReads()) {
++        get() = strictMode.allowViolation(StrictMode::allowThreadDiskReads) {
 +            if (settings.useUnifiedPush) {
 +                unifiedPushFeature.also { feature ->
 +                    // Check if the distributor is still installed on the system
@@ -2826,10 +2826,10 @@ index 5980161e96b6..3fde1ab08d96 100644
      publicKey = stringDecoder(this.publicKey),
      endpoint = this.endpoint,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index c518b78ce9c5..ff3feaf0a622 100644
+index 40212e28e9e0..ccf1282facd9 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-@@ -156,6 +156,12 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+@@ -155,6 +155,12 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
              }
          }
  
@@ -2843,10 +2843,10 @@ index c518b78ce9c5..ff3feaf0a622 100644
              isVisible = Config.channel.isNightlyOrDebug
              isChecked = context.settings().isAddressSyncEnabled
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index 4d499da8deab..e68b4078d0e8 100644
+index e1a67a6da426..dfff9eacb7ad 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-@@ -417,6 +417,48 @@ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -426,6 +426,48 @@ class SettingsFragment : PreferenceFragmentCompat() {
                  null
              }
  
@@ -2854,7 +2854,7 @@ index 4d499da8deab..e68b4078d0e8 100644
 +            resources.getString(R.string.pref_key_use_unifiedpush) -> {
 +                val context = requireActivity()
 +                context.settings().apply { useUnifiedPush = !useUnifiedPush }
-+                val alert = AlertDialog.Builder(context).apply {
++                val alert = MaterialAlertDialogBuilder(context).apply {
 +                    setTitle(context.getString(R.string.preferences_unifiedpush))
 +                    setMessage(context.getString(R.string.quit_application))
 +                    setNegativeButton(android.R.string.cancel) { dialog: DialogInterface, _ ->
@@ -2895,7 +2895,7 @@ index 4d499da8deab..e68b4078d0e8 100644
              // Only displayed when secret settings are enabled
              resources.getString(R.string.pref_key_override_amo_collection) -> {
                  val context = requireContext()
-@@ -549,6 +591,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -558,6 +600,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
              findPreference<Preference>(getPreferenceKey(R.string.pref_key_start_profiler))
  
          with(settings) {
@@ -2909,10 +2909,10 @@ index 4d499da8deab..e68b4078d0e8 100644
                  getPreferenceKey(R.string.pref_key_nimbus_experiments),
              )?.isVisible = showSecretDebugMenuThisSession
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 312b5b3de307..f035a4ee7ada 100644
+index 6ef1bc0ace33..745483757b5c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2133,6 +2133,22 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2087,6 +2087,22 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          }
      }
  
@@ -2936,7 +2936,7 @@ index 312b5b3de307..f035a4ee7ada 100644
       * Indicates if the onboarding feature is enabled.
       */
 diff --git a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-index df4af2bda65e..3a670fdb54d4 100644
+index a8380d5680fb..e978c61b4a29 100644
 --- a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
 +++ b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
 @@ -410,6 +410,8 @@
@@ -2949,7 +2949,7 @@ index df4af2bda65e..3a670fdb54d4 100644
      <string name="pref_key_start_profiler" translatable="false">pref_key_start_profiler</string>
  
 diff --git a/mobile/android/fenix/app/src/main/res/values/static_strings.xml b/mobile/android/fenix/app/src/main/res/values/static_strings.xml
-index fe77b9182e57..0b28d1f8e941 100644
+index bdd1da9070ec..65d394c6e7b1 100644
 --- a/mobile/android/fenix/app/src/main/res/values/static_strings.xml
 +++ b/mobile/android/fenix/app/src/main/res/values/static_strings.xml
 @@ -69,6 +69,8 @@
@@ -2962,10 +2962,10 @@ index fe77b9182e57..0b28d1f8e941 100644
      <string name="preferences_debug_settings_homepage_searchbar" translatable="false">Enable Homepage Search Bar</string>
      <!-- Label for overriding user specified homepage sections -->
 diff --git a/mobile/android/fenix/app/src/main/res/values/strings.xml b/mobile/android/fenix/app/src/main/res/values/strings.xml
-index 7fe934418bdd..66e053ade58b 100644
+index dff38a7aef4d..408febff9ddb 100644
 --- a/mobile/android/fenix/app/src/main/res/values/strings.xml
 +++ b/mobile/android/fenix/app/src/main/res/values/strings.xml
-@@ -804,6 +804,13 @@
+@@ -819,6 +819,13 @@
      <!-- Message to indicate users that we are quitting the application to apply the changes -->
      <string name="quit_application">Quitting the application to apply changes…</string>
  
@@ -2998,7 +2998,7 @@ index 159944ab7d38..7949efe32b2d 100644
              android:key="@string/pref_key_leakcanary"
              android:title="@string/preference_leakcanary"
 diff --git a/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
-index 602a0b799b97..2c954005a98f 100644
+index e8059b6aea0b..2398956f83ed 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
 @@ -15,6 +15,11 @@
@@ -3117,7 +3117,7 @@ index 000000000000..35838390c423
 +    }
 +}
 diff --git a/mobile/android/fenix/app/src/test/java/org/mozilla/fenix/push/WebPushEngineIntegrationTest.kt b/mobile/android/fenix/app/src/test/java/org/mozilla/fenix/push/WebPushEngineIntegrationTest.kt
-index 24a2ef56f86e..6b2f1a27f421 100644
+index 16ee790d92c3..6ccd0cb58264 100644
 --- a/mobile/android/fenix/app/src/test/java/org/mozilla/fenix/push/WebPushEngineIntegrationTest.kt
 +++ b/mobile/android/fenix/app/src/test/java/org/mozilla/fenix/push/WebPushEngineIntegrationTest.kt
 @@ -21,8 +21,8 @@ import mozilla.components.concept.engine.Engine
@@ -3130,7 +3130,7 @@ index 24a2ef56f86e..6b2f1a27f421 100644
  import org.junit.Assert.assertEquals
  import org.junit.Assert.assertFalse
  import org.junit.Assert.assertNotNull
-@@ -94,7 +94,7 @@ class WebPushEngineIntegrationTest {
+@@ -101,7 +101,7 @@ class WebPushEngineIntegrationTest {
      @Test
      fun `delegate calls getSubscription`() {
          integration.start()
@@ -3139,7 +3139,7 @@ index 24a2ef56f86e..6b2f1a27f421 100644
          every { pushFeature.getSubscription("scope", block = any()) } answers {
              subscribeFn = thirdArg()
          }
-@@ -111,7 +111,7 @@ class WebPushEngineIntegrationTest {
+@@ -118,7 +118,7 @@ class WebPushEngineIntegrationTest {
          assertNotNull(subscribeFn)
  
          subscribeFn!!(
@@ -3148,7 +3148,7 @@ index 24a2ef56f86e..6b2f1a27f421 100644
                  scope = "scope",
                  publicKey = "abc",
                  endpoint = "def",
-@@ -134,7 +134,7 @@ class WebPushEngineIntegrationTest {
+@@ -141,7 +141,7 @@ class WebPushEngineIntegrationTest {
      fun `delegate calls subscribe`() {
          integration.start()
          var onSubscribeErrorFn: ((Exception) -> Unit)? = null
@@ -3157,7 +3157,7 @@ index 24a2ef56f86e..6b2f1a27f421 100644
          every {
              pushFeature.subscribe(
                  scope = "scope",
-@@ -164,7 +164,7 @@ class WebPushEngineIntegrationTest {
+@@ -171,7 +171,7 @@ class WebPushEngineIntegrationTest {
          onSubscribeInvoked = false // Reset for next callback
          assertNotNull(onSubscribeFn)
          onSubscribeFn!!(

@@ -57,7 +57,7 @@ function apply_patch {
 "$rustup"/rustup-init.sh -y --no-update-default-toolchain
 # shellcheck disable=SC1090,SC1091
 source "$HOME/.cargo/env"
-rustup default 1.89.0
+rustup default 1.90.0
 
 #
 # Fenix
@@ -198,7 +198,7 @@ pushd "$application_services"
 # Remove Mozilla repositories substitution and explicitly add the required ones
 apply_patch "$patches/a-c-localize_maven.patch"
 # Break the dependency on older A-C
-sed -i -e '/android-components = /s/"142\.0\.1"/"144.0"/' gradle/libs.versions.toml
+sed -i -e '/android-components = /s/"143\.0"/"145.0"/' gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 sed -i -e '/content {/,/}/d' build.gradle
