@@ -33,7 +33,7 @@ sdkmanager 'platforms;android-36' # for GeckoView
 # Set up Rust
 # shellcheck disable=SC1090,SC1091
 source "$HOME/.cargo/env"
-cargo install --force --vers 0.29.0 cbindgen
+cargo install --force --vers 0.29.2 cbindgen
 
 # Build LLVM
 pushd "$llvm"

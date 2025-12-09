@@ -48,7 +48,7 @@ function apply_patch {
 "$rustup"/rustup-init.sh -y --no-update-default-toolchain
 # shellcheck disable=SC1090,SC1091
 source "$HOME/.cargo/env"
-rustup default 1.90.0
+rustup default 1.86.0
 
 #
 # Fenix
@@ -200,7 +200,7 @@ apply_patch "$patches/a-c-localize_maven.patch"
 # Configure default search engines
 apply_patch "$patches/a-c-configure-default-search-engines.patch"
 # Break the dependency on older A-C
-sed -i -e '/android-components = /s/"143\.0"/"145.0"/' gradle/libs.versions.toml
+sed -i -e '/android-components = /s/"144\.0\.1"/"146.0"/' gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 sed -i -e '/content {/,/}/d' build.gradle
@@ -233,9 +233,6 @@ apply_patch "$patches/gecko-localize_maven.patch"
 
 # Replace GMS with microG client library
 apply_patch "$patches/gecko-liberate.patch"
-
-# Fix v125 compile error
-apply_patch "$patches/gecko-fix-125-compile.patch"
 
 # Work-around upstream bug to fix compilation with WASI SDK 20, see
 # https://bugzilla.mozilla.org/show_bug.cgi?id=1994063
