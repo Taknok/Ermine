@@ -84,6 +84,22 @@
     },
     {
       "attachment": {
+        "filename": "kagi.png",
+        "hash": "7a11261b10e0ff65d2b968718da64f69816ad9d2feb93889fb8f6c5608bab875",
+        "location": "",
+        "mimetype": "image/png",
+        "size": 1358
+      },
+      "engineIdentifiers": [
+        "kagi"
+      ],
+      "id": "eb73f935-25fa-4125-a5a3-3fa884e4fb5d",
+      "imageSize": 48,
+      "last_modified": 1765759764322,
+      "schema": 1765759764322
+    },
+    {
+      "attachment": {
         "filename": "metager.png",
         "hash": "f0e2947a5c1c95d9c767a08a5bc057d34d2dd6ce5bc503aad412557411045aa8",
         "location": "",

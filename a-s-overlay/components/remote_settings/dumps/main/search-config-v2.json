@@ -2,7 +2,7 @@
   "data": [
     {
       "id": "96ad4fd9-4bbb-454d-bbe5-24225a2cbe04",
-      "last_modified": 1745933974542,
+      "last_modified": 1743687919606,
       "locales": [
         "af",
         "an",
@@ -512,6 +512,37 @@
                 }
               ]
             }
+          }
+        }
+      ]
+    },
+    {
+      "base": {
+        "aliases": [
+          "kagi"
+        ],
+        "classification": "general",
+        "name": "Kagi",
+        "urls": {
+          "search": {
+            "base": "https://kagi.com/search",
+            "searchTermParamName": "q"
+          },
+          "suggestions": {
+            "base": "https://kagi.com/api/autosuggest",
+            "searchTermParamName": "q"
+          }
+        }
+      },
+      "id": "eb73f935-25fa-4125-a5a3-3fa884e4fb5d",
+      "identifier": "kagi",
+      "last_modified": 1765759764322,
+      "recordType": "engine",
+      "schema": 1765759764322,
+      "variants": [
+        {
+          "environment": {
+            "allRegionsAndLocales": true
           }
         }
       ]
