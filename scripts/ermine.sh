@@ -85,8 +85,8 @@ find "$DIRECTORY" -depth \
   -execdir bash -c 'mv "$1" "${1//fennec_dos/ermine}"' _ {} \;
 find "$DIRECTORY" -depth \
   -not -path "*/.git*/*" \
-  -name "*us.spotco*" \
-  -execdir bash -c 'mv "$1" "${1//us.spotco/com.deeperwire}"' _ {} \;
+  -name "*org.mozilla*" \
+  -execdir bash -c 'mv "$1" "${1//org.mozilla/com.deeperwire}"' _ {} \;
 
 find "$DIRECTORY" -type f \
  -not -path "*/scripts/*" \
