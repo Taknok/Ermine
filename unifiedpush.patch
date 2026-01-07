@@ -1,17 +1,17 @@
 diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
-index 52e9a741e922..981d304d339b 100644
+index 341d91eafc60..61ed2460d792 100644
 --- a/gradle/libs.versions.toml
 +++ b/gradle/libs.versions.toml
-@@ -69,6 +69,8 @@ semanticdb-javac = "0.11.1"
+@@ -70,6 +70,8 @@ semanticdb-javac = "0.11.1"
  semanticdb-kotlinc = "0.7.0"
  tomlj = "1.1.1"
  
-+unifiedpush = "3.1.0"
++unifiedpush = "3.2.0"
 +
  # Linters
  detekt = "1.23.8"
  google-java-format = "1.28.0"
-@@ -270,6 +272,7 @@ okhttp-urlconnection = { group = "com.squareup.okhttp3", name = "okhttp-urlconne
+@@ -274,6 +276,7 @@ okhttp-urlconnection = { group = "com.squareup.okhttp3", name = "okhttp-urlconne
  okio = { group = "com.squareup.okio", name = "okio", version.ref = "okio" }
  sentry = { group = "io.sentry", name = "sentry-android", version.ref = "sentry" }
  zxing = { group = "com.google.zxing", name = "core", version.ref = "zxing" }
@@ -20,10 +20,10 @@ index 52e9a741e922..981d304d339b 100644
  [plugins]
  detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 diff --git a/mobile/android/android-components/.buildconfig.yml b/mobile/android/android-components/.buildconfig.yml
-index f9711dc715e7..1421a44a87ec 100644
+index 9a16eea8e262..915b82727c86 100644
 --- a/mobile/android/android-components/.buildconfig.yml
 +++ b/mobile/android/android-components/.buildconfig.yml
-@@ -602,6 +602,7 @@ projects:
+@@ -603,6 +603,7 @@ projects:
      - components:support-utils
      - components:tooling-lint
      - components:ui-icons
@@ -31,7 +31,7 @@ index f9711dc715e7..1421a44a87ec 100644
    components:feature-addons:
      description: A feature that provides for managing add-ons.
      path: components/feature/addons
-@@ -2418,3 +2419,13 @@ projects:
+@@ -2440,3 +2441,13 @@ projects:
      - components:tooling-lint
      - components:ui-colors
      - components:ui-icons
@@ -955,7 +955,7 @@ index 000000000000..80b2c95cea58
 +android {
 +    defaultConfig {
 +        minSdkVersion config.minSdkVersion
-+        compileSdk config.compileSdkVersion
++        compileSdk { version = release(config.compileSdkMajorVersion) { minorApiLevel = config.compileSdkMinorVersion } }
 +        targetSdkVersion config.targetSdkVersion
 +    }
 +
@@ -2500,10 +2500,10 @@ index 1753bcbd86ff..6cb5632fe911 100644
  - apks:
    - abi: arm64-v8a
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index af2ddca5a621..8bdcdc0a615c 100644
+index d6f8ce2a2bd6..d2396e50a61a 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -743,6 +743,7 @@ dependencies {
+@@ -751,6 +751,7 @@ dependencies {
      androidTestUtil libs.androidx.test.orchestrator
  
      lintChecks project(':components:tooling-lint')
@@ -2512,10 +2512,10 @@ index af2ddca5a621..8bdcdc0a615c 100644
  
  protobuf {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-index f89328f00e04..196bcc825e58 100644
+index 906184d1e43b..ce4960fb3f20 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-@@ -40,6 +40,11 @@ object FeatureFlags {
+@@ -38,6 +38,11 @@ object FeatureFlags {
       */
      const val META_ATTRIBUTION_ENABLED = true
  
@@ -2528,10 +2528,10 @@ index f89328f00e04..196bcc825e58 100644
       * Disables the Onboarding feature for debug builds by default. Set this to `true` if you need
       * to access the Onboarding feature for development purposes.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index bd75990cd850..12f6bd31f059 100644
+index da46df8f5cd7..f286ad8362b2 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -37,7 +37,7 @@ import mozilla.components.browser.storage.sync.GlobalPlacesDependencyProvider
+@@ -38,7 +38,7 @@ import mozilla.components.browser.storage.sync.GlobalPlacesDependencyProvider
  import mozilla.components.concept.base.crash.Breadcrumb
  import mozilla.components.concept.engine.webextension.WebExtension
  import mozilla.components.concept.engine.webextension.isUnsupported
@@ -2540,7 +2540,7 @@ index bd75990cd850..12f6bd31f059 100644
  import mozilla.components.concept.storage.FrecencyThresholdOption
  import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
  import mozilla.components.feature.addons.update.GlobalAddonDependencyProvider
-@@ -518,7 +518,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -500,7 +500,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
              logger.info("AutoPushFeature is configured, initializing it...")
  
              // Install the AutoPush singleton to receive messages.
@@ -2550,10 +2550,10 @@ index bd75990cd850..12f6bd31f059 100644
              WebPushEngineIntegration(components.core.engine, it).start()
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
-index 68190994b3a0..5a08b7622fbe 100644
+index 6ed5a8715f84..d901bc3ede88 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
-@@ -226,8 +226,8 @@ class BackgroundServices(
+@@ -224,8 +224,8 @@ class BackgroundServices(
          accountManager.register(AccountManagerReadyObserver(accountManagerAvailableQueue))
  
          // Enable push if it's configured.
@@ -2826,11 +2826,11 @@ index 5980161e96b6..3fde1ab08d96 100644
      publicKey = stringDecoder(this.publicKey),
      endpoint = this.endpoint,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index 40212e28e9e0..ccf1282facd9 100644
+index 25b489cf24e9..df4c3e02d1d6 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-@@ -155,6 +155,12 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
-             }
+@@ -160,6 +160,12 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+             onPreferenceChangeListener = SharedPreferenceUpdater()
          }
  
 +        requirePreference<SwitchPreference>(R.string.pref_key_enable_unifiedpush).apply {
@@ -2843,10 +2843,10 @@ index 40212e28e9e0..ccf1282facd9 100644
              isVisible = Config.channel.isNightlyOrDebug
              isChecked = context.settings().isAddressSyncEnabled
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index e1a67a6da426..dfff9eacb7ad 100644
+index 0c73973e0468..b19efd176b66 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-@@ -426,6 +426,48 @@ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -433,6 +433,48 @@ class SettingsFragment : PreferenceFragmentCompat() {
                  null
              }
  
@@ -2895,7 +2895,7 @@ index e1a67a6da426..dfff9eacb7ad 100644
              // Only displayed when secret settings are enabled
              resources.getString(R.string.pref_key_override_amo_collection) -> {
                  val context = requireContext()
-@@ -558,6 +600,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -565,6 +607,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
              findPreference<Preference>(getPreferenceKey(R.string.pref_key_start_profiler))
  
          with(settings) {
@@ -2909,10 +2909,10 @@ index e1a67a6da426..dfff9eacb7ad 100644
                  getPreferenceKey(R.string.pref_key_nimbus_experiments),
              )?.isVisible = showSecretDebugMenuThisSession
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 6ef1bc0ace33..745483757b5c 100644
+index 276ad8cf1df1..39608a243843 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2087,6 +2087,22 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2168,6 +2168,22 @@ class Settings(
          }
      }
  
@@ -2936,10 +2936,10 @@ index 6ef1bc0ace33..745483757b5c 100644
       * Indicates if the onboarding feature is enabled.
       */
 diff --git a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-index a8380d5680fb..e978c61b4a29 100644
+index 3efb48eec051..c9cfb06a2762 100644
 --- a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
 +++ b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-@@ -410,6 +410,8 @@
+@@ -421,6 +421,8 @@
      <string name="pref_key_pocket_sponsored_stories_profile_migrated" translatable="false">pref_key_pocket_sponsored_stories_profile_migrated</string>
  
      <!-- Secret Info Setting Keys -->
@@ -2949,10 +2949,10 @@ index a8380d5680fb..e978c61b4a29 100644
      <string name="pref_key_start_profiler" translatable="false">pref_key_start_profiler</string>
  
 diff --git a/mobile/android/fenix/app/src/main/res/values/static_strings.xml b/mobile/android/fenix/app/src/main/res/values/static_strings.xml
-index bdd1da9070ec..65d394c6e7b1 100644
+index 9ac59b7a8487..1ef4cba41d6a 100644
 --- a/mobile/android/fenix/app/src/main/res/values/static_strings.xml
 +++ b/mobile/android/fenix/app/src/main/res/values/static_strings.xml
-@@ -69,6 +69,8 @@
+@@ -65,6 +65,8 @@
      <string name="preferences_sync_debug_temporary_auth_error_button_title">Simulate temporary account auth error</string>
      <!-- Button title for simulating an FxA permanent auth error inside the Sync Debug menu -->
      <string name="preferences_sync_debug_permanent_auth_error_button_title">Simulate permanent account auth error</string>
@@ -2962,10 +2962,10 @@ index bdd1da9070ec..65d394c6e7b1 100644
      <string name="preferences_debug_settings_homepage_searchbar" translatable="false">Enable Homepage Search Bar</string>
      <!-- Label for overriding user specified homepage sections -->
 diff --git a/mobile/android/fenix/app/src/main/res/values/strings.xml b/mobile/android/fenix/app/src/main/res/values/strings.xml
-index dff38a7aef4d..408febff9ddb 100644
+index 6c2ae8b2c81b..333f5c64454e 100644
 --- a/mobile/android/fenix/app/src/main/res/values/strings.xml
 +++ b/mobile/android/fenix/app/src/main/res/values/strings.xml
-@@ -819,6 +819,13 @@
+@@ -820,6 +820,13 @@
      <!-- Message to indicate users that we are quitting the application to apply the changes -->
      <string name="quit_application">Quitting the application to apply changes…</string>
  
@@ -2998,7 +2998,7 @@ index 159944ab7d38..7949efe32b2d 100644
              android:key="@string/pref_key_leakcanary"
              android:title="@string/preference_leakcanary"
 diff --git a/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
-index e8059b6aea0b..2398956f83ed 100644
+index 24be8702dbda..ede2df30906d 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
 @@ -15,6 +15,11 @@

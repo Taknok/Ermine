@@ -27,8 +27,8 @@ source "$(dirname "$0")/paths.sh"
 # plugins (Glean).
 
 # Set up Android SDK
-sdkmanager 'build-tools;36.0.0' # for GeckoView
-sdkmanager 'platforms;android-36' # for GeckoView
+sdkmanager 'build-tools;36.1.0' # for GeckoView
+sdkmanager 'platforms;android-36.1' # for GeckoView
 
 # Set up Rust
 # shellcheck disable=SC1090,SC1091

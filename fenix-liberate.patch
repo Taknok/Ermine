@@ -1,14 +1,14 @@
 diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
-index ed368f95634e..1949c4ddce37 100644
+index 341d91eafc60..6bc2cb97b34b 100644
 --- a/gradle/libs.versions.toml
 +++ b/gradle/libs.versions.toml
-@@ -49,15 +49,10 @@ work = "2.11.0"
+@@ -50,15 +50,10 @@ work = "2.11.0"
  
  # Google other
  accompanist = "0.37.3"
 -firebase-messaging = "25.0.1"
  installreferrer = "2.2"
- ksp = "2.3.2"
+ ksp = "2.3.3"
  material = "1.13.0"
  osslicenses-plugin = "0.10.7"
 -play-review = "2.0.2"
@@ -18,7 +18,7 @@ index ed368f95634e..1949c4ddce37 100644
  protobuf = "4.33.0" # Keep Protobuf in sync with the version used by AppServices.
  
  # Gradle plugins
-@@ -197,7 +192,6 @@ androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "u
+@@ -201,7 +196,6 @@ androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "u
  
  # Google other
  accompanist-drawablepainter = { group = "com.google.accompanist", name = "accompanist-drawablepainter", version.ref = "accompanist" }
@@ -26,7 +26,7 @@ index ed368f95634e..1949c4ddce37 100644
  installreferrer = { group = "com.android.installreferrer", name = "installreferrer", version.ref = "installreferrer" }
  google-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
  ksp-symbol-processing-aa = { group = "com.google.devtools.ksp", name = "symbol-processing-aa", version.ref = "ksp" }
-@@ -205,11 +199,6 @@ ksp-symbol-processing-aa-embeddable = { group = "com.google.devtools.ksp", name
+@@ -209,11 +203,6 @@ ksp-symbol-processing-aa-embeddable = { group = "com.google.devtools.ksp", name
  ksp-symbol-processing-api = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
  ksp-symbol-processing-common-deps = { group = "com.google.devtools.ksp", name = "symbol-processing-common-deps", version.ref = "ksp" }
  osslicenses-plugin = { group = "com.google.android.gms", name = "oss-licenses-plugin", version.ref = "osslicenses-plugin" }
@@ -39,10 +39,10 @@ index ed368f95634e..1949c4ddce37 100644
  protobuf-javalite = { group = "com.google.protobuf", name = "protobuf-javalite", version.ref = "protobuf" }
  
 diff --git a/mobile/android/android-components/.buildconfig.yml b/mobile/android/android-components/.buildconfig.yml
-index 200b84de37cf..3f3aa6819bc2 100644
+index 9a16eea8e262..addb9e76ab6d 100644
 --- a/mobile/android/android-components/.buildconfig.yml
 +++ b/mobile/android/android-components/.buildconfig.yml
-@@ -1704,17 +1704,6 @@ projects:
+@@ -1705,17 +1705,6 @@ projects:
      - components:support-base
      - components:support-test
      - components:tooling-lint
@@ -73,10 +73,10 @@ index 1753bcbd86ff..fad6fde5c2a0 100644
      - components:service-digitalassetlinks
      - components:service-firefox-accounts
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index 237d28a56042..6d0a3f954590 100644
+index d6f8ce2a2bd6..315cd41b7c8c 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -637,12 +637,10 @@ dependencies {
+@@ -640,12 +640,10 @@ dependencies {
      implementation project(':components:lib-crash')
      implementation project(':components:lib-crash-sentry')
      implementation project(':components:lib-dataprotect')
@@ -89,7 +89,7 @@ index 237d28a56042..6d0a3f954590 100644
      implementation libs.androidx.activity
      implementation libs.androidx.activity.ktx
      implementation libs.androidx.annotation
-@@ -688,16 +686,14 @@ dependencies {
+@@ -693,16 +691,14 @@ dependencies {
      implementation libs.androidx.viewpager2
      implementation libs.androidx.work.runtime
      implementation libs.google.material
@@ -103,7 +103,7 @@ index 237d28a56042..6d0a3f954590 100644
      implementation libs.protobuf.javalite
      implementation libs.sentry
  
-+    implementation 'org.microg.gms:play-services-ads-identifier:0.3.10.250932'
++    implementation 'org.microg.gms:play-services-ads-identifier:0.3.11.250932'
 +
      debugImplementation libs.androidx.compose.ui.tooling
      debugImplementation libs.leakcanary
@@ -564,10 +564,10 @@ index 000000000000..b50a6f03a218
 +    }
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt
-index e9702fc00de6..d762260fed70 100644
+index 067d968dd9fa..2304954b7b8a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt
-@@ -1272,19 +1272,16 @@ abstract class BaseBrowserFragment :
+@@ -1298,19 +1298,16 @@ abstract class BaseBrowserFragment :
              view = view,
          )
  
@@ -598,7 +598,7 @@ index e9702fc00de6..d762260fed70 100644
          screenOrientationFeature.set(
              feature = ScreenOrientationFeature(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index ce5e4868ccc2..a31d709d321a 100644
+index a32764c2ea45..1cbed0f443a5 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 @@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
@@ -609,7 +609,7 @@ index ce5e4868ccc2..a31d709d321a 100644
  import mozilla.components.feature.addons.AddonManager
  import mozilla.components.feature.addons.amo.AMOAddonsProvider
  import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
-@@ -216,7 +215,6 @@ class Components(private val context: Context) {
+@@ -236,7 +235,6 @@ class Components(private val context: Context) {
  
      val playStoreReviewPromptController by lazyMonitored {
          PlayStoreReviewPromptController(
@@ -618,20 +618,20 @@ index ce5e4868ccc2..a31d709d321a 100644
          )
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/PlayStoreReviewPromptController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/PlayStoreReviewPromptController.kt
-index 3d6e83903dcf..d5031be9ae24 100644
+index f08c5cecdade..7f75cc75c20c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/PlayStoreReviewPromptController.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/PlayStoreReviewPromptController.kt
-@@ -9,9 +9,6 @@ import android.content.ActivityNotFoundException
- import android.content.Intent
- import androidx.annotation.VisibleForTesting
+@@ -11,9 +11,6 @@ import androidx.annotation.VisibleForTesting
  import androidx.core.net.toUri
+ import androidx.fragment.app.FragmentActivity
+ import androidx.navigation.fragment.NavHostFragment
 -import com.google.android.play.core.review.ReviewException
 -import com.google.android.play.core.review.ReviewInfo
 -import com.google.android.play.core.review.ReviewManager
  import kotlinx.coroutines.Dispatchers
  import kotlinx.coroutines.withContext
  import mozilla.components.support.base.log.logger.Logger
-@@ -33,7 +30,6 @@ val logger = Logger("PlayStoreReviewPromptController")
+@@ -35,7 +32,6 @@ val logger = Logger("PlayStoreReviewPromptController")
   * Wraps the Play Store In-App Review API.
   */
  class PlayStoreReviewPromptController(
@@ -639,7 +639,7 @@ index 3d6e83903dcf..d5031be9ae24 100644
      private val numberOfAppLaunches: () -> Int,
  ) {
  
-@@ -45,71 +41,12 @@ class PlayStoreReviewPromptController(
+@@ -47,80 +43,12 @@ class PlayStoreReviewPromptController(
          onNotDisplayed: () -> Unit = {},
          onError: () -> Unit = {},
      ) {
@@ -699,11 +699,20 @@ index 3d6e83903dcf..d5031be9ae24 100644
 -        } catch (e: ActivityNotFoundException) {
 -            // Device without the play store installed.
 -            // Opening the play store website.
--            (activity as HomeActivity).openToBrowserAndLoad(
+-
+-            activity.applicationContext.components.useCases.fenixBrowserUseCases.loadUrlOrSearch(
 -                searchTermOrURL = SupportUtils.FENIX_PLAY_STORE_URL,
 -                newTab = true,
--                from = BrowserDirection.FromGlobal,
 -            )
+-
+-            // https://bugzilla.mozilla.org/show_bug.cgi?id=1997148
+-            (activity as? FragmentActivity)
+-                ?.supportFragmentManager
+-                ?.fragments
+-                ?.firstOrNull { it is NavHostFragment }
+-                ?.let { (it as NavHostFragment).navController }
+-                ?.openToBrowser()
+-
 -            logger.warn("Failed to launch play store review flow due to: $e.")
 -        }
 -
@@ -712,7 +721,7 @@ index 3d6e83903dcf..d5031be9ae24 100644
  
      companion object {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
-index 233855f4c25b..2af8f7844428 100644
+index fd1214e90d5e..aca5729e4e9c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
 @@ -6,8 +6,6 @@ package org.mozilla.fenix.components.metrics
@@ -734,12 +743,13 @@ index 233855f4c25b..2af8f7844428 100644
  import org.mozilla.fenix.ext.settings
  import org.mozilla.fenix.utils.Settings
  import java.io.UnsupportedEncodingException
-@@ -33,86 +28,10 @@ class InstallReferrerMetricsService(private val context: Context) : MetricsServi
+@@ -33,87 +28,11 @@ class InstallReferrerMetricsService(private val context: Context) : MetricsServi
      private val logger = Logger("InstallReferrerMetricsService")
      override val type = MetricServiceType.Data
  
 -    private var referrerClient: InstallReferrerClient? = null
 -
+     @Suppress("CognitiveComplexMethod")
      override fun start() {
 -        if (context.settings().utmParamsKnown) {
 -            return
@@ -821,7 +831,7 @@ index 233855f4c25b..2af8f7844428 100644
      }
  
      override fun track(event: Event) = Unit
-@@ -120,9 +39,6 @@ class InstallReferrerMetricsService(private val context: Context) : MetricsServi
+@@ -121,9 +40,6 @@ class InstallReferrerMetricsService(private val context: Context) : MetricsServi
      override fun shouldTrack(event: Event): Boolean = false
  
      private fun triggerPing() {
@@ -831,7 +841,7 @@ index 233855f4c25b..2af8f7844428 100644
      }
  }
  
-@@ -237,12 +153,6 @@ data class UTMParams(
+@@ -238,12 +154,6 @@ data class UTMParams(
              return
          }
          intoSettings(settings)
@@ -844,7 +854,7 @@ index 233855f4c25b..2af8f7844428 100644
      }
  }
  
-@@ -337,9 +247,5 @@ data class MetaParams(
+@@ -338,9 +248,5 @@ data class MetaParams(
       * record META attribution params to telemetry
       */
      fun recordMetaAttribution() {
@@ -855,7 +865,7 @@ index 233855f4c25b..2af8f7844428 100644
      }
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt
-index 50fa1b1fc800..24060c734c92 100644
+index 55091c77b307..c2dc6d65fc90 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt
 @@ -7,8 +7,6 @@ package org.mozilla.fenix.components.metrics
@@ -867,7 +877,7 @@ index 50fa1b1fc800..24060c734c92 100644
  import mozilla.components.support.base.log.logger.Logger
  import org.mozilla.fenix.distributions.DistributionIdManager
  import org.mozilla.fenix.ext.components
-@@ -25,84 +23,17 @@ const val ADJUST_REFTAG_PREFIX = "adjust_reftag="
+@@ -25,80 +23,18 @@ const val ADJUST_REFTAG_PREFIX = "adjust_reftag="
   */
  class MarketingAttributionService(private val context: Context) {
      private val logger = Logger("MarketingAttributionService")
@@ -876,6 +886,7 @@ index 50fa1b1fc800..24060c734c92 100644
      /**
       * Starts the connection with the install referrer and handle the response.
       */
+     @Suppress("CognitiveComplexMethod")
      fun start() {
 -        val client = InstallReferrerClient.newBuilder(context).build()
 -        referrerClient = client
@@ -905,12 +916,7 @@ index 50fa1b1fc800..24060c734c92 100644
 -                                val utmParams = UTMParams.parseUTMParameters(installReferrerResponse)
 -
 -                                distributionIdManager.updateDistributionIdFromUtmParams(utmParams)
--
--                                if (distributionIdManager.shouldSkipMarketingConsentScreen()) {
--                                    context.components.settings.isMarketingTelemetryEnabled = true
--                                    context.components.settings.hasMadeMarketingTelemetrySelection = true
--                                    context.components.analytics.metrics.start(MetricServiceType.Marketing)
--                                }
+-                                distributionIdManager.startAdjustIfSkippingConsentScreen()
 -                            }
 -
 -                            context.settings().shouldShowMarketingOnboarding =
@@ -981,10 +987,10 @@ index d211d3625dbf..0458e8704d5c 100644
      /**
       * Show Pocket sponsored stories in between Pocket recommended stories on home.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-index 3b7336c90f18..5c1b9781f05d 100644
+index 7ccbf4d7c2c6..785dd9194be9 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-@@ -454,8 +454,7 @@ class OnboardingFragment : Fragment() {
+@@ -479,8 +479,7 @@ class OnboardingFragment : Fragment() {
          }
  
          if (!settings.isTelemetryEnabled) {
@@ -995,7 +1001,7 @@ index 3b7336c90f18..5c1b9781f05d 100644
  
          startMetricsIfEnabled(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-index 4b0f1cd450ed..cf3cf1428a46 100644
+index 8a7e3ad3f549..531457b4da17 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 @@ -29,6 +29,8 @@ object SupportUtils {
@@ -1008,10 +1014,10 @@ index 4b0f1cd450ed..cf3cf1428a46 100644
      // This is locale-less on purpose so that the content negotiation happens on the AMO side because the current
      // user language might not be supported by AMO and/or the language might not be exactly what AMO is expecting
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 35d4c5a9c0a4..a089818877f0 100644
+index 276ad8cf1df1..cafaf05bdf0a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -170,8 +170,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -174,8 +174,7 @@ class Settings(
      private val logger = Logger("Settings")
  
      @VisibleForTesting
@@ -1021,7 +1027,7 @@ index 35d4c5a9c0a4..a089818877f0 100644
  
      override val preferences: SharedPreferences =
          appContext.getSharedPreferences(FENIX_PREFERENCES, MODE_PRIVATE)
-@@ -197,11 +196,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -201,11 +200,7 @@ class Settings(
      /**
       * Indicates if the stories homescreen section should be shown.
       */
@@ -1033,8 +1039,8 @@ index 35d4c5a9c0a4..a089818877f0 100644
 +    var showPocketRecommendationsFeature = false
  
      /**
-      * Indicates what toolbar shortcut key is currently selected.
-@@ -215,11 +210,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+      * Indicates what simple toolbar shortcut key is currently selected.
+@@ -240,11 +235,7 @@ class Settings(
      /**
       * Indicates if the Pocket recommendations homescreen section should also show sponsored stories.
       */
@@ -1047,7 +1053,7 @@ index 35d4c5a9c0a4..a089818877f0 100644
  
      /**
       * Indicates whether or not the "Recently Visited" section should be shown on the home screen.
-@@ -529,12 +520,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -553,12 +544,7 @@ class Settings(
          default = true,
      )
  
@@ -1061,7 +1067,7 @@ index 35d4c5a9c0a4..a089818877f0 100644
  
      var crashReportChoice by stringPreference(
          appContext.getPreferenceKey(R.string.pref_key_crash_reporting_choice),
-@@ -546,20 +532,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -570,20 +556,11 @@ class Settings(
          default = false,
      )
  
@@ -1085,7 +1091,7 @@ index 35d4c5a9c0a4..a089818877f0 100644
  
      var hasAcceptedTermsOfService by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_terms_accepted),
-@@ -657,16 +634,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -680,16 +657,9 @@ class Settings(
       * sure that users who upgrade and had telemetry disabled don't start sending the
       * daily usage ping telemetry.
       */
@@ -1104,7 +1110,7 @@ index 35d4c5a9c0a4..a089818877f0 100644
  
      /**
       * This lets us know if the user has disabled experimentation manually so that we know
-@@ -2062,10 +2032,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2129,10 +2099,7 @@ class Settings(
      /**
       * Indicates if the Contile functionality should be visible.
       */

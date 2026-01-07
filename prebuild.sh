@@ -48,7 +48,7 @@ function apply_patch {
 "$rustup"/rustup-init.sh -y --no-update-default-toolchain
 # shellcheck disable=SC1090,SC1091
 source "$HOME/.cargo/env"
-rustup default 1.86.0
+rustup default 1.90.0
 
 #
 # Fenix
@@ -196,11 +196,11 @@ find "$patches/a-s-overlay" -type f | while read -r src; do
     cp "$src" "${src#"$patches/a-s-overlay/"}"
 done
 # Remove Mozilla repositories substitution and explicitly add the required ones
-apply_patch "$patches/a-c-localize_maven.patch"
+apply_patch "$patches/a-s-localize_maven.patch"
 # Configure default search engines
-apply_patch "$patches/a-c-configure-default-search-engines.patch"
+apply_patch "$patches/a-s-configure-default-search-engines.patch"
 # Break the dependency on older A-C
-sed -i -e '/android-components = /s/"144\.0\.1"/"146.0.1"/' gradle/libs.versions.toml
+sed -i -e '/android-components = /s/"145\.0\.2"/"147.0"/' gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 sed -i -e '/content {/,/}/d' build.gradle
