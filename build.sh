@@ -95,9 +95,17 @@ popd
 pushd "$android_components"
 # Required by A-S
 gradle :components:concept-fetch:publishToMavenLocal
+# Required by UnifiedPush
+gradle :components:concept-base:publishToMavenLocal
+gradle :components:support-base:publishToMavenLocal
+gradle :components:ui-icons:publishToMavenLocal
 popd
 
 pushd "$application_services"
+gradle publishToMavenLocal
+popd
+
+pushd "$unifiedpush_ac"
 gradle publishToMavenLocal
 popd
 

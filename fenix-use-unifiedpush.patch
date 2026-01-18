@@ -1,0 +1,41 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
+index 1cbed0f443a5..e8c9db45a476 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
+@@ -220,7 +220,7 @@ class Components(private val context: Context) {
+     val publicSuffixList by lazyMonitored { PublicSuffixList(context) }
+     val clipboardHandler by lazyMonitored { ClipboardHandler(context) }
+     val performance by lazyMonitored { PerformanceComponent() }
+-    val push by lazyMonitored { Push(context, analytics.crashReporter) }
++    val push by lazyMonitored { Push(context) }
+     val wifiConnectionMonitor by lazyMonitored { WifiConnectionMonitor(context as Application) }
+ 
+     val strictMode by lazyMonitored {
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt
+index 98a10159bff3..2f7fb5939944 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt
+@@ -31,7 +31,6 @@ class Push(val context: Context, val strictMode: StrictModeManager = context.com
+     private val logger = Logger("Push")
+     val feature: Pusher?
+         get() = strictMode.allowViolation(StrictMode::allowThreadDiskReads) {
+-            if (context.settings().ironfox.useUnifiedPush) {
+                 unifiedPushFeature.also { feature ->
+                     if (feature.isAvailable(context)) {
+                         logger.info("Using UnifiedPush")
+@@ -50,15 +49,8 @@ class Push(val context: Context, val strictMode: StrictModeManager = context.com
+                             notificationId = notificationId,
+                             notification = notification
+                         )
+-                        context.settings().ironfox.useUnifiedPush = false
+                     }
+                 }
+-            } else {
+-                logger.info("Using AutoPush")
+-                autoPushFeature?.also { feature ->
+-                    feature.migrateFrom(unifiedPushFeature)
+-                }
+-            }
+         }
+     private val autoPushFeature by lazyMonitored {
+         iAutoPushFeature

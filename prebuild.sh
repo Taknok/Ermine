@@ -181,6 +181,18 @@ sed -i \
 popd
 
 #
+# UnifiedPush Android Component
+#
+
+pushd "$unifiedpush_ac"
+localize_maven
+# Set A-C version
+echo "mozilla.version=${1%.0}" >> local.properties
+# Set A-S version
+sed -i -e 's/0.0.1-SNAPSHOT-+/148.0.1/' gradle/libs.versions.toml
+popd
+
+#
 # Application Services
 #
 
@@ -229,7 +241,8 @@ apply_patch "$patches/gecko-liberate.patch"
 apply_patch "$patches/gecko-unbreak-wasi-sdk-20-clang.patch"
 
 # Add UnifiedPush support
-apply_patch "$patches/unifiedpush.patch"
+apply_patch "$unifiedpush_ac/patches/a-c-unifiedpush.patch"
+apply_patch "$unifiedpush_ac/patches/fenix-unifiedpush.patch"
 
 # Patch the use of proprietary and tracking libraries
 apply_patch "$patches/fenix-liberate.patch"
@@ -246,6 +259,9 @@ apply_patch "$patches/fenix-disable-crashpull.patch"
 
 # Remove "Sent from Firefox" reference on sharing
 apply_patch "$patches/fenix-disable-sent-from-fx.patch"
+
+# Hack the use of IronFox-specific setting
+apply_patch "$patches/fenix-use-unifiedpush.patch"
 
 # Fix v125 aar output not including native libraries
 sed -i \
