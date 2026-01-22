@@ -95,11 +95,15 @@ gradle -x javadocRelease :exoplayer2:publishReleasePublicationToMavenLocal
 popd
 
 pushd "$android_components"
-# Publish concept-fetch (required by A-S) with auto-publication disabled,
-# otherwise automatically triggered publication of A-S will fail
+# Required by A-S
 gradle :components:concept-fetch:publishToMavenLocal
-# Enable the auto-publication workflow now that concept-fetch is published
-echo "autoPublish.application-services.dir=$application_services" >> local.properties
+popd
+
+pushd "$application_services"
+gradle publishToMavenLocal
+popd
+
+pushd "$android_components"
 gradle publishToMavenLocal
 popd
 

@@ -143,9 +143,6 @@ case $(echo "$2" | cut -c 6) in
 esac
 sed -i -e "s/include \".*\"/include \"$abi\"/" app/build.gradle
 
-# Enable the auto-publication workflow
-echo "autoPublish.application-services.dir=$application_services" >> local.properties
-
 # Disable FUS Service or we'll get errors like:
 # Exception while loading configuration for :app: Could not load the value of field `__buildFusService__` of task `:app:compileFenixReleaseKotlin` of type `org.jetbrains.kotlin.gradle.tasks.KotlinCompile`.
 echo "kotlin.internal.collectFUSMetrics=false" >> local.properties
