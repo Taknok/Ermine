@@ -116,11 +116,11 @@ case $(echo "$2" | cut -c 6) in
         rustup target add armv7-linux-androideabi
         ;;
     1)
-        abi=x86
-        target=i686-linux-android
+        abi=x86_64
+        target=x86_64-linux-android
         echo "X86" > "$llvm/targets_to_build"
-        rusttarget=x86
-        rustup target add i686-linux-android
+        rusttarget=x86_64
+        rustup target add x86_64-linux-android
         ;;
     2)
         abi=arm64-v8a
@@ -128,13 +128,6 @@ case $(echo "$2" | cut -c 6) in
         echo "AArch64" > "$llvm/targets_to_build"
         rusttarget=arm64
         rustup target add aarch64-linux-android
-        ;;
-    3)
-        abi=x86_64
-        target=x86_64-linux-android
-        echo "X86" > "$llvm/targets_to_build"
-        rusttarget=x86_64
-        rustup target add x86_64-linux-android
         ;;
     *)
         echo "Unknown target code in $2." >&2
