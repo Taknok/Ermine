@@ -125,17 +125,10 @@ jobs:
 
       - name: Adding swap
         run: |
-          sudo swapon --show
-          sudo df -h
-          sudo ls -la /
-          sudo swapoff -a
-          sudo fallocate -l 6G /swapfile
-          sudo chmod 600 /swapfile
-          sudo mkswap /swapfile
-          sudo swapon --show
-          sudo swapoff -a
-          sudo swapon /swapfile
-          sudo swapon --show
+          sudo fallocate -l 6G /swapfile_custom
+          sudo chmod 600 /swapfile_custom
+          sudo mkswap /swapfile_custom
+          sudo swapon /swapfile_custom
 
       - name: Compiling
         run: |
