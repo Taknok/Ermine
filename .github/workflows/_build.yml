@@ -125,6 +125,7 @@ jobs:
 
       - name: Adding swap
         run: |
+          sudo swapon --show
           sudo df -h
           sudo ls -la /
           sudo swapoff -a
