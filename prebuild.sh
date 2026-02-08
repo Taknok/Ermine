@@ -244,6 +244,9 @@ sed -i 's|https://firefox.settings.services.mozilla.com/v1/buckets/main-preview/
 # Remove the use of RemoteSettingsCrashPull, the part of the crash reporter
 apply_patch "$patches/fenix-disable-crashpull.patch"
 
+# Remove "Sent from Firefox" reference on sharing
+apply_patch "$patches/fenix-disable-sent-from-fx.patch"
+
 # Fix v125 aar output not including native libraries
 sed -i \
     -e 's/singleVariant("debug")/singleVariant("release")/' \
