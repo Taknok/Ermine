@@ -72,7 +72,7 @@ export TARGET_CFLAGS=-DNDEBUG
 gradle publishToMavenLocal
 popd
 
-pushd "$application_services/components/external/glean"
+pushd "$glean_as"
 gradle publishToMavenLocal
 popd
 

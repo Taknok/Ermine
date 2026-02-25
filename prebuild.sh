@@ -152,6 +152,15 @@ localize_maven
 popd
 
 #
+# Glean for Application Services
+#
+
+pushd "$glean_as"
+echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
+localize_maven
+popd
+
+#
 # Android Components
 #
 
@@ -174,11 +183,6 @@ popd
 #
 # Application Services
 #
-
-pushd "$application_services/components/external/glean"
-apply_patch "$patches/glean-uniffi-bindgen.patch"
-echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
-popd
 
 pushd "$application_services"
 rm -vrf components/remote_settings/dumps/*/attachments/search-config-icons/*
