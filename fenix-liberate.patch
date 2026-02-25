@@ -1,5 +1,5 @@
 diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
-index 341d91eafc60..6bc2cb97b34b 100644
+index 49046593a376..ffeea59f2778 100644
 --- a/gradle/libs.versions.toml
 +++ b/gradle/libs.versions.toml
 @@ -50,15 +50,10 @@ work = "2.11.0"
@@ -8,17 +8,17 @@ index 341d91eafc60..6bc2cb97b34b 100644
  accompanist = "0.37.3"
 -firebase-messaging = "25.0.1"
  installreferrer = "2.2"
- ksp = "2.3.3"
+ ksp = "2.3.4"
  material = "1.13.0"
- osslicenses-plugin = "0.10.7"
+ osslicenses-plugin = "0.10.10"
 -play-review = "2.0.2"
 -play-services-ads-id = "18.2.0"
 -play-services-base = "18.9.0"
 -play-services-fido = "21.2.0"
- protobuf = "4.33.0" # Keep Protobuf in sync with the version used by AppServices.
+ protobuf = "4.33.2" # Keep Protobuf in sync with the version used by AppServices.
  
  # Gradle plugins
-@@ -201,7 +196,6 @@ androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "u
+@@ -202,7 +197,6 @@ androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "u
  
  # Google other
  accompanist-drawablepainter = { group = "com.google.accompanist", name = "accompanist-drawablepainter", version.ref = "accompanist" }
@@ -26,7 +26,7 @@ index 341d91eafc60..6bc2cb97b34b 100644
  installreferrer = { group = "com.android.installreferrer", name = "installreferrer", version.ref = "installreferrer" }
  google-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
  ksp-symbol-processing-aa = { group = "com.google.devtools.ksp", name = "symbol-processing-aa", version.ref = "ksp" }
-@@ -209,11 +203,6 @@ ksp-symbol-processing-aa-embeddable = { group = "com.google.devtools.ksp", name
+@@ -210,11 +204,6 @@ ksp-symbol-processing-aa-embeddable = { group = "com.google.devtools.ksp", name
  ksp-symbol-processing-api = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
  ksp-symbol-processing-common-deps = { group = "com.google.devtools.ksp", name = "symbol-processing-common-deps", version.ref = "ksp" }
  osslicenses-plugin = { group = "com.google.android.gms", name = "oss-licenses-plugin", version.ref = "osslicenses-plugin" }
@@ -39,10 +39,10 @@ index 341d91eafc60..6bc2cb97b34b 100644
  protobuf-javalite = { group = "com.google.protobuf", name = "protobuf-javalite", version.ref = "protobuf" }
  
 diff --git a/mobile/android/android-components/.buildconfig.yml b/mobile/android/android-components/.buildconfig.yml
-index 9a16eea8e262..addb9e76ab6d 100644
+index 0e25603f7719..3f693627d1fa 100644
 --- a/mobile/android/android-components/.buildconfig.yml
 +++ b/mobile/android/android-components/.buildconfig.yml
-@@ -1705,17 +1705,6 @@ projects:
+@@ -1712,17 +1712,6 @@ projects:
      - components:support-base
      - components:support-test
      - components:tooling-lint
@@ -61,7 +61,7 @@ index 9a16eea8e262..addb9e76ab6d 100644
      description: A library for maintaining application state.
      path: components/lib/state
 diff --git a/mobile/android/fenix/.buildconfig.yml b/mobile/android/fenix/.buildconfig.yml
-index 1753bcbd86ff..fad6fde5c2a0 100644
+index 5c550dfa554e..b5c953ca2c1b 100644
 --- a/mobile/android/fenix/.buildconfig.yml
 +++ b/mobile/android/fenix/.buildconfig.yml
 @@ -65,7 +65,6 @@ projects:
@@ -73,10 +73,10 @@ index 1753bcbd86ff..fad6fde5c2a0 100644
      - components:service-digitalassetlinks
      - components:service-firefox-accounts
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index d6f8ce2a2bd6..315cd41b7c8c 100644
+index 1b27020a20ee..d066914c072d 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -640,12 +640,10 @@ dependencies {
+@@ -625,12 +625,10 @@ dependencies {
      implementation project(':components:lib-crash')
      implementation project(':components:lib-crash-sentry')
      implementation project(':components:lib-dataprotect')
@@ -89,7 +89,7 @@ index d6f8ce2a2bd6..315cd41b7c8c 100644
      implementation libs.androidx.activity
      implementation libs.androidx.activity.ktx
      implementation libs.androidx.annotation
-@@ -693,16 +691,14 @@ dependencies {
+@@ -678,16 +676,14 @@ dependencies {
      implementation libs.androidx.viewpager2
      implementation libs.androidx.work.runtime
      implementation libs.google.material
@@ -564,10 +564,10 @@ index 000000000000..b50a6f03a218
 +    }
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt
-index 067d968dd9fa..2304954b7b8a 100644
+index 950cbf375816..773eafa32e73 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt
-@@ -1298,19 +1298,16 @@ abstract class BaseBrowserFragment :
+@@ -1310,19 +1310,16 @@ abstract class BaseBrowserFragment :
              view = view,
          )
  
@@ -598,7 +598,7 @@ index 067d968dd9fa..2304954b7b8a 100644
          screenOrientationFeature.set(
              feature = ScreenOrientationFeature(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index a32764c2ea45..1cbed0f443a5 100644
+index 211aac26e6e4..c8b81754a245 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 @@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
@@ -987,7 +987,7 @@ index d211d3625dbf..0458e8704d5c 100644
      /**
       * Show Pocket sponsored stories in between Pocket recommended stories on home.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-index 7ccbf4d7c2c6..785dd9194be9 100644
+index 947a088c2dc4..e55a780059e4 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 @@ -479,8 +479,7 @@ class OnboardingFragment : Fragment() {
@@ -1001,7 +1001,7 @@ index 7ccbf4d7c2c6..785dd9194be9 100644
  
          startMetricsIfEnabled(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-index 8a7e3ad3f549..531457b4da17 100644
+index 18a8759566b6..5b030acf48fd 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 @@ -29,6 +29,8 @@ object SupportUtils {
@@ -1014,10 +1014,10 @@ index 8a7e3ad3f549..531457b4da17 100644
      // This is locale-less on purpose so that the content negotiation happens on the AMO side because the current
      // user language might not be supported by AMO and/or the language might not be exactly what AMO is expecting
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 276ad8cf1df1..cafaf05bdf0a 100644
+index 81d95a9666a1..4f3bf914cbec 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -174,8 +174,7 @@ class Settings(
+@@ -177,8 +177,7 @@ class Settings(
      private val logger = Logger("Settings")
  
      @VisibleForTesting
@@ -1027,33 +1027,33 @@ index 276ad8cf1df1..cafaf05bdf0a 100644
  
      override val preferences: SharedPreferences =
          appContext.getSharedPreferences(FENIX_PREFERENCES, MODE_PRIVATE)
-@@ -201,11 +200,7 @@ class Settings(
+@@ -202,11 +201,7 @@ class Settings(
      /**
       * Indicates if the stories homescreen section should be shown.
       */
--    var showPocketRecommendationsFeature by lazyFeatureFlagPreference(
+-    var showPocketRecommendationsFeature by lazyFeatureFlagBooleanPreference(
 -        appContext.getPreferenceKey(R.string.pref_key_pocket_homescreen_recommendations),
 -        featureFlag = ContentRecommendationsFeatureHelper.isContentRecommendationsFeatureEnabled(appContext),
--        default = { homescreenSections[HomeScreenSection.POCKET] == true },
+-        defaultValue = { homescreenSections[HomeScreenSection.POCKET] == true },
 -    )
 +    var showPocketRecommendationsFeature = false
  
      /**
       * Indicates what simple toolbar shortcut key is currently selected.
-@@ -240,11 +235,7 @@ class Settings(
+@@ -241,11 +236,7 @@ class Settings(
      /**
       * Indicates if the Pocket recommendations homescreen section should also show sponsored stories.
       */
--    val showPocketSponsoredStories by lazyFeatureFlagPreference(
+-    val showPocketSponsoredStories by lazyFeatureFlagBooleanPreference(
 -        key = appContext.getPreferenceKey(R.string.pref_key_pocket_sponsored_stories),
--        default = { homescreenSections[HomeScreenSection.POCKET_SPONSORED_STORIES] == true },
+-        defaultValue = { homescreenSections[HomeScreenSection.POCKET_SPONSORED_STORIES] == true },
 -        featureFlag = ContentRecommendationsFeatureHelper.isPocketSponsoredStoriesFeatureEnabled(appContext),
 -    )
 +    val showPocketSponsoredStories = false
  
      /**
       * Indicates whether or not the "Recently Visited" section should be shown on the home screen.
-@@ -553,12 +544,7 @@ class Settings(
+@@ -554,12 +545,7 @@ class Settings(
          default = true,
      )
  
@@ -1067,7 +1067,7 @@ index 276ad8cf1df1..cafaf05bdf0a 100644
  
      var crashReportChoice by stringPreference(
          appContext.getPreferenceKey(R.string.pref_key_crash_reporting_choice),
-@@ -570,20 +556,11 @@ class Settings(
+@@ -571,20 +557,11 @@ class Settings(
          default = false,
      )
  
@@ -1091,7 +1091,7 @@ index 276ad8cf1df1..cafaf05bdf0a 100644
  
      var hasAcceptedTermsOfService by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_terms_accepted),
-@@ -680,16 +657,9 @@ class Settings(
+@@ -698,16 +675,9 @@ class Settings(
       * sure that users who upgrade and had telemetry disabled don't start sending the
       * daily usage ping telemetry.
       */
@@ -1110,7 +1110,7 @@ index 276ad8cf1df1..cafaf05bdf0a 100644
  
      /**
       * This lets us know if the user has disabled experimentation manually so that we know
-@@ -2129,10 +2099,7 @@ class Settings(
+@@ -2146,10 +2116,7 @@ class Settings(
      /**
       * Indicates if the Contile functionality should be visible.
       */
@@ -1123,7 +1123,7 @@ index 276ad8cf1df1..cafaf05bdf0a 100644
      /**
       * Indicates if the Unified Search feature should be visible.
 diff --git a/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml
-index 4fd1f8945ae2..9d6da836cf30 100644
+index e1afb71a53b2..aa4c14b19436 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml
 @@ -13,7 +13,8 @@
@@ -1155,7 +1155,7 @@ index 4fd1f8945ae2..9d6da836cf30 100644
      <androidx.preference.Preference
          android:key="@string/pref_key_wallpapers"
 diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-index 159944ab7d38..d3480d93a5b2 100644
+index 243eddddd9a3..90a3d9e966b6 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 @@ -141,11 +141,6 @@
@@ -1170,7 +1170,7 @@ index 159944ab7d38..d3480d93a5b2 100644
      </androidx.preference.PreferenceCategory>
  
      <PreferenceCategory
-@@ -206,11 +201,6 @@
+@@ -217,11 +212,6 @@
          android:title="@string/preferences_category_about"
          app:iconSpaceReserved="false"
          android:layout="@layout/preference_category_no_icon_style">

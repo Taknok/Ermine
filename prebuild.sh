@@ -97,6 +97,9 @@ find "$patches/fenix-overlay" -type f | while read -r src; do
     cp "$src" "$dst"
 done
 
+# There are a lot of "No cast needed" warnings in the generated code
+sed -i -e '/compilerOptions.allWarningsAsErrors/s/true/false/' build.gradle
+
 # Enable about:config
 sed -i \
     -e 's/aboutConfigEnabled(.*)/aboutConfigEnabled(true)/' \
@@ -194,7 +197,7 @@ apply_patch "$patches/a-s-localize_maven.patch"
 # Configure default search engines
 apply_patch "$patches/a-s-configure-default-search-engines.patch"
 # Break the dependency on older A-C
-sed -i -e '/android-components = /s/"145\.0\.2"/"147.0.2"/' gradle/libs.versions.toml
+sed -i -e '/android-components = /s/"145\.0\.2"/"148.0.1"/' gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 # Fail on use of prebuilt binary
