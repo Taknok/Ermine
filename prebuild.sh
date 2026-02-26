@@ -197,10 +197,6 @@ apply_patch "$patches/a-s-configure-default-search-engines.patch"
 sed -i -e '/android-components = /s/"145\.0\.2"/"147.0.2"/' gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
-sed -i -e '/content {/,/}/d' build.gradle
-localize_maven
-# Fix stray
-sed -i -e '/^    mavenLocal/{n;d}' tools/nimbus-gradle-plugin/build.gradle
 # Fail on use of prebuilt binary
 sed -i 's|https://|hxxps://|' tools/nimbus-gradle-plugin/src/main/groovy/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.groovy
 popd
