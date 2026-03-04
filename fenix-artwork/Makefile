@@ -21,6 +21,7 @@ flidir := ../fastlane/metadata/android/en-US/images
 images := $(foreach x,hdpi mdpi xhdpi xxhdpi xxxhdpi, \
                     $(resdir)/mipmap-$(x)/ic_launcher.webp \
                     $(resdir)/mipmap-$(x)/ic_launcher_foreground.webp \
+                    $(resdir)/drawable-$(x)/ic_firefox.webp \
                     $(resdir)/drawable-$(x)/ic_logo_wordmark_normal.webp \
                     $(resdir)/drawable-$(x)/ic_logo_wordmark_private.webp) \
           $(resdir)/drawable/ic_wordmark_text_normal.webp \
@@ -76,6 +77,23 @@ $(resdir)/mipmap-xxhdpi/ic_launcher_foreground.webp : ic_launcher_foreground.svg
 
 $(resdir)/mipmap-xxxhdpi/ic_launcher_foreground.webp : ic_launcher_foreground.svg
 	$(call rasterize,0:0:108:108,432)
+
+# Search widget logo
+
+$(resdir)/drawable-mdpi/ic_firefox.webp : ic_launcher_foreground.svg
+	$(call rasterize,28:28:80:80,48)
+
+$(resdir)/drawable-hdpi/ic_firefox.webp : ic_launcher_foreground.svg
+	$(call rasterize,28:28:80:80,72)
+
+$(resdir)/drawable-xhdpi/ic_firefox.webp : ic_launcher_foreground.svg
+	$(call rasterize,28:28:80:80,96)
+
+$(resdir)/drawable-xxhdpi/ic_firefox.webp : ic_launcher_foreground.svg
+	$(call rasterize,28:28:80:80,144)
+
+$(resdir)/drawable-xxxhdpi/ic_firefox.webp : ic_launcher_foreground.svg
+	$(call rasterize,28:28:80:80,192)
 
 # Wordmark normal
 
