@@ -31,8 +31,6 @@ sdkmanager 'build-tools;36.1.0' # for GeckoView
 sdkmanager 'platforms;android-36.1' # for GeckoView
 
 # Set up Rust
-# shellcheck disable=SC1090,SC1091
-source "$HOME/.cargo/env"
 cargo install --force --vers 0.29.2 cbindgen
 
 # Build LLVM
