@@ -74,13 +74,6 @@ pushd "$glean_as"
 gradle publishToMavenLocal
 popd
 
-pushd "$application_services"
-export NSS_DIR="$application_services/libs/desktop/linux-x86-64/nss"
-export NSS_STATIC=1
-./libs/verify-android-environment.sh
-gradle :tooling-nimbus-gradle:publishToMavenLocal
-popd
-
 pushd "$mozilla_release"
 ./mach build
 ./mach package
@@ -102,7 +95,15 @@ gradle :components:ui-icons:publishToMavenLocal
 popd
 
 pushd "$application_services"
+export NSS_DIR="$application_services/libs/desktop/linux-x86-64/nss"
+export NSS_STATIC=1
+./libs/verify-android-environment.sh
 gradle publishToMavenLocal
+# Build and install nimbus-fml manually
+pushd components/support/nimbus-fml
+cargo build --release
+popd
+mv target/release/nimbus-fml "$mozilla_release/obj/dist/host/bin/nimbus-fml"
 popd
 
 pushd "$unifiedpush_ac"

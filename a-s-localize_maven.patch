@@ -1,3 +1,23 @@
+diff --git a/components/ads-client/android/build.gradle b/components/ads-client/android/build.gradle
+index 52e4c5da3..7f8e87d9c 100644
+--- a/components/ads-client/android/build.gradle
++++ b/components/ads-client/android/build.gradle
+@@ -1,14 +1,7 @@
+ buildscript {
+     if (gradle.hasProperty("mozconfig")) {
+         repositories {
+-            gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
+-                maven {
+-                    url = repository
+-                    if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
+-                        allowInsecureProtocol = true
+-                    }
+-                }
+-            }
++            mavenLocal()
+         }
+ 
+         dependencies {
 diff --git a/components/fxa-client/android/build.gradle b/components/fxa-client/android/build.gradle
 index 88709f675..165ed22f2 100644
 --- a/components/fxa-client/android/build.gradle
@@ -39,7 +59,7 @@ index 748c8fc02..aaa73f6e4 100644
  
          dependencies {
 diff --git a/components/nimbus/android/build.gradle b/components/nimbus/android/build.gradle
-index 74b3aec47..14cc9bd64 100644
+index 915abb43f..f4aa47d21 100644
 --- a/components/nimbus/android/build.gradle
 +++ b/components/nimbus/android/build.gradle
 @@ -2,14 +2,7 @@ buildscript {
@@ -78,6 +98,26 @@ index be15dd740..47afad31d 100644
          }
  
          dependencies {
+diff --git a/components/support/error/android/build.gradle b/components/support/error/android/build.gradle
+index 9d97dc2c2..ea10793d3 100644
+--- a/components/support/error/android/build.gradle
++++ b/components/support/error/android/build.gradle
+@@ -2,14 +2,7 @@ buildscript {
+     // in mozilla-central there's no build.gradle suitable for the maven/glean config, so each component gets it.
+     if (gradle.hasProperty("mozconfig")) {
+         repositories {
+-            gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
+-                maven {
+-                    url = repository
+-                    if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
+-                        allowInsecureProtocol = true
+-                    }
+-                }
+-            }
++            mavenLocal()
+         }
+ 
+         dependencies {
 diff --git a/components/sync_manager/android/build.gradle b/components/sync_manager/android/build.gradle
 index 48d962f38..6bff91c91 100644
 --- a/components/sync_manager/android/build.gradle
@@ -99,30 +139,10 @@ index 48d962f38..6bff91c91 100644
  
          dependencies {
 diff --git a/settings.gradle b/settings.gradle
-index 34feca4cd..1c083df84 100644
+index c891c8ac1..a7741776b 100644
 --- a/settings.gradle
 +++ b/settings.gradle
-@@ -31,14 +31,7 @@ buildscript {
-         gradle.ext.mozconfig = gradle.root.mozconfig
- 
-         repositories {
--            gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
--                maven {
--                    url = repository
--                    if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
--                        allowInsecureProtocol = true
--                    }
--                }
--            }
-+            mavenLocal()
-         }
-     }
- }
-diff --git a/tools/nimbus-gradle-plugin/settings.gradle b/tools/nimbus-gradle-plugin/settings.gradle
-index 7d907f057..8679108f7 100644
---- a/tools/nimbus-gradle-plugin/settings.gradle
-+++ b/tools/nimbus-gradle-plugin/settings.gradle
-@@ -21,14 +21,7 @@ buildscript {
+@@ -22,14 +22,7 @@ buildscript {
          gradle.ext.mozconfig = gradle.root.mozconfig
  
          repositories {
