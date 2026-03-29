@@ -12,30 +12,212 @@ index 1cbed0f443a5..e8c9db45a476 100644
  
      val strictMode by lazyMonitored {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt
-index 98a10159bff3..2f7fb5939944 100644
+index 98a10159bff3..63c189a82256 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt
-@@ -31,7 +31,6 @@ class Push(val context: Context, val strictMode: StrictModeManager = context.com
+@@ -31,7 +31,7 @@ class Push(val context: Context, val strictMode: StrictModeManager = context.com
      private val logger = Logger("Push")
      val feature: Pusher?
          get() = strictMode.allowViolation(StrictMode::allowThreadDiskReads) {
 -            if (context.settings().ironfox.useUnifiedPush) {
++            if (context.settings().useUnifiedPush) {
                  unifiedPushFeature.also { feature ->
                      if (feature.isAvailable(context)) {
                          logger.info("Using UnifiedPush")
-@@ -50,15 +49,8 @@ class Push(val context: Context, val strictMode: StrictModeManager = context.com
+@@ -50,7 +50,7 @@ class Push(val context: Context, val strictMode: StrictModeManager = context.com
                              notificationId = notificationId,
                              notification = notification
                          )
 -                        context.settings().ironfox.useUnifiedPush = false
++                        context.settings().useUnifiedPush = false
                      }
                  }
--            } else {
--                logger.info("Using AutoPush")
--                autoPushFeature?.also { feature ->
--                    feature.migrateFrom(unifiedPushFeature)
--                }
--            }
+             } else {
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
+index e6c28d967904..a3f7fbc0cd3d 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
+@@ -220,6 +220,12 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+             onPreferenceChangeListener = SharedPreferenceUpdater()
          }
-     private val autoPushFeature by lazyMonitored {
-         iAutoPushFeature
+ 
++        requirePreference<SwitchPreference>(R.string.pref_key_enable_unifiedpush).apply {
++            isVisible = true
++            isChecked = context.settings().enableUnifiedPush
++            onPreferenceChangeListener = SharedPreferenceUpdater()
++        }
++
+         requirePreference<SwitchPreference>(R.string.pref_key_enable_address_sync).apply {
+             isVisible = Config.channel.isNightlyOrDebug
+             isChecked = context.settings().isAddressSyncEnabled
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
+index c47237dd222c..cb0fa7e69856 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
+@@ -438,6 +438,48 @@ class SettingsFragment : PreferenceFragmentCompat() {
+                 null
+             }
+ 
++            // Only displayed when UnifiedPush is enabled
++            resources.getString(R.string.pref_key_use_unifiedpush) -> {
++                val context = requireActivity()
++                context.settings().apply { useUnifiedPush = !useUnifiedPush }
++                val alert = MaterialAlertDialogBuilder(context).apply {
++                    setTitle(context.getString(R.string.preferences_unifiedpush))
++                    setMessage(context.getString(R.string.quit_application))
++                    setNegativeButton(android.R.string.cancel) { dialog: DialogInterface, _ ->
++                        dialog.cancel()
++                    }
++
++                    setPositiveButton(android.R.string.ok) { _, _ ->
++                        Toast.makeText(
++                            context,
++                            getString(R.string.toast_change_unifiedpush_done),
++                            Toast.LENGTH_LONG,
++                        ).show()
++
++                        Handler(Looper.getMainLooper()).postDelayed(
++                            {
++                                exitProcess(0)
++                            },
++                            FXA_SYNC_OVERRIDE_EXIT_DELAY,
++                        )
++                    }
++                    create().withCenterAlignedButtons()
++                }
++                if (context.settings().useUnifiedPush) {
++                    requireComponents.push.switchToUnifiedPush(context) { success ->
++                        if (!success) {
++                            context.settings().useUnifiedPush = false
++                        } else {
++                            alert.show()
++                        }
++                    }
++                } else {
++                    requireComponents.push.switchToAutoPush(context)
++                    alert.show()
++                }
++                null
++            }
++
+             // Only displayed when secret settings are enabled
+             resources.getString(R.string.pref_key_override_amo_collection) -> {
+                 val context = requireContext()
+@@ -578,6 +620,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
+             findPreference<Preference>(getPreferenceKey(R.string.pref_key_start_profiler))
+ 
+         with(settings) {
++            findPreference<SwitchPreference>(
++                getPreferenceKey(R.string.pref_key_use_unifiedpush),
++            )?.apply {
++                isVisible = enableUnifiedPush
++                isChecked = useUnifiedPush
++            }
+             findPreference<Preference>(
+                 getPreferenceKey(R.string.pref_key_nimbus_experiments),
+             )?.isVisible = showSecretDebugMenuThisSession
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 83b0cb19b298..819eb3d2c2e4 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -2174,6 +2174,22 @@ class Settings(
+         }
+     }
+ 
++    /**
++     * Indicates if UnifiedPush can be used
++     */
++    var enableUnifiedPush by booleanPreference(
++        key = appContext.getPreferenceKey(R.string.pref_key_enable_unifiedpush),
++        default = true,
++    )
++
++    /**
++     * Indicates if UnifiedPush is used
++     */
++    var useUnifiedPush by booleanPreference(
++        key = appContext.getPreferenceKey(R.string.pref_key_use_unifiedpush),
++        default = false,
++    )
++
+     /**
+      * Get the current mode for cookie banner handling
+      */
+diff --git a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
+index 1d38ede30cc7..e1459e2af3a8 100644
+--- a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
++++ b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
+@@ -432,6 +432,8 @@
+     <string name="pref_key_pocket_sponsored_stories" translatable="false">pref_key_pocket_sponsored_stories</string>
+ 
+     <!-- Secret Info Setting Keys -->
++    <string name="pref_key_enable_unifiedpush" translatable="false">pref_key_enable_unifiedpush</string>
++    <string name="pref_key_use_unifiedpush" translatable="false">pref_key_use_unifiedpush</string>
+     <string name="pref_key_secret_debug_info" translatable="false">pref_key_secret_debug_info</string>
+     <string name="pref_key_start_profiler" translatable="false">pref_key_start_profiler</string>
+ 
+diff --git a/mobile/android/fenix/app/src/main/res/values/static_strings.xml b/mobile/android/fenix/app/src/main/res/values/static_strings.xml
+index cc62cedb1265..8a1ec895ea39 100644
+--- a/mobile/android/fenix/app/src/main/res/values/static_strings.xml
++++ b/mobile/android/fenix/app/src/main/res/values/static_strings.xml
+@@ -61,6 +61,8 @@
+     <string name="preferences_sync_debug_temporary_auth_error_button_title">Simulate temporary account auth error</string>
+     <!-- Button title for simulating an FxA permanent auth error inside the Sync Debug menu -->
+     <string name="preferences_sync_debug_permanent_auth_error_button_title">Simulate permanent account auth error</string>
++    <!-- Label for enabling UnifiedPush -->
++    <string name="preferences_debug_settings_unifiedpush" translatable="false">Enable UnifiedPush</string>
+     <!-- Label for enabling the Homepage Search Bar -->
+     <string name="preferences_debug_settings_homepage_searchbar" translatable="false">Enable Homepage Search Bar</string>
+   <!-- Label for enabling Homepage as a New Tab -->
+diff --git a/mobile/android/fenix/app/src/main/res/values/strings.xml b/mobile/android/fenix/app/src/main/res/values/strings.xml
+index d37bc1885f10..37040d026c85 100644
+--- a/mobile/android/fenix/app/src/main/res/values/strings.xml
++++ b/mobile/android/fenix/app/src/main/res/values/strings.xml
+@@ -926,6 +926,13 @@
+     <!-- Message to indicate users that we are quitting the application to apply the changes -->
+     <string name="quit_application">Quitting the application to apply changes…</string>
+ 
++    <!-- Label for using UnifiedPush. UnifiedPush is a decentralized push notification system, so users can benefit from mobile push notifications without relying on Google Services. Users choose the application (and server) they wish to use to manage webpush for other applications. If enabled, the browser (e.g. Firefox for Android) will receive webpush messages via the chosen app. -->
++    <string name="preferences_unifiedpush">Use UnifiedPush</string>
++    <!--  The application must be restarted for the UnifiedPush setting to take effect. -->
++    <string name="preferences_unifiedpush_summary">Requires restart</string>
++    <!-- Toast shown after confirming the UnifiedPush configuration -->
++    <string name="toast_change_unifiedpush_done">UnifiedPush setting modified. Quitting the application to apply changes…</string>
++
+     <!-- Preference for extensions -->
+     <string name="preferences_extensions">Extensions</string>
+     <!-- Preference for installing a local extension -->
+diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
+index bb261eb1738e..c341630ece75 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
+@@ -190,6 +190,13 @@
+             app:isPreferenceVisible="false"
+             android:title="@string/firefox_labs_title" />
+ 
++        <androidx.preference.SwitchPreference
++            android:defaultValue="false"
++            android:key="@string/pref_key_use_unifiedpush"
++            app:iconSpaceReserved="false"
++            android:title="@string/preferences_unifiedpush"
++            android:summary="@string/preferences_unifiedpush_summary"/>
++
+         <androidx.preference.SwitchPreference
+             android:key="@string/pref_key_leakcanary"
+             android:title="@string/preference_leakcanary"
+diff --git a/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
+index b23d258a4df0..b9e8368b19f8 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
+@@ -15,6 +15,11 @@
+         android:key="@string/pref_key_nimbus_use_preview"
+         android:title="@string/preferences_nimbus_use_preview_collection"
+         app:iconSpaceReserved="false" />
++    <SwitchPreference
++        android:defaultValue="false"
++        android:key="@string/pref_key_enable_unifiedpush"
++        android:title="@string/preferences_debug_settings_unifiedpush"
++        app:iconSpaceReserved="false" />
+     <SwitchPreference
+         android:defaultValue="false"
+         android:key="@string/pref_key_enable_address_sync"

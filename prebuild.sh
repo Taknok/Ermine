@@ -258,7 +258,7 @@ apply_patch "$patches/fenix-disable-crashpull.patch"
 # Remove "Sent from Firefox" reference on sharing
 apply_patch "$patches/fenix-disable-sent-from-fx.patch"
 
-# Hack the use of IronFox-specific setting
+# Add "Enable UnifiedPush" and "Use UnifiedPush" settings
 apply_patch "$patches/fenix-use-unifiedpush.patch"
 
 # Fail on use of prebuilt binary
