@@ -102,6 +102,11 @@ sed -i \
     -e 's/aboutConfigEnabled(.*)/aboutConfigEnabled(true)/' \
     app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
 
+# Disable remote improvements by default
+sed -i \
+    -e '/android:defaultValue=/s/"true"/"false"/' \
+    app/src/main/res/xml/remote_improvements_preferences.xml
+
 # Add wallpaper URL
 echo 'https://gitlab.com/relan/fennecmedia/-/raw/master/wallpapers/android' > .wallpaper_url
 
