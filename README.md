@@ -1,16 +1,16 @@
 What's this?
 ------------
 
-Scripts and patches to compile [Fennec F-Droid](https://f-droid.org/packages/org.mozilla.fennec_fdroid/). They remove proprietary chunks from Mozilla code, rebrand Firefox to Fennec and build it. You can assemble your own APK in the very same way as F-Droid by cloning [recipes](https://gitlab.com/fdroid/fdroiddata) and running
+Scripts and patches to compile [Ermine F-Droid](https://f-droid.org/packages/com.deeperwire.ermine/). They remove proprietary chunks from Mozilla code, rebrand Firefox to Ermine and build it. You can assemble your own APK in the very same way as F-Droid by cloning [recipes](https://gitlab.com/fdroid/fdroiddata) and running
 
-    fdroid build org.mozilla.fennec_fdroid:VERCODE
+    fdroid build com.deeperwire.ermine:VERCODE
 
 where VERCODE is a version code number.
 
 Want to translate the description?
 ----------------------------------
 
-Feel free to translate the Fennec F-Droid [description](https://f-droid.org/packages/org.mozilla.fennec_fdroid/) via [Codeberg Translate](https://translate.codeberg.org/projects/fennec/).
+Feel free to translate the Ermine F-Droid [description](https://f-droid.org/packages/com.deeperwire.ermine/) via [Codeberg Translate](https://translate.codeberg.org/projects/ermine/).
 
 Licenses
 --------
