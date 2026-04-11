@@ -162,10 +162,10 @@ index 39a6df6fb62e..86ee82a027dc 100644
 +-dontwarn org.checkerframework.checker.nullness.qual.RequiresNonNull
 diff --git a/mobile/android/fenix/app/src/main/java/com/adjust/sdk/Adjust.java b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/Adjust.java
 new file mode 100644
-index 000000000000..d377e98bbf05
+index 000000000000..1bafc51be64e
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/Adjust.java
-@@ -0,0 +1,50 @@
+@@ -0,0 +1,55 @@
 +/*
 + * Copyright (c) 2012-2017 adjust GmbH,
 + * http://www.adjust.com
@@ -214,6 +214,11 @@ index 000000000000..d377e98bbf05
 +    }
 +
 +    public static void gdprForgetMe(final Context context) {
++    }
++
++    public static void trackThirdPartySharing(
++            final AdjustThirdPartySharing adjustThirdPartySharing)
++    {
 +    }
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustAttribution.java b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustAttribution.java
@@ -364,6 +369,25 @@ index 000000000000..0b4d80ed4b2c
 +    }
 +
 +    public void setPurchaseToken(String purchaseToken) {
++    }
++}
+diff --git a/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustThirdPartySharing.java b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustThirdPartySharing.java
+new file mode 100644
+index 000000000000..1a8314dae0a1
+--- /dev/null
++++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustThirdPartySharing.java
+@@ -0,0 +1,13 @@
++package com.adjust.sdk;
++
++public class AdjustThirdPartySharing {
++
++    public AdjustThirdPartySharing(final Boolean isEnabled) {
++    }
++
++    public void addPartnerSharingSetting(final String partnerName,
++                                         final String key,
++                                         final boolean value)
++    {
 +    }
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/com/adjust/sdk/Constants.java b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/Constants.java
@@ -812,152 +836,189 @@ index f08c5cecdade..7f75cc75c20c 100644
      }
  
      companion object {
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
-index fd1214e90d5e..aca5729e4e9c 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
-@@ -6,8 +6,6 @@ package org.mozilla.fenix.components.metrics
- 
- import android.content.Context
- import android.os.RemoteException
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerWorker.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerWorker.kt
+index be9e47f9fbf2..fd16b5119e41 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerWorker.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerWorker.kt
+@@ -9,8 +9,6 @@ import android.os.RemoteException
+ import androidx.annotation.VisibleForTesting
+ import androidx.work.CoroutineWorker
+ import androidx.work.WorkerParameters
 -import com.android.installreferrer.api.InstallReferrerClient
 -import com.android.installreferrer.api.InstallReferrerStateListener
- import kotlinx.coroutines.CoroutineScope
- import kotlinx.coroutines.Dispatchers
- import kotlinx.coroutines.launch
-@@ -15,9 +13,6 @@ import mozilla.components.support.base.log.logger.Logger
- import org.json.JSONException
- import org.json.JSONObject
- import org.mozilla.fenix.FeatureFlags
--import org.mozilla.fenix.GleanMetrics.MetaAttribution
--import org.mozilla.fenix.GleanMetrics.Pings
--import org.mozilla.fenix.GleanMetrics.PlayStoreAttribution
- import org.mozilla.fenix.ext.settings
- import org.mozilla.fenix.utils.Settings
- import java.io.UnsupportedEncodingException
-@@ -33,87 +28,11 @@ class InstallReferrerMetricsService(private val context: Context) : MetricsServi
-     private val logger = Logger("InstallReferrerMetricsService")
-     override val type = MetricServiceType.Data
+ import kotlinx.coroutines.suspendCancellableCoroutine
+ import mozilla.components.support.base.log.logger.Logger
+ import mozilla.telemetry.glean.GleanTimerId
+@@ -43,31 +41,7 @@ class InstallReferrerWorker(
+     private val settings = context.settings()
  
--    private var referrerClient: InstallReferrerClient? = null
+     override suspend fun doWork(): Result {
+-        val referrerClient = DefaultInstallReferrerClient(applicationContext)
+-        val (responseCode, referrerResponse) = fetchInstallReferrer(referrerClient)
 -
-     @Suppress("CognitiveComplexMethod")
-     override fun start() {
--        if (context.settings().utmParamsKnown) {
--            return
+-        return when (responseCode) {
+-            InstallReferrerClient.InstallReferrerResponse.OK -> {
+-                handleSuccess(referrerResponse, responseCode, settings)
+-                Result.success()
+-            }
+-
+-            InstallReferrerClient.InstallReferrerResponse.SERVICE_DISCONNECTED,
+-            InstallReferrerClient.InstallReferrerResponse.SERVICE_UNAVAILABLE,
+-            -> {
+-                if (shouldRetry(runAttemptCount)) {
+-                    Result.retry()
+-                } else {
+-                    markAsComplete(responseCode)
+-                    Result.failure()
+-                }
+-            }
+-
+-            else -> {
+-                markAsComplete(responseCode)
+-                Result.failure()
+-            }
+-        }
++        return Result.success()
+     }
+ 
+     @VisibleForTesting
+@@ -76,103 +50,6 @@ class InstallReferrerWorker(
+         responseCode: Int,
+         settings: Settings,
+     ) {
+-        if (!installReferrerResponse.isNullOrBlank()) {
+-            PlayStoreAttribution.installReferrerResponse.set(installReferrerResponse)
+-
+-            val utmParams = UTMParams.parseUTMParameters(installReferrerResponse)
+-            val metaParams = MetaParams.extractMetaAttribution(utmParams.content)
+-            if (metaParams != null) {
+-                settings.isUserMetaAttributed = true
+-                metaParams.recordMetaAttribution()
+-            } else {
+-                settings.isUserMetaAttributed = false
+-            }
+-
+-            utmParams.recordInstallReferrer(settings)
 -        }
 -
--        val timerId = PlayStoreAttribution.attributionTime.start()
--        val client = InstallReferrerClient.newBuilder(context).build()
--        referrerClient = client
+-        markAsComplete(responseCode)
+-    }
 -
--        client.startConnection(
--            object : InstallReferrerStateListener {
--                override fun onInstallReferrerSetupFinished(responseCode: Int) {
--                    PlayStoreAttribution.attributionTime.stopAndAccumulate(timerId)
--                    val firstSession = FirstSessionPing(context)
--                    PlayStoreAttribution.responseCode.set(responseCode.toString())
--                    when (responseCode) {
--                        InstallReferrerClient.InstallReferrerResponse.OK -> {
--                            // Connection established.
--                            val installReferrerResponse = try {
--                                client.installReferrer.installReferrer
--                            } catch (e: RemoteException) {
--                                // We can't do anything about this.
--                                logger.error("Failed to retrieve install referrer response", e)
--                                null
--                            } catch (e: SecurityException) {
--                                logger.error("Failed to retrieve install referrer response", e)
--                                null
--                            }
+-    private fun markAsComplete(responseCode: Int) {
+-        settings.utmParamsKnown = true
+-        PlayStoreAttribution.responseCode.set(responseCode.toString())
+-        Pings.playStoreAttribution.submit()
+-    }
 -
--                            if (installReferrerResponse.isNullOrBlank()) {
--                                return
--                            }
+-    companion object {
+-        private val logger = Logger("InstallReferrerWorker")
 -
--                            PlayStoreAttribution.installReferrerResponse.set(installReferrerResponse)
+-        @VisibleForTesting
+-        internal fun shouldRetry(runAttemptCount: Int): Boolean {
+-            return runAttemptCount < InstallReferrerMetricsService.MAX_RETRIES
+-        }
 -
--                            val utmParams = UTMParams.parseUTMParameters(installReferrerResponse)
--                            if (FeatureFlags.META_ATTRIBUTION_ENABLED) {
--                                MetaParams.extractMetaAttribution(utmParams.content)
--                                    ?.recordMetaAttribution()
--                            }
+-        @VisibleForTesting
+-        internal suspend fun fetchInstallReferrer(
+-            referrerClient: InstallReferrerClientWrapper,
+-        ): Pair<Int, String?> {
+-            val timerId = PlayStoreAttribution.attributionTime.start()
 -
--                            utmParams.recordInstallReferrer(context.settings())
--                            context.settings().utmParamsKnown = true
--
--                            firstSession.checkAndSend()
--                            triggerPing()
--                        }
--
--                        InstallReferrerClient.InstallReferrerResponse.FEATURE_NOT_SUPPORTED,
--                        InstallReferrerClient.InstallReferrerResponse.DEVELOPER_ERROR,
--                        InstallReferrerClient.InstallReferrerResponse.PERMISSION_ERROR,
--                        -> {
--                            // unrecoverable errors, but we still want to send the first-session ping.
--                            context.settings().utmParamsKnown = true
--                            firstSession.checkAndSend()
--                            triggerPing()
--                        }
--
--                        InstallReferrerClient.InstallReferrerResponse.SERVICE_UNAVAILABLE -> {
--                            // Connection couldn't be established.
--                        }
--                    }
--                    // End the connection, and null out the client.
--                    stop()
+-            return suspendCancellableCoroutine { continuation ->
+-                continuation.invokeOnCancellation {
+-                    safelyEndConnection(referrerClient)
 -                }
 -
--                override fun onInstallReferrerServiceDisconnected() {
--                    // Try to restart the connection on the next request to
--                    // Google Play by calling the startConnection() method.
--                    referrerClient = null
--                }
--            },
--        )
-     }
- 
-     override fun stop() {
--        referrerClient?.endConnection()
--        referrerClient = null
-     }
- 
-     override fun track(event: Event) = Unit
-@@ -121,9 +40,6 @@ class InstallReferrerMetricsService(private val context: Context) : MetricsServi
-     override fun shouldTrack(event: Event): Boolean = false
- 
-     private fun triggerPing() {
--        CoroutineScope(Dispatchers.IO).launch {
--            Pings.playStoreAttribution.submit()
+-                val listener = createReferrerStateListener(timerId, referrerClient, continuation)
+-                referrerClient.startConnection(listener)
+-            }
+-        }
+-
+-        private fun createReferrerStateListener(
+-            timerId: GleanTimerId,
+-            referrerClient: InstallReferrerClientWrapper,
+-            continuation: kotlin.coroutines.Continuation<Pair<Int, String?>>,
+-        ) = object : InstallReferrerStateListener {
+-            override fun onInstallReferrerSetupFinished(responseCode: Int) {
+-                PlayStoreAttribution.attributionTime.stopAndAccumulate(timerId)
+-                val referrerResponse = getReferrerResponseIfOk(responseCode, referrerClient)
+-                safelyEndConnection(referrerClient)
+-                continuation.resume(Pair(responseCode, referrerResponse))
+-            }
+-
+-            override fun onInstallReferrerServiceDisconnected() {
+-                continuation.resume(
+-                    Pair(
+-                        InstallReferrerClient.InstallReferrerResponse.SERVICE_UNAVAILABLE,
+-                        null,
+-                    ),
+-                )
+-            }
+-        }
+-
+-        private fun getReferrerResponseIfOk(
+-            responseCode: Int,
+-            referrerClient: InstallReferrerClientWrapper,
+-        ): String? {
+-            if (responseCode != InstallReferrerClient.InstallReferrerResponse.OK) {
+-                return null
+-            }
+-
+-            return try {
+-                referrerClient.getInstallReferrer()
+-            } catch (e: RemoteException) {
+-                logger.error("Failed to retrieve install referrer", e)
+-                null
+-            } catch (e: SecurityException) {
+-                logger.error("Failed to retrieve install referrer", e)
+-                null
+-            }
+-        }
+-
+-        @Suppress("TooGenericExceptionCaught")
+-        private fun safelyEndConnection(referrerClient: InstallReferrerClientWrapper) {
+-            try {
+-                referrerClient.endConnection()
+-            } catch (e: Exception) {
+-                logger.error("Failed to end connection", e)
+-            }
 -        }
      }
  }
  
-@@ -238,12 +154,6 @@ data class UTMParams(
-             return
-         }
-         intoSettings(settings)
--
--        PlayStoreAttribution.source.set(source)
--        PlayStoreAttribution.medium.set(medium)
--        PlayStoreAttribution.campaign.set(campaign)
--        PlayStoreAttribution.content.set(content)
--        PlayStoreAttribution.term.set(term)
-     }
+@@ -181,30 +58,10 @@ class InstallReferrerWorker(
+  */
+ @VisibleForTesting
+ internal interface InstallReferrerClientWrapper {
+-    fun startConnection(listener: InstallReferrerStateListener)
+     fun getInstallReferrer(): String?
+     fun endConnection()
  }
  
-@@ -338,9 +248,5 @@ data class MetaParams(
-      * record META attribution params to telemetry
-      */
-     fun recordMetaAttribution() {
--        MetaAttribution.app.set(app)
--        MetaAttribution.t.set(t)
--        MetaAttribution.data.set(data)
--        MetaAttribution.nonce.set(nonce)
-     }
- }
+-/**
+- * Default implementation that wraps the actual InstallReferrerClient.
+- */
+-private class DefaultInstallReferrerClient(context: Context) : InstallReferrerClientWrapper {
+-    private val client = InstallReferrerClient.newBuilder(context).build()
+-
+-    override fun startConnection(listener: InstallReferrerStateListener) {
+-        client.startConnection(listener)
+-    }
+-
+-    override fun getInstallReferrer(): String? {
+-        return client.installReferrer?.installReferrer
+-    }
+-
+-    override fun endConnection() {
+-        client.endConnection()
+-    }
+-}
+-
+ /**
+  * Descriptions of utm parameters comes from
+  * https://support.google.com/analytics/answer/1033863
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt
-index 0bd43d312119..821d99c59521 100644
+index c35705351b3e..b0156324642b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt
 @@ -7,8 +7,6 @@ package org.mozilla.fenix.components.metrics
@@ -969,7 +1030,7 @@ index 0bd43d312119..821d99c59521 100644
  import kotlinx.coroutines.CoroutineScope
  import kotlinx.coroutines.Dispatchers
  import kotlinx.coroutines.launch
-@@ -28,85 +26,18 @@ const val ADJUST_REFTAG_PREFIX = "adjust_reftag="
+@@ -28,87 +26,18 @@ const val ADJUST_REFTAG_PREFIX = "adjust_reftag="
   */
  class MarketingAttributionService(private val context: Context) {
      private val logger = Logger("MarketingAttributionService")
@@ -1007,6 +1068,8 @@ index 0bd43d312119..821d99c59521 100644
 -                                response = installReferrerResponse
 -                                val utmParams =
 -                                    UTMParams.parseUTMParameters(installReferrerResponse)
+-
+-                                context.settings().isUserMetaAttributed = isMetaAttribution(installReferrerResponse)
 -
 -                                distributionIdManager.updateDistributionIdFromUtmParams(utmParams)
 -                                CoroutineScope(Dispatchers.IO).launch {
@@ -1246,7 +1309,7 @@ index 09a40c4d935b..8a81595ebc7c 100644
      // This is locale-less on purpose so that the content negotiation happens on the AMO side because the current
      // user language might not be supported by AMO and/or the language might not be exactly what AMO is expecting
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 98b4c588e5c8..31ba0efd34c0 100644
+index 5c3035c5b371..845f2a979282 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -174,8 +174,7 @@ class Settings(
@@ -1285,7 +1348,7 @@ index 98b4c588e5c8..31ba0efd34c0 100644
  
      /**
       * Indicates whether or not the "Recently Visited" section should be shown on the home screen.
-@@ -551,12 +542,7 @@ class Settings(
+@@ -566,12 +557,7 @@ class Settings(
          default = true,
      )
  
@@ -1299,7 +1362,7 @@ index 98b4c588e5c8..31ba0efd34c0 100644
  
      var crashReportChoice by stringPreference(
          appContext.getPreferenceKey(R.string.pref_key_crash_reporting_choice),
-@@ -568,20 +554,11 @@ class Settings(
+@@ -583,20 +569,11 @@ class Settings(
          default = false,
      )
  
@@ -1323,7 +1386,7 @@ index 98b4c588e5c8..31ba0efd34c0 100644
  
      var hasAcceptedTermsOfService by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_terms_accepted),
-@@ -695,16 +672,9 @@ class Settings(
+@@ -710,16 +687,9 @@ class Settings(
       * sure that users who upgrade and had telemetry disabled don't start sending the
       * daily usage ping telemetry.
       */
@@ -1342,7 +1405,7 @@ index 98b4c588e5c8..31ba0efd34c0 100644
  
      /**
       * This lets us know if the user has disabled experimentation manually so that we know
-@@ -2080,10 +2050,7 @@ class Settings(
+@@ -2095,10 +2065,7 @@ class Settings(
      /**
       * Indicates if the Contile functionality should be visible.
       */
