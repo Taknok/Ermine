@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
-index 12df28433480..d8e15ea79415 100644
+index 74ac9357648f..da5ae510aa4c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
 @@ -7,7 +7,6 @@ package org.mozilla.fenix.gecko
@@ -26,7 +26,7 @@ index 12df28433480..d8e15ea79415 100644
  
          return geckoRuntime
      }
-@@ -122,7 +123,6 @@ object GeckoProvider {
+@@ -118,7 +119,6 @@ object GeckoProvider {
              .extensionsProcessEnabled(true)
              .extensionsWebAPIEnabled(true)
              .translationsOfferPopup(context.settings().offerTranslation)
@@ -35,23 +35,23 @@ index 12df28433480..d8e15ea79415 100644
                  FxNimbus.features.sameDocumentNavigationOverridesLoadType.value().enabled,
              )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index 3c071edf51a4..a16994ac9a1a 100644
+index 7cf7648c813a..a70d084dc95c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-@@ -314,7 +314,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+@@ -488,7 +488,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFra
          }
  
-         requirePreference<SwitchPreference>(R.string.pref_key_crash_pull_never_show_again).apply {
+         requirePreference<SwitchPreferenceCompat>(R.string.pref_key_crash_pull_never_show_again).apply {
 -            isVisible = true
 +            isVisible = false
              isChecked = context.settings().crashPullNeverShowAgain
              onPreferenceChangeListener = SharedPreferenceUpdater()
          }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 35d4c5a9c0a4..0e8ff24bd1cd 100644
+index a975ccd3d669..6bcaac61a178 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -536,10 +536,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -594,10 +594,7 @@ class Settings(
                  true,
              )
  
@@ -63,7 +63,7 @@ index 35d4c5a9c0a4..0e8ff24bd1cd 100644
  
      val isRemoteDebuggingEnabled by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_remote_debugging),
-@@ -905,10 +902,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1011,10 +1008,7 @@ class Settings(
       * Indicates if the user denies to ever see again the Remote Settings crash
       * pull UI.
       */

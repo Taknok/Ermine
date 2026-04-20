@@ -1,8 +1,8 @@
 diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
-index 1c7225db5d34..2b18b3eee978 100644
+index 1b7622e873dc..d25750ce27cb 100644
 --- a/gradle/libs.versions.toml
 +++ b/gradle/libs.versions.toml
-@@ -51,16 +51,10 @@ work = "2.11.1"
+@@ -52,17 +52,11 @@ work = "2.11.1"
  
  # Google other
  accompanist = "0.37.3"
@@ -10,6 +10,7 @@ index 1c7225db5d34..2b18b3eee978 100644
  installreferrer = "2.2"
  ksp = "2.3.6"
  material = "1.13.0"
+ mlkit-prompt = "1.0.0-beta1"
  osslicenses-plugin = "0.10.10"
 -play-integrity = "1.6.0"
 -play-review = "2.0.2"
@@ -19,15 +20,15 @@ index 1c7225db5d34..2b18b3eee978 100644
  protobuf = "4.33.2" # Keep Protobuf in sync with the version used by AppServices.
  
  # Gradle plugins
-@@ -120,7 +114,6 @@ kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref =
- kotlin-serialization = { module = "org.jetbrains.kotlin.plugin.serialization:org.jetbrains.kotlin.plugin.serialization.gradle.plugin", version.ref = "kotlin" }
+@@ -123,7 +117,6 @@ kotlin-serialization = { module = "org.jetbrains.kotlin.plugin.serialization:org
+ kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test" }
  kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
  kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 -kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "coroutines" }
  kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
  kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
  
-@@ -210,7 +203,6 @@ androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling
+@@ -215,7 +208,6 @@ androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling
  
  # Google other
  accompanist-drawablepainter = { module = "com.google.accompanist:accompanist-drawablepainter", version.ref = "accompanist" }
@@ -35,9 +36,9 @@ index 1c7225db5d34..2b18b3eee978 100644
  google-material = { module = "com.google.android.material:material", version.ref = "material" }
  installreferrer = { module = "com.android.installreferrer:installreferrer", version.ref = "installreferrer" }
  ksp-symbol-processing-aa = { module = "com.google.devtools.ksp:symbol-processing-aa", version.ref = "ksp" }
-@@ -219,12 +211,6 @@ ksp-symbol-processing-api = { module = "com.google.devtools.ksp:symbol-processin
+@@ -224,12 +216,6 @@ ksp-symbol-processing-api = { module = "com.google.devtools.ksp:symbol-processin
  ksp-symbol-processing-common-deps = { module = "com.google.devtools.ksp:symbol-processing-common-deps", version.ref = "ksp" }
- mlkit-prompt = { module = "com.google.mlkit:genai-prompt", version = "1.0.0-alpha1" }
+ mlkit-prompt = { module = "com.google.mlkit:genai-prompt", version.ref = "mlkit-prompt" }
  osslicenses-plugin = { module = "com.google.android.gms:oss-licenses-plugin", version.ref = "osslicenses-plugin" }
 -play-integrity = { module = "com.google.android.play:integrity", version.ref = "play-integrity" }
 -play-review = { module = "com.google.android.play:review", version.ref = "play-review" }
@@ -49,10 +50,10 @@ index 1c7225db5d34..2b18b3eee978 100644
  protobuf-javalite = { module = "com.google.protobuf:protobuf-javalite", version.ref = "protobuf" }
  
 diff --git a/mobile/android/android-components/.buildconfig.yml b/mobile/android/android-components/.buildconfig.yml
-index c26c00fa5a13..ff79084820f0 100644
+index e7d7e44f9070..5c65c830d96c 100644
 --- a/mobile/android/android-components/.buildconfig.yml
 +++ b/mobile/android/android-components/.buildconfig.yml
-@@ -1769,18 +1769,6 @@ projects:
+@@ -1788,18 +1788,6 @@ projects:
      - components:support-test
      - components:tooling-fetch-tests
      - components:tooling-lint
@@ -71,7 +72,7 @@ index c26c00fa5a13..ff79084820f0 100644
    components:lib-jexl:
      description: 'Javascript Expression Language: Powerful context-based expression
        parser and evaluator.'
-@@ -1821,17 +1809,6 @@ projects:
+@@ -1840,17 +1828,6 @@ projects:
      - components:support-base
      - components:support-test
      - components:tooling-lint
@@ -90,10 +91,10 @@ index c26c00fa5a13..ff79084820f0 100644
      description: A library to detect shake gestures from accelerometer data
      path: components/lib/shake
 diff --git a/mobile/android/fenix/.buildconfig.yml b/mobile/android/fenix/.buildconfig.yml
-index 7d6b48243700..5e94d59bfa5e 100644
+index eabb45b4c21e..6fb703d12c7b 100644
 --- a/mobile/android/fenix/.buildconfig.yml
 +++ b/mobile/android/fenix/.buildconfig.yml
-@@ -69,10 +69,8 @@ projects:
+@@ -71,10 +71,8 @@ projects:
      - components:lib-crash
      - components:lib-crash-sentry
      - components:lib-dataprotect
@@ -105,10 +106,10 @@ index 7d6b48243700..5e94d59bfa5e 100644
      - components:lib-state
      - components:service-digitalassetlinks
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index 4930620b7123..552003446b24 100644
+index 245d757db6a6..af82936983bd 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -623,16 +623,13 @@ dependencies {
+@@ -618,16 +618,13 @@ dependencies {
      implementation project(':components:lib-crash')
      implementation project(':components:lib-crash-sentry')
      implementation project(':components:lib-dataprotect')
@@ -125,7 +126,7 @@ index 4930620b7123..552003446b24 100644
      implementation libs.androidx.activity
      implementation libs.androidx.activity.ktx
      implementation libs.androidx.annotation
-@@ -679,16 +676,14 @@ dependencies {
+@@ -675,13 +672,10 @@ dependencies {
      implementation libs.androidx.viewpager2
      implementation libs.androidx.work.runtime
      implementation libs.google.material
@@ -136,14 +137,10 @@ index 4930620b7123..552003446b24 100644
 -    implementation libs.play.review
 -    implementation libs.play.review.ktx
 -    implementation libs.play.services.ads.id
++    implementation 'org.microg.gms:play-services-ads-identifier:0.3.13.250932'
      implementation libs.protobuf.javalite
      implementation libs.sentry
- 
-+    implementation 'org.microg.gms:play-services-ads-identifier:0.3.13.250932'
-+
-     debugImplementation libs.androidx.compose.ui.tooling
-     debugImplementation libs.leakcanary
- 
+     implementation libs.androidx.documentfile
 diff --git a/mobile/android/fenix/app/proguard-rules.pro b/mobile/android/fenix/app/proguard-rules.pro
 index 39a6df6fb62e..86ee82a027dc 100644
 --- a/mobile/android/fenix/app/proguard-rules.pro
@@ -278,10 +275,10 @@ index 000000000000..ab6b3badbdb1
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustConfig.java b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustConfig.java
 new file mode 100644
-index 000000000000..df58236bc456
+index 000000000000..d8eefee89267
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustConfig.java
-@@ -0,0 +1,52 @@
+@@ -0,0 +1,55 @@
 +/*
 + * Copyright (c) 2012-2017 adjust GmbH,
 + * http://www.adjust.com
@@ -332,6 +329,9 @@ index 000000000000..df58236bc456
 +    }
 +
 +    public void enableCoppaCompliance() {
++    }
++
++    public void enablePlayStoreKidsCompliance() {
 +    }
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustEvent.java b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustEvent.java
@@ -624,10 +624,10 @@ index 000000000000..b50a6f03a218
 +    }
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 8dd1374d2d94..fb6785a50a77 100644
+index f0ee597d00c8..44196bb7bf8b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -412,7 +412,6 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+@@ -425,7 +425,6 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
          queueIncrementNumberOfAppLaunches(queue)
          queueRestoreLocale(queue)
          queueStorageMaintenance(queue)
@@ -635,7 +635,7 @@ index 8dd1374d2d94..fb6785a50a77 100644
          queueNimbusFetchInForeground(queue)
          queueSetAutofillMetrics(queue)
          queueDownloadWallpapers(queue)
-@@ -533,14 +532,6 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+@@ -555,14 +554,6 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
          components.core.autofillStorage.registerStorageMaintenanceWorker()
      }
  
@@ -647,14 +647,14 @@ index 8dd1374d2d94..fb6785a50a77 100644
 -            }
 -        }
 -
-     @OptIn(DelicateCoroutinesApi::class) // GlobalScope usage
+     @OptIn(DelicateCoroutinesApi::class, ExperimentalAndroidComponentsApi::class) // GlobalScope usage
      private fun queueNimbusFetchInForeground(queue: RunWhenReadyQueue) =
          runOnVisualCompleteness(queue) {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt
-index cbbdc3c76899..97fedfafc208 100644
+index d54451a21168..7e41e70ddc81 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt
-@@ -1372,19 +1372,16 @@ abstract class BaseBrowserFragment :
+@@ -1373,19 +1373,16 @@ abstract class BaseBrowserFragment :
              view = view,
          )
  
@@ -684,8 +684,35 @@ index cbbdc3c76899..97fedfafc208 100644
  
          screenOrientationFeature.set(
              feature = ScreenOrientationFeature(
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ClientUUID.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ClientUUID.kt
+index c9e41120b397..158ec9c65354 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ClientUUID.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ClientUUID.kt
+@@ -7,7 +7,6 @@ package org.mozilla.fenix.components
+ import android.content.Context
+ import android.content.SharedPreferences
+ import androidx.core.content.edit
+-import mozilla.components.lib.integrity.googleplay.RequestHashProvider
+ import mozilla.components.lib.llm.mlpa.UserIdProvider
+ import mozilla.components.lib.llm.mlpa.service.UserId
+ import mozilla.components.support.ktx.kotlin.toHexString
+@@ -39,9 +38,12 @@ fun interface Hasher {
+ 
+ /**
+  * Generates and persists a stable per-install UUID, used to identify this client
+- * consistently across [UserIdProvider] and [RequestHashProvider] consumers.
++ * consistently across [UserIdProvider] consumers.
+  */
+-interface ClientUUID : UserIdProvider, RequestHashProvider {
++interface ClientUUID : UserIdProvider {
++    fun generateHash(): String { return "" }
++    fun getUserID() {}
++
+     companion object {
+         /**
+          * Convenience initializer that creates a [SharedPreferences] to be used by [ClientUUID].
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index 2c3b431cec24..e7550716a0fa 100644
+index 1c95e76d4dac..4bd320b3d0e5 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 @@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
@@ -696,19 +723,18 @@ index 2c3b431cec24..e7550716a0fa 100644
  import mozilla.components.feature.addons.AddonManager
  import mozilla.components.feature.addons.amo.AMOAddonsProvider
  import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
-@@ -18,11 +17,6 @@ import mozilla.components.feature.addons.update.DefaultAddonUpdater
+@@ -18,10 +17,6 @@ import mozilla.components.feature.addons.update.DefaultAddonUpdater
  import mozilla.components.feature.autofill.AutofillConfiguration
  import mozilla.components.lib.crash.store.CrashAction
  import mozilla.components.lib.crash.store.CrashMiddleware
 -import mozilla.components.lib.integrity.googleplay.GooglePlayIntegrityClient
 -import mozilla.components.lib.integrity.googleplay.GoogleProjectNumber
 -import mozilla.components.lib.integrity.googleplay.IntegrityManagerProvider
--import mozilla.components.lib.integrity.googleplay.RequestHashProvider
 -import mozilla.components.lib.integrity.googleplay.TokenProviderFactory
  import mozilla.components.lib.publicsuffixlist.PublicSuffixList
  import mozilla.components.service.fxrelay.eligibility.RelayEligibilityStore
  import mozilla.components.service.fxrelay.eligibility.middlewares.ClearLastUsedMiddleware
-@@ -247,7 +241,6 @@ class Components(private val context: Context) {
+@@ -250,7 +245,6 @@ class Components(private val context: Context) {
  
      val playStoreReviewPromptController by lazyMonitored {
          PlayStoreReviewPromptController(
@@ -716,7 +742,7 @@ index 2c3b431cec24..e7550716a0fa 100644
              numberOfAppLaunches = { settings.numberOfAppLaunches },
          )
      }
-@@ -364,16 +357,6 @@ class Components(private val context: Context) {
+@@ -368,16 +362,6 @@ class Components(private val context: Context) {
          )
      }
  
@@ -726,12 +752,20 @@ index 2c3b431cec24..e7550716a0fa 100644
 -                IntegrityManagerProvider.create(context),
 -                GoogleProjectNumber.create(BuildConfig.GPS_INTEGRITY_TOKEN),
 -            ),
--            RequestHashProvider.randomHashProvider(),
+-            clientUUID,
 -        )
 -    }
 -
      val termsOfUsePromptRepository by lazyMonitored {
          DefaultTermsOfUsePromptRepository(settings)
+     }
+@@ -415,7 +399,6 @@ class Components(private val context: Context) {
+         Llm(
+             client = core.client,
+             fxaTokenProvider = backgroundServices.accountManager.accessTokenProvider,
+-            integrityClient = integrityClient,
+             userIdProvider = clientUUID,
+         )
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/PlayStoreReviewPromptController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/PlayStoreReviewPromptController.kt
 index f08c5cecdade..7f75cc75c20c 100644
@@ -836,6 +870,42 @@ index f08c5cecdade..7f75cc75c20c 100644
      }
  
      companion object {
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/llm/Llm.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/llm/Llm.kt
+index 89826e869ef6..7205364c5028 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/llm/Llm.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/llm/Llm.kt
+@@ -9,8 +9,7 @@ import mozilla.components.concept.integrity.IntegrityClient
+ import mozilla.components.lib.llm.mlpa.MlpaLlmProvider
+ import mozilla.components.lib.llm.mlpa.MlpaTokenProvider
+ import mozilla.components.lib.llm.mlpa.UserIdProvider
+-import mozilla.components.lib.llm.mlpa.service.PackageName
+-import org.mozilla.fenix.BuildConfig
++import mozilla.components.lib.llm.mlpa.service.AuthorizationToken
+ import org.mozilla.fenix.components.llm.ext.FxaAccessTokenProvider
+ import org.mozilla.fenix.components.llm.ext.choose
+ import org.mozilla.fenix.components.llm.ext.fxaTokenProvider
+@@ -22,7 +21,6 @@ import org.mozilla.fenix.perf.lazyMonitored
+ class Llm(
+     private val client: Client,
+     private val fxaTokenProvider: FxaAccessTokenProvider,
+-    private val integrityClient: IntegrityClient,
+     private val userIdProvider: UserIdProvider,
+ ) {
+ 
+@@ -32,12 +30,7 @@ class Llm(
+         MlpaLlmProvider(
+             MlpaTokenProvider.choose(
+                 MlpaTokenProvider.fxaTokenProvider(fxaTokenProvider),
+-                MlpaTokenProvider.mlpaIntegrityHandshake(
+-                    integrityClient = integrityClient,
+-                    authenticationService = fenixMlpaService,
+-                    userIdProvider = userIdProvider,
+-                    packageName = PackageName(BuildConfig.APPLICATION_ID),
+-                ),
++                MlpaTokenProvider.static(AuthorizationToken.Integrity("my-test-token")),
+             ),
+             fenixMlpaService,
+         )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerWorker.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerWorker.kt
 index be9e47f9fbf2..fd16b5119e41 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerWorker.kt
@@ -1119,7 +1189,7 @@ index c35705351b3e..b0156324642b 100644
  
      /**
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt
-index abd548208c15..959565d2241b 100644
+index 8e3d50dc8369..6bc227ac98d0 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt
 @@ -8,7 +8,6 @@ import androidx.annotation.StringRes
@@ -1130,7 +1200,7 @@ index abd548208c15..959565d2241b 100644
  import mozilla.components.concept.storage.CreditCardsAddressesStorage
  import mozilla.components.concept.storage.LoginsStorage
  import org.mozilla.fenix.R
-@@ -23,7 +22,6 @@ import org.mozilla.fenix.debugsettings.crashtools.CrashTools
+@@ -24,7 +23,6 @@ import org.mozilla.fenix.debugsettings.crashtools.CrashTools
  import org.mozilla.fenix.debugsettings.creditcards.CreditCardsTools
  import org.mozilla.fenix.debugsettings.gleandebugtools.GleanDebugToolsStore
  import org.mozilla.fenix.debugsettings.gleandebugtools.ui.GleanDebugToolsScreen
@@ -1138,7 +1208,7 @@ index abd548208c15..959565d2241b 100644
  import org.mozilla.fenix.debugsettings.llm.LlmTools
  import org.mozilla.fenix.debugsettings.logins.LoginsTools
  import org.mozilla.fenix.debugsettings.region.RegionTools
-@@ -86,10 +84,6 @@ enum class DebugDrawerRoute(
+@@ -87,10 +85,6 @@ enum class DebugDrawerRoute(
          route = "crash_debug_tools",
          title = R.string.crash_debug_tools_title,
      ),
@@ -1149,23 +1219,23 @@ index abd548208c15..959565d2241b 100644
      LlmTools(
          route = "llm_tools",
          title = R.string.llm_debug_tools_title,
-@@ -107,7 +101,6 @@ enum class DebugDrawerRoute(
-          * @param loginsStorage [LoginsStorage] used to access logins for [LoginsScreen].
+@@ -109,7 +103,6 @@ enum class DebugDrawerRoute(
           * @param addressesDebugRegionRepository used to control storage for [AddressesTools].
           * @param creditCardsAddressesStorage used to access addresses for [AddressesTools].
+          * @param clientUUID used to test an [IntegrityClient] in [IntegrityTools].
 -         * @param integrityClient used to test an [IntegrityClient] in [IntegrityTools].
           * @param inactiveTabsEnabled Whether the inactive tabs feature is enabled.
           * @param llm the component group [Llm].
           */
-@@ -120,7 +113,6 @@ enum class DebugDrawerRoute(
-             loginsStorage: LoginsStorage,
+@@ -123,7 +116,6 @@ enum class DebugDrawerRoute(
              addressesDebugRegionRepository: AddressesDebugRegionRepository,
              creditCardsAddressesStorage: CreditCardsAddressesStorage,
+             clientUUID: ClientUUID,
 -            integrityClient: IntegrityClient,
              inactiveTabsEnabled: Boolean,
              llm: Llm,
          ): List<DebugDrawerDestination> =
-@@ -235,14 +227,6 @@ enum class DebugDrawerRoute(
+@@ -238,14 +230,6 @@ enum class DebugDrawerRoute(
                              CrashTools()
                          }
                      }
@@ -1174,17 +1244,17 @@ index abd548208c15..959565d2241b 100644
 -                            debugDrawerStore.dispatch(DebugDrawerAction.NavigateTo.IntegrityDebugTools)
 -                        }
 -                        content = {
--                            IntegrityTools(integrityClient)
+-                            IntegrityTools(clientUUID, integrityClient)
 -                        }
 -                    }
  
                      LlmTools -> {
                          onClick = {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerAction.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerAction.kt
-index 4719845ff56e..234bd51c9773 100644
+index 7c6e6473ce6b..427f6e2fb32b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerAction.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerAction.kt
-@@ -89,11 +89,6 @@ sealed class DebugDrawerAction : Action {
+@@ -94,11 +94,6 @@ sealed class DebugDrawerAction : Action {
           */
          object CrashDebugTools : NavigateTo()
  
@@ -1197,7 +1267,7 @@ index 4719845ff56e..234bd51c9773 100644
           * [NavigateTo] action fired when the debug drawer needs to navigate to [LlmTools].
           */
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerNavigationMiddleware.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerNavigationMiddleware.kt
-index 15917e848afa..389bc3e05848 100644
+index fb9adb0610c2..2f9a4d9dd04f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerNavigationMiddleware.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerNavigationMiddleware.kt
 @@ -55,8 +55,6 @@ class DebugDrawerNavigationMiddleware(
@@ -1209,48 +1279,61 @@ index 15917e848afa..389bc3e05848 100644
                  is DebugDrawerAction.NavigateTo.LlmDebugTools ->
                      navController.navigate(route = DebugDrawerRoute.LlmTools.route)
                  is DebugDrawerAction.OnBackPressed -> navController.popBackStack()
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerTelemetryMiddleware.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerTelemetryMiddleware.kt
+index 79c30dc6a49f..7f67cf04f969 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerTelemetryMiddleware.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerTelemetryMiddleware.kt
+@@ -33,7 +33,6 @@ class DebugDrawerTelemetryMiddleware : Middleware<DebugDrawerState, DebugDrawerA
+             DebugDrawerAction.NavigateTo.CreditCards,
+             DebugDrawerAction.NavigateTo.GleanDebugTools,
+             DebugDrawerAction.NavigateTo.Home,
+-            DebugDrawerAction.NavigateTo.IntegrityDebugTools,
+             DebugDrawerAction.NavigateTo.LlmDebugTools,
+             DebugDrawerAction.NavigateTo.Logins,
+             DebugDrawerAction.NavigateTo.RegionDebugTools,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/ui/FenixOverlay.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/ui/FenixOverlay.kt
-index 4f379233e869..ff3e7e48f5d4 100644
+index 0a6ae602bf40..4f1648b34ca5 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/ui/FenixOverlay.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/ui/FenixOverlay.kt
-@@ -113,7 +113,6 @@ fun FenixOverlay(
-             },
+@@ -120,7 +120,6 @@ fun FenixOverlay(
          creditCardsAddressesStorage = context.components.core.autofillStorage,
          inactiveTabsEnabled = inactiveTabsEnabled,
+         clientUUID = context.components.clientUUID,
 -        integrityClient = context.components.integrityClient,
          llm = context.components.llm,
      )
  }
-@@ -127,7 +126,6 @@ fun FenixOverlay(
-  * @param loginsStorage [LoginsStorage] used to access logins for [LoginsTools].
+@@ -135,7 +134,6 @@ fun FenixOverlay(
   * @param addressesDebugRegionRepository used to control storage for [AddressesTools].
   * @param creditCardsAddressesStorage used to access addresses for [AddressesTools].
+  * @param clientUUID used to test an [IntegrityClient].
 - * @param integrityClient used to test an [IntegrityClient].
   * @param llm the component group [Llm].
   * @param inactiveTabsEnabled Whether the inactive tabs feature is enabled.
   */
-@@ -140,7 +138,6 @@ private fun FenixOverlay(
-     loginsStorage: LoginsStorage,
+@@ -149,7 +147,6 @@ private fun FenixOverlay(
      addressesDebugRegionRepository: AddressesDebugRegionRepository,
      creditCardsAddressesStorage: CreditCardsAddressesStorage,
+     clientUUID: ClientUUID,
 -    integrityClient: IntegrityClient,
      llm: Llm,
      inactiveTabsEnabled: Boolean,
  ) {
-@@ -168,7 +165,6 @@ private fun FenixOverlay(
-             loginsStorage = loginsStorage,
+@@ -183,7 +180,6 @@ private fun FenixOverlay(
              addressesDebugRegionRepository = addressesDebugRegionRepository,
              creditCardsAddressesStorage = creditCardsAddressesStorage,
+             clientUUID = clientUUID,
 -            integrityClient = integrityClient,
              llm = llm,
          )
      }
-@@ -219,7 +215,6 @@ private fun FenixOverlayPreview() {
-         loginsStorage = FakeLoginsStorage(),
+@@ -235,7 +231,6 @@ private fun FenixOverlayPreview() {
          addressesDebugRegionRepository = FakeAddressesDebugRegionRepository(),
          creditCardsAddressesStorage = FakeCreditCardsAddressesStorage(),
+         clientUUID = FakeClientUUID(),
 -        integrityClient = IntegrityClient.testSuccess,
-         llm = Llm(FakeClient()),
+-        llm = Llm(FakeClient(), { null }, FakeIntegrityClient(), FakeUserIdProvider()),
++        llm = Llm(FakeClient(), { null }, FakeUserIdProvider()),
      )
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/pocket/ContentRecommendationsFeatureHelper.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/pocket/ContentRecommendationsFeatureHelper.kt
@@ -1282,10 +1365,10 @@ index d211d3625dbf..0458e8704d5c 100644
      /**
       * Show Pocket sponsored stories in between Pocket recommended stories on home.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-index d3b5cb6187ac..61f458c19fdc 100644
+index 3d0108791451..be743ef235a7 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-@@ -474,8 +474,7 @@ class OnboardingFragment : Fragment() {
+@@ -462,8 +462,7 @@ class OnboardingFragment : Fragment() {
          }
  
          if (!settings.isTelemetryEnabled) {
@@ -1296,7 +1379,7 @@ index d3b5cb6187ac..61f458c19fdc 100644
  
          // The marketing telemetry may be enabled after finishing onboarding.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-index 09a40c4d935b..8a81595ebc7c 100644
+index 0570c9b5dd77..c0508505a4f3 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 @@ -30,6 +30,8 @@ object SupportUtils {
@@ -1309,10 +1392,10 @@ index 09a40c4d935b..8a81595ebc7c 100644
      // This is locale-less on purpose so that the content negotiation happens on the AMO side because the current
      // user language might not be supported by AMO and/or the language might not be exactly what AMO is expecting
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 5c3035c5b371..845f2a979282 100644
+index a975ccd3d669..e4fed493af7c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -174,8 +174,7 @@ class Settings(
+@@ -175,8 +175,7 @@ class Settings(
      private val logger = Logger("Settings")
  
      @VisibleForTesting
@@ -1322,7 +1405,7 @@ index 5c3035c5b371..845f2a979282 100644
  
      override val preferences: SharedPreferences =
          appContext.getSharedPreferences(FENIX_PREFERENCES, MODE_PRIVATE)
-@@ -199,11 +198,7 @@ class Settings(
+@@ -200,11 +199,7 @@ class Settings(
      /**
       * Indicates if the stories homescreen section should be shown.
       */
@@ -1335,7 +1418,7 @@ index 5c3035c5b371..845f2a979282 100644
  
      /**
       * Indicates what simple toolbar shortcut key is currently selected.
-@@ -238,11 +233,7 @@ class Settings(
+@@ -239,11 +234,7 @@ class Settings(
      /**
       * Indicates if the Pocket recommendations homescreen section should also show sponsored stories.
       */
@@ -1348,7 +1431,7 @@ index 5c3035c5b371..845f2a979282 100644
  
      /**
       * Indicates whether or not the "Recently Visited" section should be shown on the home screen.
-@@ -566,12 +557,7 @@ class Settings(
+@@ -587,12 +578,7 @@ class Settings(
          default = true,
      )
  
@@ -1362,7 +1445,7 @@ index 5c3035c5b371..845f2a979282 100644
  
      var crashReportChoice by stringPreference(
          appContext.getPreferenceKey(R.string.pref_key_crash_reporting_choice),
-@@ -583,20 +569,11 @@ class Settings(
+@@ -604,20 +590,11 @@ class Settings(
          default = false,
      )
  
@@ -1386,7 +1469,7 @@ index 5c3035c5b371..845f2a979282 100644
  
      var hasAcceptedTermsOfService by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_terms_accepted),
-@@ -710,16 +687,9 @@ class Settings(
+@@ -731,16 +708,9 @@ class Settings(
       * sure that users who upgrade and had telemetry disabled don't start sending the
       * daily usage ping telemetry.
       */
@@ -1405,7 +1488,7 @@ index 5c3035c5b371..845f2a979282 100644
  
      /**
       * This lets us know if the user has disabled experimentation manually so that we know
-@@ -2095,10 +2065,7 @@ class Settings(
+@@ -2115,10 +2085,7 @@ class Settings(
      /**
       * Indicates if the Contile functionality should be visible.
       */
@@ -1418,7 +1501,7 @@ index 5c3035c5b371..845f2a979282 100644
      /**
       * Indicates if the Unified Search feature should be visible.
 diff --git a/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml
-index e1afb71a53b2..aa4c14b19436 100644
+index 988c9ea84a10..49ab465b8911 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml
 @@ -13,7 +13,8 @@
@@ -1429,11 +1512,11 @@ index e1afb71a53b2..aa4c14b19436 100644
 +        android:title="@string/customize_toggle_contile"
 +        app:isPreferenceVisible="false" />
  
-     <androidx.preference.SwitchPreference
-         android:key="@string/pref_key_recent_tabs"
-@@ -29,13 +30,15 @@
+     <androidx.preference.SwitchPreferenceCompat
+         android:key="@string/pref_key_privacy_report"
+@@ -33,13 +34,15 @@
  
-     <androidx.preference.SwitchPreference
+     <androidx.preference.SwitchPreferenceCompat
          android:key="@string/pref_key_pocket_homescreen_recommendations"
 -        android:title="@string/customize_toggle_pocket_3" />
 +        android:title="@string/customize_toggle_pocket_3"
@@ -1450,10 +1533,10 @@ index e1afb71a53b2..aa4c14b19436 100644
      <androidx.preference.Preference
          android:key="@string/pref_key_wallpapers"
 diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-index 9235796cf72f..bb261eb1738e 100644
+index 0dba7aaefc26..576b00991d57 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-@@ -147,11 +147,6 @@
+@@ -153,11 +153,6 @@
              app:iconSpaceReserved="false"
              android:title="@string/preferences_notifications" />
  
@@ -1465,7 +1548,7 @@ index 9235796cf72f..bb261eb1738e 100644
      </androidx.preference.PreferenceCategory>
  
      <PreferenceCategory
-@@ -223,11 +218,6 @@
+@@ -229,11 +224,6 @@
          android:title="@string/preferences_category_about"
          app:iconSpaceReserved="false"
          android:layout="@layout/preference_category_no_icon_style">
@@ -1492,7 +1575,7 @@ index dfe2d28572f2..54a99d9e1dc5 100644
      <androidx.preference.Preference
          android:icon="@drawable/ic_autoplay"
 diff --git a/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
-index d224eedd7c87..2d1fc926bb34 100644
+index 5a466fa0a8d2..119ddea7bfa2 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
 @@ -73,6 +73,7 @@

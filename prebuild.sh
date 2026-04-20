@@ -94,9 +94,6 @@ find "$patches/fenix-overlay" -type f | while read -r src; do
     cp "$src" "$dst"
 done
 
-# There are a lot of "No cast needed" warnings in the generated code
-sed -i -e '/compilerOptions.allWarningsAsErrors/s/true/false/' build.gradle
-
 # Enable about:config
 sed -i \
     -e 's/aboutConfigEnabled(.*)/aboutConfigEnabled(true)/' \
@@ -194,7 +191,7 @@ localize_maven
 # Set A-C version
 echo "mozilla.version=${1%.0}" >> local.properties
 # Set A-S version
-sed -i -e 's/0.0.1-SNAPSHOT-+/149.0/' gradle/libs.versions.toml
+echo 'as.version=150.0.1' >> local.properties
 popd
 
 #
@@ -266,13 +263,16 @@ apply_patch "$patches/fenix-disable-sent-from-fx.patch"
 # Add "Enable UnifiedPush" and "Use UnifiedPush" settings
 apply_patch "$patches/fenix-use-unifiedpush.patch"
 
+# There are a lot of "No cast needed" warnings in the generated code
+sed -i -e 's/allWarningsAsErrors, true/allWarningsAsErrors, false/' mobile/android/gradle/plugins/conventions/src/main/java/org/mozilla/conventions/ProjectPlugin.kt
+
 # Fail on use of prebuilt binary
-sed -i 's|https://|hxxps://|' mobile/android/gradle/plugins/nimbus-gradle-plugin/src/main/groovy/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.groovy
+sed -i 's|https://|hxxps://|' mobile/android/gradle/plugins/nimbus-gradle-plugin/src/main/kotlin/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.kt
 
 # Make Nimbus Gradle Plugin use obj/dist/host/bin/nimbus-fml which we copy
 # there manually from A-S. Otherwise Nimbus Gradle Plugin tries to download
 # nimbus-fml from Mozilla.
-sed -i 's/project.gradle.ext.mozconfig.substs.MOZ_APPSERVICES_IN_TREE/true/' mobile/android/gradle/plugins/nimbus-gradle-plugin/src/main/groovy/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.groovy
+sed -i 's/mozconfigSubsts?.get("MOZ_APPSERVICES_IN_TREE").isTruthy()/true/' mobile/android/gradle/plugins/nimbus-gradle-plugin/src/main/kotlin/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.kt
 
 # Fix v125 aar output not including native libraries
 sed -i \
