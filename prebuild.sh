@@ -236,6 +236,10 @@ apply_patch "$patches/gecko-localize_maven.patch"
 # Replace GMS with microG client library
 apply_patch "$patches/gecko-liberate.patch"
 
+# Prevent websites from being able to detect that a user is using Fennec F-Droid
+## (based on the presence of resources used by `about:crashes`)
+apply_patch "$patches/gecko-prevent-fingerprinting-via-crash-resources.patch"
+
 # Work-around upstream bug to fix compilation with WASI SDK 20, see
 # https://bugzilla.mozilla.org/show_bug.cgi?id=1994063
 apply_patch "$patches/gecko-unbreak-wasi-sdk-20-clang.patch"
