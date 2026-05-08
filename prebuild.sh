@@ -349,7 +349,7 @@ pref("media.gmp-manager.url.override", "data:text/plain,");
 pref("media.gmp-gmpopenh264.enabled", false);
 
 // Disable RemoteSettingsCrashPull
-pref("browser.crashReports.crashPull", false, locked);
+pref("browser.crashReports.onDemand", false, locked);
 pref("browser.crashReports.requestedNeverShowAgain", true, locked);
 EOF
 
