@@ -1,3 +1,55 @@
+diff --git a/build.gradle b/build.gradle
+index da57c17e1..61d67b5a4 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -20,22 +20,7 @@ buildscript {
+         maven {
+             url "https://plugins.gradle.org/m2/"
+         }
+-        maven {
+-            name "Mozilla"
+-            url "https://maven.mozilla.org/maven2"
+-            content {
+-                // Improve performance: only check moz maven for mozilla deps.
+-                includeGroupByRegex "org\\.mozilla\\..*"
+-            }
+-        }
+-        maven {
+-            name "Mozilla Nightly"
+-            url "https://nightly.maven.mozilla.org/maven2"
+-            content {
+-                // Improve performance: only check moz maven for mozilla deps.
+-                includeGroupByRegex "org\\.mozilla\\..*"
+-            }
+-        }
++        mavenLocal()
+     }
+ 
+     dependencies {
+@@ -62,22 +47,7 @@ allprojects {
+     repositories {
+         google()
+         mavenCentral()
+-        maven {
+-            name "Mozilla"
+-            url "https://maven.mozilla.org/maven2"
+-            content {
+-                // Improve performance: only check moz maven for mozilla deps.
+-                includeGroupByRegex "org\\.mozilla\\..*"
+-            }
+-        }
+-        maven {
+-            name "Mozilla Nightly"
+-            url "https://nightly.maven.mozilla.org/maven2"
+-            content {
+-                // Improve performance: only check moz maven for mozilla deps.
+-                includeGroupByRegex "org\\.mozilla\\..*"
+-            }
+-        }
++        mavenLocal()
+     }
+ }
+ 
 diff --git a/components/ads-client/android/build.gradle b/components/ads-client/android/build.gradle
 index 52e4c5da3..7f8e87d9c 100644
 --- a/components/ads-client/android/build.gradle
@@ -139,7 +191,7 @@ index 48d962f38..6bff91c91 100644
  
          dependencies {
 diff --git a/settings.gradle b/settings.gradle
-index c891c8ac1..a7741776b 100644
+index 5fedb0250..e0d077c31 100644
 --- a/settings.gradle
 +++ b/settings.gradle
 @@ -22,14 +22,7 @@ buildscript {

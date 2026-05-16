@@ -82,7 +82,6 @@ read -ra locales < "$patches/locales"
 MOZ_CHROME_MULTILOCALE=${locales[*]}
 export MOZ_CHROME_MULTILOCALE
 gradle -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal
-gradle -x javadocRelease :exoplayer2:publishReleasePublicationToMavenLocal
 popd
 
 pushd "$android_components"

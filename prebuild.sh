@@ -45,7 +45,7 @@ function apply_patch {
 }
 
 # Set up Rust
-rustup default 1.93.0
+rustup default 1.94.0
 
 #
 # Fenix
@@ -191,7 +191,7 @@ localize_maven
 # Set A-C version
 echo "mozilla.version=${1%.0}" >> local.properties
 # Set A-S version
-echo 'as.version=150.0.1' >> local.properties
+echo 'as.version=151.0.2' >> local.properties
 popd
 
 #
@@ -208,7 +208,7 @@ apply_patch "$patches/a-s-localize_maven.patch"
 # Configure default search engines
 apply_patch "$patches/a-s-configure-default-search-engines.patch"
 # Break the dependency on older A-C
-sed -i -e '/android-components = /s/"146\.0\.1"/"149.0"/' gradle/libs.versions.toml
+sed -i -e '/android-components = /s/"149\.0\.2"/"151.0"/' gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 popd
@@ -279,9 +279,6 @@ sed -i 's|https://|hxxps://|' mobile/android/gradle/plugins/nimbus-gradle-plugin
 sed -i 's/mozconfigSubsts?.get("MOZ_APPSERVICES_IN_TREE").isTruthy()/true/' mobile/android/gradle/plugins/nimbus-gradle-plugin/src/main/kotlin/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.kt
 
 # Fix v125 aar output not including native libraries
-sed -i \
-    -e 's/singleVariant("debug")/singleVariant("release")/' \
-    mobile/android/exoplayer2/build.gradle
 sed -i \
     -e "s/singleVariant('debug')/singleVariant('release')/" \
     mobile/android/geckoview/build.gradle

@@ -1,21 +1,21 @@
 diff --git a/mobile/android/geckoview/build.gradle b/mobile/android/geckoview/build.gradle
-index c47f4cfe6e47..b7b3d68701fc 100644
+index d4102025d691..46972ac62e76 100644
 --- a/mobile/android/geckoview/build.gradle
 +++ b/mobile/android/geckoview/build.gradle
-@@ -220,7 +220,7 @@ dependencies {
+@@ -185,7 +185,7 @@ dependencies {
      implementation libs.androidx.core
      implementation libs.androidx.lifecycle.common
      implementation libs.androidx.lifecycle.process
 -    implementation libs.play.services.fido
-+    implementation "org.microg.gms:play-services-fido:0.3.13.250932"
++    implementation "org.microg.gms:play-services-fido:0.3.15.250932"
      implementation "org.yaml:snakeyaml:2.2"
  
      if (mozconfig.substs.MOZ_ANDROID_HLS_SUPPORT) {
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java
-index 2eea4c6af176..7cf1f3a3e1ff 100644
+index 754ce5b7815c..aa67916f8da6 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java
-@@ -195,27 +195,14 @@ import org.mozilla.gecko.util.WebAuthnUtils;
+@@ -199,27 +199,14 @@ import org.mozilla.gecko.util.WebAuthnUtils;
  
        final Task<PendingIntent> intentTask;
  
@@ -51,7 +51,7 @@ index 2eea4c6af176..7cf1f3a3e1ff 100644
  
        intentTask.addOnSuccessListener(
            pendingIntent -> {
-@@ -428,19 +415,12 @@ import org.mozilla.gecko.util.WebAuthnUtils;
+@@ -435,19 +422,12 @@ import org.mozilla.gecko.util.WebAuthnUtils;
                .build();
  
        final Task<PendingIntent> intentTask;
@@ -76,7 +76,7 @@ index 2eea4c6af176..7cf1f3a3e1ff 100644
  
        intentTask.addOnSuccessListener(
            pendingIntent -> {
-@@ -574,15 +554,9 @@ import org.mozilla.gecko.util.WebAuthnUtils;
+@@ -598,15 +578,9 @@ import org.mozilla.gecko.util.WebAuthnUtils;
    @WrapForJNI(calledFrom = "gecko")
    private static GeckoResult<Boolean> webAuthnIsUserVerifyingPlatformAuthenticatorAvailable() {
      final Task<Boolean> task;

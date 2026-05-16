@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index 1c95e76d4dac..62e6ac60d7cb 100644
+index f6fa04eac1de..0607ad9ec746 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-@@ -235,7 +235,7 @@ class Components(private val context: Context) {
+@@ -244,7 +244,7 @@ class Components(private val context: Context) {
      val publicSuffixList by lazyMonitored { PublicSuffixList(context) }
      val clipboardHandler by lazyMonitored { ClipboardHandler(context) }
      val performance by lazyMonitored { PerformanceComponent() }
@@ -34,10 +34,10 @@ index 98a10159bff3..63c189a82256 100644
                  }
              } else {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index 7cf7648c813a..f8519d9154fd 100644
+index f479706c9b40..ac4f7ea1041d 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-@@ -291,6 +291,12 @@ class SecretSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFra
+@@ -210,6 +210,12 @@ class SecretSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFra
              onPreferenceChangeListener = SharedPreferenceUpdater()
          }
  
@@ -51,10 +51,10 @@ index 7cf7648c813a..f8519d9154fd 100644
              isVisible = Config.channel.isNightlyOrDebug
              isChecked = context.settings().isAddressSyncEnabled
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index f448f7f0a79b..95eb950d426b 100644
+index 6200d8376b82..d98cabba64b8 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-@@ -451,6 +451,48 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment
+@@ -463,6 +463,48 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment
                  null
              }
  
@@ -103,7 +103,7 @@ index f448f7f0a79b..95eb950d426b 100644
              // Only displayed when secret settings are enabled
              resources.getString(R.string.pref_key_override_amo_collection) -> {
                  val context = requireContext()
-@@ -591,6 +633,12 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment
+@@ -603,6 +645,12 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment
              findPreference<Preference>(getPreferenceKey(R.string.pref_key_start_profiler))
  
          with(settings) {
@@ -117,10 +117,10 @@ index f448f7f0a79b..95eb950d426b 100644
                  getPreferenceKey(R.string.pref_key_nimbus_experiments),
              )?.isVisible = showSecretDebugMenuThisSession
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index a975ccd3d669..b5d6ec3c69b1 100644
+index 741a1a7679bd..9ec74dd2835e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2294,6 +2294,22 @@ class Settings(
+@@ -2402,6 +2402,22 @@ class Settings(
          }
      }
  
@@ -144,10 +144,10 @@ index a975ccd3d669..b5d6ec3c69b1 100644
       * Get the current mode for cookie banner handling
       */
 diff --git a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-index 4f74b7eaaaa6..c7dd3190715c 100644
+index ab58610c5577..d775c9bb4ad4 100644
 --- a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
 +++ b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-@@ -442,6 +442,8 @@
+@@ -448,6 +448,8 @@
      <string name="pref_key_pocket_sponsored_stories" translatable="false">pref_key_pocket_sponsored_stories</string>
  
      <!-- Secret Info Setting Keys -->
@@ -157,23 +157,23 @@ index 4f74b7eaaaa6..c7dd3190715c 100644
      <string name="pref_key_start_profiler" translatable="false">pref_key_start_profiler</string>
  
 diff --git a/mobile/android/fenix/app/src/main/res/values/static_strings.xml b/mobile/android/fenix/app/src/main/res/values/static_strings.xml
-index 8aa87878d159..e77eaed5b8b1 100644
+index 1f711cf6b6e7..ab4485635cdf 100644
 --- a/mobile/android/fenix/app/src/main/res/values/static_strings.xml
 +++ b/mobile/android/fenix/app/src/main/res/values/static_strings.xml
-@@ -78,6 +78,8 @@
+@@ -85,6 +85,8 @@
      <string name="preferences_sync_debug_temporary_auth_error_button_title">Simulate temporary account auth error</string>
      <!-- Button title for simulating an FxA permanent auth error inside the Sync Debug menu -->
      <string name="preferences_sync_debug_permanent_auth_error_button_title">Simulate permanent account auth error</string>
 +    <!-- Label for enabling UnifiedPush -->
 +    <string name="preferences_debug_settings_unifiedpush" translatable="false">Enable UnifiedPush</string>
+     <!-- Label for enabling the Compose wallpaper background on the homepage -->
+     <string name="preferences_debug_settings_compose_wallpaper" translatable="false">Enable Compose Wallpaper</string>
      <!-- Label for enabling the Homepage Search Bar -->
-     <string name="preferences_debug_settings_homepage_searchbar" translatable="false">Enable Homepage Search Bar</string>
-   <!-- Label for enabling Homepage as a New Tab -->
 diff --git a/mobile/android/fenix/app/src/main/res/values/strings.xml b/mobile/android/fenix/app/src/main/res/values/strings.xml
-index 4a0fc1f5177e..a62915c123a7 100644
+index 29ab67a97445..477b3414f3a8 100644
 --- a/mobile/android/fenix/app/src/main/res/values/strings.xml
 +++ b/mobile/android/fenix/app/src/main/res/values/strings.xml
-@@ -923,6 +923,13 @@
+@@ -998,6 +998,13 @@
      <!-- Message to indicate users that we are quitting the application to apply the changes -->
      <string name="quit_application">Quitting the application to apply changes…</string>
  
@@ -188,10 +188,10 @@ index 4a0fc1f5177e..a62915c123a7 100644
      <string name="preferences_extensions">Extensions</string>
      <!-- Preference for installing a local extension -->
 diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-index 0dba7aaefc26..e709b4051846 100644
+index 5daf2f0a80ee..d9eeeda34770 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-@@ -201,6 +201,13 @@
+@@ -218,6 +218,13 @@
              app:isPreferenceVisible="false"
              android:title="@string/firefox_labs_title" />
  
@@ -206,18 +206,18 @@ index 0dba7aaefc26..e709b4051846 100644
              android:key="@string/pref_key_leakcanary"
              android:title="@string/preference_leakcanary"
 diff --git a/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
-index 84ac69f70384..9df5a7b40384 100644
+index 2c8be688c972..8fc6d962feaa 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
-@@ -15,6 +15,11 @@
-         android:key="@string/pref_key_nimbus_use_preview"
-         android:title="@string/preferences_nimbus_use_preview_collection"
-         app:iconSpaceReserved="false" />
+@@ -196,6 +196,11 @@
+       android:key="@string/pref_key_nimbus_use_preview"
+       android:title="@string/preferences_nimbus_use_preview_collection"
+       app:iconSpaceReserved="false" />
 +    <SwitchPreferenceCompat
 +        android:defaultValue="false"
 +        android:key="@string/pref_key_enable_unifiedpush"
 +        android:title="@string/preferences_debug_settings_unifiedpush"
 +        app:iconSpaceReserved="false" />
      <SwitchPreferenceCompat
-         android:defaultValue="false"
-         android:key="@string/pref_key_enable_address_sync"
+       android:defaultValue="false"
+       android:key="@string/pref_key_enable_firefox_labs"
