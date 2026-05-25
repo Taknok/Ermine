@@ -244,6 +244,9 @@ apply_patch "$patches/gecko-prevent-fingerprinting-via-crash-resources.patch"
 # https://bugzilla.mozilla.org/show_bug.cgi?id=1994063
 apply_patch "$patches/gecko-unbreak-wasi-sdk-20-clang.patch"
 
+# Add "marionette.hide" option into about:config
+apply_patch "$patches/gecko-option-to-hide-marionette.patch"
+
 # Add UnifiedPush support
 apply_patch "$unifiedpush_ac/patches/a-c-unifiedpush.patch"
 apply_patch "$unifiedpush_ac/patches/fenix-unifiedpush.patch"

@@ -1,0 +1,16 @@
+diff --git a/dom/base/Navigator.cpp b/dom/base/Navigator.cpp
+index 079746f77996..d32dad41f1a5 100644
+--- a/dom/base/Navigator.cpp
++++ b/dom/base/Navigator.cpp
+@@ -2362,6 +2362,11 @@ dom::PrivateAttribution* Navigator::PrivateAttribution() {
+ /* static */
+ bool Navigator::Webdriver() {
+ #ifdef ENABLE_WEBDRIVER
++  bool marionetteHide = false;
++  nsresult rv = mozilla::Preferences::GetBool("marionette.hide", &marionetteHide);
++  if (NS_SUCCEEDED(rv) && marionetteHide) {
++    return false;
++  }
+   nsCOMPtr<nsIMarionette> marionette = do_GetService(NS_MARIONETTE_CONTRACTID);
+   if (marionette) {
+     bool marionetteRunning = false;
