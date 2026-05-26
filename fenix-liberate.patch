@@ -1,5 +1,5 @@
 diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
-index 103429a68219..0e79c2be12f1 100644
+index 103429a68219..baaafe4d3ce8 100644
 --- a/gradle/libs.versions.toml
 +++ b/gradle/libs.versions.toml
 @@ -54,17 +54,10 @@ work = "2.11.2"
@@ -1403,7 +1403,7 @@ index a4ea6265b6b3..4b1e684e1b2a 100644
      // This is locale-less on purpose so that the content negotiation happens on the AMO side because the current
      // user language might not be supported by AMO and/or the language might not be exactly what AMO is expecting
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 741a1a7679bd..4a2d355a8f63 100644
+index 741a1a7679bd..dc292a5c9654 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -174,8 +174,7 @@ class Settings(
@@ -1511,6 +1511,15 @@ index 741a1a7679bd..4a2d355a8f63 100644
  
      /**
       * Blocklist used to filter items from the home screen that have previously been removed.
+@@ -2577,7 +2544,7 @@ class Settings(
+      */
+     var showHomepageSportsWidget by booleanPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_show_homepage_sports_widget),
+-        default = true,
++        default = false,
+     )
+ 
+     /**
 diff --git a/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml
 index fbc648cf3bc5..a1b4d638c8ef 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml
