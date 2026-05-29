@@ -208,7 +208,7 @@ apply_patch "$patches/a-s-localize_maven.patch"
 # Configure default search engines
 apply_patch "$patches/a-s-configure-default-search-engines.patch"
 # Break the dependency on older A-C
-sed -i -e '/android-components = /s/"149\.0\.2"/"151.0"/' gradle/libs.versions.toml
+sed -i -e '/android-components = /s/"149\.0\.2"/"151.0.2"/' gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 popd

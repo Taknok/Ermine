@@ -1,5 +1,5 @@
 diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
-index 103429a68219..baaafe4d3ce8 100644
+index f92b4ebc0c64..5522c8dbf09e 100644
 --- a/gradle/libs.versions.toml
 +++ b/gradle/libs.versions.toml
 @@ -54,17 +54,10 @@ work = "2.11.2"
@@ -293,10 +293,10 @@ index 000000000000..ab6b3badbdb1
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustConfig.java b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustConfig.java
 new file mode 100644
-index 000000000000..d8eefee89267
+index 000000000000..bb90fba181e0
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustConfig.java
-@@ -0,0 +1,55 @@
+@@ -0,0 +1,58 @@
 +/*
 + * Copyright (c) 2012-2017 adjust GmbH,
 + * http://www.adjust.com
@@ -350,6 +350,9 @@ index 000000000000..d8eefee89267
 +    }
 +
 +    public void enablePlayStoreKidsCompliance() {
++    }
++
++    public void disableFbIdReading() {
 +    }
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustEvent.java b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustEvent.java
@@ -642,7 +645,7 @@ index 000000000000..b50a6f03a218
 +    }
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index d8e4023d8790..7a31779059c8 100644
+index 22b4c2a11c03..2eb471422432 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 @@ -433,7 +433,6 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
@@ -1403,7 +1406,7 @@ index a4ea6265b6b3..4b1e684e1b2a 100644
      // This is locale-less on purpose so that the content negotiation happens on the AMO side because the current
      // user language might not be supported by AMO and/or the language might not be exactly what AMO is expecting
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 741a1a7679bd..dc292a5c9654 100644
+index bb276167f6c6..cbd2dcc54ad2 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -174,8 +174,7 @@ class Settings(
@@ -1499,7 +1502,7 @@ index 741a1a7679bd..dc292a5c9654 100644
  
      /**
       * This lets us know if the user has disabled experimentation manually so that we know
-@@ -2223,10 +2193,7 @@ class Settings(
+@@ -2176,10 +2146,7 @@ class Settings(
      /**
       * Indicates if the Contile functionality should be visible.
       */
@@ -1511,7 +1514,7 @@ index 741a1a7679bd..dc292a5c9654 100644
  
      /**
       * Blocklist used to filter items from the home screen that have previously been removed.
-@@ -2577,7 +2544,7 @@ class Settings(
+@@ -2530,7 +2497,7 @@ class Settings(
       */
      var showHomepageSportsWidget by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_show_homepage_sports_widget),
