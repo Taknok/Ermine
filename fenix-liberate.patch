@@ -123,10 +123,10 @@ index 52ffd1b14903..cf3050b761bc 100644
      - components:lib-state
      - components:service-digitalassetlinks
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index 15b1d953a3f1..0e62f8dcf62b 100644
+index 3ac406969574..4de595871ff7 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -618,17 +618,14 @@ dependencies {
+@@ -618,10 +618,8 @@ dependencies {
      implementation project(':components:lib-crash')
      implementation project(':components:lib-crash-sentry')
      implementation project(':components:lib-dataprotect')
@@ -137,14 +137,15 @@ index 15b1d953a3f1..0e62f8dcf62b 100644
      implementation project(':components:lib-llm-mlpa')
      implementation project(':components:lib-shake')
      implementation project(':components:lib-ai-controls')
+@@ -630,7 +628,6 @@ dependencies {
+     implementation ComponentsDependencies.mozilla_appservices_merino
  
-     implementation ComponentsDependencies.mozilla_appservices_syncmanager
      implementation libs.accompanist.drawablepainter
 -    implementation libs.adjust
      implementation libs.androidx.activity
      implementation libs.androidx.activity.ktx
      implementation libs.androidx.annotation
-@@ -676,13 +673,10 @@ dependencies {
+@@ -678,13 +675,10 @@ dependencies {
      implementation libs.androidx.viewpager2
      implementation libs.androidx.work.runtime
      implementation libs.google.material
@@ -676,10 +677,10 @@ index 22b4c2a11c03..2eb471422432 100644
  
      @OptIn(DelicateCoroutinesApi::class, ExperimentalAndroidComponentsApi::class) // GlobalScope usage
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt
-index ac5f5f6b8ec1..2579a367fc5f 100644
+index 8bc0861524c3..ceeef65a80d5 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt
-@@ -1359,19 +1359,16 @@ abstract class BaseBrowserFragment :
+@@ -1360,19 +1360,16 @@ abstract class BaseBrowserFragment :
              view = view,
          )
  
@@ -737,18 +738,18 @@ index c9e41120b397..158ec9c65354 100644
          /**
           * Convenience initializer that creates a [SharedPreferences] to be used by [ClientUUID].
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index f6fa04eac1de..c02d20554a87 100644
+index 3d7952e0b32e..fb5680ddb6c1 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
- import androidx.compose.runtime.ReadOnlyComposable
+@@ -12,7 +12,6 @@ import androidx.compose.runtime.ReadOnlyComposable
  import androidx.compose.ui.platform.LocalContext
  import androidx.core.app.NotificationManagerCompat
+ import androidx.core.content.getSystemService
 -import com.google.android.play.core.review.ReviewManagerFactory
  import mozilla.components.concept.ai.controls.AIFeatureBlock
  import mozilla.components.concept.ai.controls.AIFeatureRegistry
  import mozilla.components.feature.addons.AddonManager
-@@ -23,10 +22,6 @@ import mozilla.components.feature.summarize.settings.SummarizationSettings
+@@ -25,10 +24,6 @@ import mozilla.components.feature.summarize.settings.SummarizationSettings
  import mozilla.components.lib.ai.controls.default
  import mozilla.components.lib.crash.store.CrashAction
  import mozilla.components.lib.crash.store.CrashMiddleware
@@ -759,7 +760,7 @@ index f6fa04eac1de..c02d20554a87 100644
  import mozilla.components.lib.llm.mlpa.MlpaTokenStorage
  import mozilla.components.lib.publicsuffixlist.PublicSuffixList
  import mozilla.components.service.fxrelay.eligibility.RelayEligibilityStore
-@@ -259,7 +254,6 @@ class Components(private val context: Context) {
+@@ -265,7 +260,6 @@ class Components(private val context: Context) {
  
      val playStoreReviewPromptController by lazyMonitored {
          PlayStoreReviewPromptController(
@@ -767,7 +768,7 @@ index f6fa04eac1de..c02d20554a87 100644
              numberOfAppLaunches = { settings.numberOfAppLaunches },
          )
      }
-@@ -390,16 +384,6 @@ class Components(private val context: Context) {
+@@ -413,16 +407,6 @@ class Components(private val context: Context) {
          )
      }
  
@@ -784,7 +785,7 @@ index f6fa04eac1de..c02d20554a87 100644
      val termsOfUsePromptRepository by lazyMonitored {
          DefaultTermsOfUsePromptRepository(settings)
      }
-@@ -465,7 +449,6 @@ class Components(private val context: Context) {
+@@ -488,7 +472,6 @@ class Components(private val context: Context) {
              client = core.client,
              storage = MlpaTokenStorage.sharedPrefs(context),
              fxaTokenProvider = backgroundServices.accountManager.accessTokenProvider,
@@ -1406,7 +1407,7 @@ index a4ea6265b6b3..4b1e684e1b2a 100644
      // This is locale-less on purpose so that the content negotiation happens on the AMO side because the current
      // user language might not be supported by AMO and/or the language might not be exactly what AMO is expecting
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index bb276167f6c6..cbd2dcc54ad2 100644
+index cfcf6eda54be..5f80a7335736 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -174,8 +174,7 @@ class Settings(
@@ -1514,7 +1515,7 @@ index bb276167f6c6..cbd2dcc54ad2 100644
  
      /**
       * Blocklist used to filter items from the home screen that have previously been removed.
-@@ -2530,7 +2497,7 @@ class Settings(
+@@ -2558,7 +2525,7 @@ class Settings(
       */
      var showHomepageSportsWidget by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_show_homepage_sports_widget),
