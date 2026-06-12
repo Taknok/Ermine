@@ -26,9 +26,10 @@ source "$(dirname "$0")/paths.sh"
 # auto-publication workflow because the latter does not work for Gradle
 # plugins (Glean).
 
-# Set up Android SDK
-sdkmanager 'build-tools;36.1.0' # for GeckoView
-sdkmanager 'platforms;android-36.1' # for GeckoView
+# Set up Android SDK for GeckoView
+sdkmanager 'build-tools;37.0.0'
+sdkmanager 'cmdline-tools;20.0'
+sdkmanager 'platforms;android-37.0'
 
 # Set up Rust
 cargo install --force --vers 0.29.2 cbindgen

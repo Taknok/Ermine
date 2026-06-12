@@ -191,7 +191,7 @@ localize_maven
 # Set A-C version
 echo "mozilla.version=${1%.0}" >> local.properties
 # Set A-S version
-echo 'as.version=151.0.2' >> local.properties
+echo 'as.version=152.0.1' >> local.properties
 popd
 
 #
@@ -208,7 +208,7 @@ apply_patch "$patches/a-s-localize_maven.patch"
 # Configure default search engines
 apply_patch "$patches/a-s-configure-default-search-engines.patch"
 # Break the dependency on older A-C
-sed -i -e '/android-components = /s/"149\.0\.2"/"151.0.3"/' gradle/libs.versions.toml
+sed -i -e "/android-components = /s/150\.0\.3/${1%.0}/" gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 popd

@@ -1,8 +1,8 @@
 diff --git a/components/remote_settings/src/client.rs b/components/remote_settings/src/client.rs
-index d274ade65..6123c3275 100644
+index b951d45c0..6abad9d3c 100644
 --- a/components/remote_settings/src/client.rs
 +++ b/components/remote_settings/src/client.rs
-@@ -122,77 +122,17 @@ impl<C: ApiClient> RemoteSettingsClient<C> {
+@@ -118,77 +118,17 @@ impl<C: ApiClient> RemoteSettingsClient<C> {
              "world-buffered",
          ],
          ("main", "search-config-icons") => [
@@ -85,37 +85,16 @@ index d274ade65..6123c3275 100644
          ],
          ("main", "translations-wasm") => [
              "4fd32605-9889-4dd9-9fc7-577ad1136746",
-@@ -731,11 +671,19 @@ impl Client {
-             ))?,
-         };
- 
-+        let collection_name = if config.collection_name == String::from("search-config-icons") || config.collection_name == String::from("search-config-v2") {
-+            Err(Error::ConfigError(
-+                "Download attempt for remote search configuration was blocked.".into(),
-+            ))?
-+        } else {
-+            config.collection_name
-+        };
-+
-         let bucket_name = config.bucket_name.unwrap_or_else(|| String::from("main"));
-         let endpoints = RemoteSettingsEndpoints::new(
-             &server.get_base_url()?,
-             &bucket_name,
--            &config.collection_name,
-+            &collection_name,
-         );
- 
-         Ok(Self {
 diff --git a/components/remote_settings/src/service.rs b/components/remote_settings/src/service.rs
-index 17d986f62..c2be46550 100644
+index b7cc30d39..8337266f8 100644
 --- a/components/remote_settings/src/service.rs
 +++ b/components/remote_settings/src/service.rs
-@@ -108,7 +108,7 @@ impl RemoteSettingsService {
+@@ -118,7 +118,7 @@ impl RemoteSettingsService {
                      }
                  }
              }
 -            if synced_collections.insert(collection_name.to_string()) {
 +            if collection_name != String::from("search-config-icons") && collection_name != String::from("search-config-v2") && synced_collections.insert(collection_name.to_string()) {
                  trace!("syncing collection: {collection_name}");
-                 client.sync()?;
-             }
+                 let start_time = std::time::Instant::now();
+                 let sync_result = client.sync();
