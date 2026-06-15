@@ -520,6 +520,130 @@ index 000000000000..7efa1c6804c6
 +public interface OnAttributionChangedListener {
 +    void onAttributionChanged(AdjustAttribution attribution);
 +}
+diff --git a/mobile/android/fenix/app/src/main/java/com/android/installreferrer/api/InstallReferrerClient.java b/mobile/android/fenix/app/src/main/java/com/android/installreferrer/api/InstallReferrerClient.java
+new file mode 100644
+index 000000000000..d6a2e9ebe16b
+--- /dev/null
++++ b/mobile/android/fenix/app/src/main/java/com/android/installreferrer/api/InstallReferrerClient.java
+@@ -0,0 +1,48 @@
++package com.android.installreferrer.api;
++
++import android.content.Context;
++import android.os.RemoteException;
++
++public abstract class InstallReferrerClient {
++
++    public InstallReferrerClient() {
++    }
++
++    public static Builder newBuilder(Context context) {
++        return new Builder(context);
++    }
++
++    public abstract void startConnection(InstallReferrerStateListener listener);
++
++    public abstract void endConnection();
++
++    public abstract boolean isReady();
++
++    public abstract ReferrerDetails getInstallReferrer() throws RemoteException;
++
++    public @interface InstallReferrerResponse {
++        int SERVICE_DISCONNECTED = -1;
++        int OK = 0;
++        int SERVICE_UNAVAILABLE = 1;
++        int FEATURE_NOT_SUPPORTED = 2;
++        int DEVELOPER_ERROR = 3;
++        int PERMISSION_ERROR = 4;
++    }
++
++    public static final class Builder {
++
++        private final Context context;
++
++        private Builder(Context context) {
++            if (context == null) {
++                throw new IllegalArgumentException("Context must not be null");
++            }
++            this.context = context.getApplicationContext();
++        }
++
++        public InstallReferrerClient build() {
++            return new InstallReferrerClientImpl(context);
++        }
++    }
++
++}
+diff --git a/mobile/android/fenix/app/src/main/java/com/android/installreferrer/api/InstallReferrerClientImpl.java b/mobile/android/fenix/app/src/main/java/com/android/installreferrer/api/InstallReferrerClientImpl.java
+new file mode 100644
+index 000000000000..e177bbecebed
+--- /dev/null
++++ b/mobile/android/fenix/app/src/main/java/com/android/installreferrer/api/InstallReferrerClientImpl.java
+@@ -0,0 +1,30 @@
++package com.android.installreferrer.api;
++
++import android.content.Context;
++import android.os.RemoteException;
++
++final class InstallReferrerClientImpl extends InstallReferrerClient {
++
++    InstallReferrerClientImpl(Context context) {
++    }
++
++    @Override
++    public void startConnection(InstallReferrerStateListener listener) {
++        throw new UnsupportedOperationException();
++    }
++
++    @Override
++    public void endConnection() {
++    }
++
++    @Override
++    public boolean isReady() {
++        return false;
++    }
++
++    @Override
++    public ReferrerDetails getInstallReferrer() throws RemoteException {
++        throw new UnsupportedOperationException();
++    }
++
++}
+diff --git a/mobile/android/fenix/app/src/main/java/com/android/installreferrer/api/InstallReferrerStateListener.java b/mobile/android/fenix/app/src/main/java/com/android/installreferrer/api/InstallReferrerStateListener.java
+new file mode 100644
+index 000000000000..002e5e2e8d9d
+--- /dev/null
++++ b/mobile/android/fenix/app/src/main/java/com/android/installreferrer/api/InstallReferrerStateListener.java
+@@ -0,0 +1,8 @@
++package com.android.installreferrer.api;
++
++public interface InstallReferrerStateListener {
++
++    void onInstallReferrerServiceDisconnected();
++    void onInstallReferrerSetupFinished(int responseCode);
++
++}
+diff --git a/mobile/android/fenix/app/src/main/java/com/android/installreferrer/api/ReferrerDetails.java b/mobile/android/fenix/app/src/main/java/com/android/installreferrer/api/ReferrerDetails.java
+new file mode 100644
+index 000000000000..70cafeb1713e
+--- /dev/null
++++ b/mobile/android/fenix/app/src/main/java/com/android/installreferrer/api/ReferrerDetails.java
+@@ -0,0 +1,14 @@
++package com.android.installreferrer.api;
++
++import android.os.Bundle;
++
++public class ReferrerDetails {
++
++     public ReferrerDetails(Bundle referrerBundle) {
++     }
++
++     public String getInstallReferrer() {
++         return "";
++     }
++
++}
 diff --git a/mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java b/mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java
 new file mode 100644
 index 000000000000..4d5fd8153d21
@@ -922,427 +1046,6 @@ index efb47806713b..0aa729e1cfd6 100644
              ),
              storage = storage,
              mlpaService = fenixMlpaService,
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/DefaultInstallReferrerClient.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/DefaultInstallReferrerClient.kt
-deleted file mode 100644
-index d8d27cee9183..000000000000
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/DefaultInstallReferrerClient.kt
-+++ /dev/null
-@@ -1,28 +0,0 @@
--/* This Source Code Form is subject to the terms of the Mozilla Public
-- * License, v. 2.0. If a copy of the MPL was not distributed with this
-- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
--
--package org.mozilla.fenix.components.metrics
--
--import android.content.Context
--import com.android.installreferrer.api.InstallReferrerClient
--import com.android.installreferrer.api.InstallReferrerStateListener
--
--/**
-- * Default implementation that wraps the actual InstallReferrerClient.
-- */
--class DefaultInstallReferrerClient(context: Context) : InstallReferrerClientWrapper {
--    private val client = InstallReferrerClient.newBuilder(context).build()
--
--    override fun startConnection(listener: InstallReferrerStateListener) {
--        client.startConnection(listener)
--    }
--
--    override fun getInstallReferrer(): String? {
--        return client.installReferrer?.installReferrer
--    }
--
--    override fun endConnection() {
--        client.endConnection()
--    }
--}
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerClientWrapper.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerClientWrapper.kt
-deleted file mode 100644
-index e5167e582c58..000000000000
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerClientWrapper.kt
-+++ /dev/null
-@@ -1,27 +0,0 @@
--/* This Source Code Form is subject to the terms of the Mozilla Public
-- * License, v. 2.0. If a copy of the MPL was not distributed with this
-- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
--
--package org.mozilla.fenix.components.metrics
--
--import com.android.installreferrer.api.InstallReferrerStateListener
--
--/**
-- * Wrapper interface for InstallReferrerClient to enable testing.
-- */
--interface InstallReferrerClientWrapper {
--    /**
--     * Starts up `InstallReferrerClient` setup process asynchronously.
--     */
--    fun startConnection(listener: InstallReferrerStateListener)
--
--    /**
--     * Get the install referrer URL of the application.
--     */
--    fun getInstallReferrer(): String?
--
--    /**
--     * Close the `InstallReferrerClient` connection and release all held resources such as service connections.
--     */
--    fun endConnection()
--}
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerHandlingService.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerHandlingService.kt
-index b491ac9d6836..b22536a7c52a 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerHandlingService.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerHandlingService.kt
-@@ -7,8 +7,6 @@ package org.mozilla.fenix.components.metrics
- import android.content.Context
- import android.os.RemoteException
- import androidx.annotation.VisibleForTesting
--import com.android.installreferrer.api.InstallReferrerClient
--import com.android.installreferrer.api.InstallReferrerStateListener
- import kotlinx.coroutines.CoroutineScope
- import kotlinx.coroutines.Dispatchers
- import kotlinx.coroutines.launch
-@@ -39,79 +37,10 @@ class InstallReferrerHandlingService(
- ) {
-     private val logger = Logger("InstallReferrerHandlingService")
- 
--    @VisibleForTesting
--    internal var clientFactory: (Context) -> InstallReferrerClientWrapper = ::DefaultInstallReferrerClient
--
-     /**
-      * Starts the connection with the install referrer and handle the response.
-      */
-     fun start() {
--        val client = clientFactory(context)
--
--        client.startConnection(
--            object : InstallReferrerStateListener {
--                override fun onInstallReferrerSetupFinished(responseCode: Int) {
--                    when (responseCode) {
--                        InstallReferrerClient.InstallReferrerResponse.OK -> {
--                            // Connection established.
--                            val installReferrerResponse = try {
--                                client.getInstallReferrer()
--                            } catch (e: RemoteException) {
--                                // We can't do anything about this.
--                                logger.error("Failed to retrieve install referrer response", e)
--                                null
--                            } catch (e: SecurityException) {
--                                // https://issuetracker.google.com/issues/72926755
--                                logger.error("Failed to retrieve install referrer response", e)
--                                null
--                            }
--
--                            val distributionIdManager = context.components.distributionIdManager
--
--                            if (!installReferrerResponse.isNullOrBlank()) {
--                                response = installReferrerResponse
--                                context.settings().isUserMetaAttributed = isMetaAttribution(installReferrerResponse)
--                                context.settings().isUserTikTokAttributed = isTikTokAttribution(installReferrerResponse)
--                                context.settings().isUserRedditAttributed = isRedditAttribution(installReferrerResponse)
--                                distributionIdManager.updateDistributionIdFromUtmParams(
--                                    UTMParams.parseUTMParameters(installReferrerResponse),
--                                )
--                                scope.launch {
--                                    distributionIdManager.startAdjustIfSkippingConsentScreen()
--                                }
--                            }
--
--                            scope.launch {
--                                context.settings().shouldShowMarketingOnboarding =
--                                    shouldShowMarketingOnboarding(
--                                        installReferrerResponse,
--                                        distributionIdManager,
--                                    )
--                            }
--
--                            safeEndConnection(client)
--                            return
--                        }
--
--                        InstallReferrerClient.InstallReferrerResponse.FEATURE_NOT_SUPPORTED,
--                        InstallReferrerClient.InstallReferrerResponse.DEVELOPER_ERROR,
--                        InstallReferrerClient.InstallReferrerResponse.PERMISSION_ERROR,
--                        InstallReferrerClient.InstallReferrerResponse.SERVICE_UNAVAILABLE,
--                        InstallReferrerClient.InstallReferrerResponse.SERVICE_DISCONNECTED,
--                            -> {
--                            context.settings().shouldShowMarketingOnboarding = false
--                            safeEndConnection(client)
--                            return
--                        }
--                    }
--                }
--
--                override fun onInstallReferrerServiceDisconnected() {
--                    context.settings().shouldShowMarketingOnboarding = false
--                    safeEndConnection(client)
--                }
--            },
--        )
-     }
- 
-     /**
-@@ -119,104 +48,10 @@ class InstallReferrerHandlingService(
-      * showing the marketing onboarding flow.
-      */
-     companion object {
--        private val marketingPrefixes = listOf(GCLID_PREFIX, ADJUST_REFTAG_PREFIX)
--
--        @Suppress("TooGenericExceptionCaught")
--        private fun safeEndConnection(client: InstallReferrerClientWrapper) {
--            try {
--                client.endConnection()
--            } catch (e: Exception) {
--                // endConnection can throw if the binding is already dead.
--            }
--        }
--
-         /**
-          * The raw install referrer string. Only read this after the user has accepted ToS —
-          * do not use it to trigger telemetry or network calls before consent is given.
-          */
-         var response: String? = null
--
--        @VisibleForTesting
--        internal fun isMetaAttribution(installReferrerResponse: String?): Boolean {
--            if (installReferrerResponse.isNullOrBlank()) {
--                return false
--            }
--
--            val utmParams = UTMParams.parseUTMParameters(installReferrerResponse)
--            return MetaParams.extractMetaAttribution(utmParams.content) != null
--        }
--
--        private const val ADJUST_EXTERNAL_CLICK_ID = "adjust_external_click_id"
--        private val TIKTOK_EXTERNAL_CLICK_ID_PREFIXES = listOf("E.C.P.C", "E_C_P_C")
--        private const val REDDIT_EXTERNAL_CLICK_ID_PREFIX = "reddit_"
--
--        @VisibleForTesting
--        internal fun isTikTokAttribution(installReferrerResponse: String?): Boolean {
--            if (installReferrerResponse.isNullOrBlank()) return false
--
--            val decoded = try {
--                URLDecoder.decode(installReferrerResponse, "UTF-8")
--            } catch (e: IllegalArgumentException) {
--                Logger.error("isTikTokAttribution() - bad installReferrerResponse", e)
--
--                installReferrerResponse
--            }
--
--            val clickId = UTMParams.parseInstallReferrer(decoded)[ADJUST_EXTERNAL_CLICK_ID]
--                ?: return false
--
--            return TIKTOK_EXTERNAL_CLICK_ID_PREFIXES.any { clickId.startsWith(it, ignoreCase = true) }
--        }
--
--        @VisibleForTesting
--        internal fun isRedditAttribution(installReferrerResponse: String?): Boolean {
--            if (installReferrerResponse.isNullOrBlank()) return false
--
--            val decoded = try {
--                URLDecoder.decode(installReferrerResponse, "UTF-8")
--            } catch (e: IllegalArgumentException) {
--                Logger.error("isRedditAttribution() - bad installReferrerResponse", e)
--
--                installReferrerResponse
--            }
--
--            val clickId = UTMParams.parseInstallReferrer(decoded)[ADJUST_EXTERNAL_CLICK_ID]
--                ?: return false
--
--            return clickId.startsWith(REDDIT_EXTERNAL_CLICK_ID_PREFIX, ignoreCase = true)
--        }
--
--        @Suppress("ReturnCount")
--        @VisibleForTesting
--        internal suspend fun shouldShowMarketingOnboarding(
--            installReferrerResponse: String?,
--            distributionIdManager: DistributionIdManager,
--        ): Boolean {
--            if (distributionIdManager.isPartnershipDistribution()) {
--                return !distributionIdManager.shouldSkipMarketingConsentScreen()
--            }
--
--            if (installReferrerResponse.isNullOrBlank()) {
--                return false
--            }
--
--            if (!FxNimbus.features.marketingOnboardingCard.value().enabled) {
--                return false
--            }
--
--            if (isMetaAttribution(installReferrerResponse)) {
--                return true
--            }
--
--            if (isTikTokAttribution(installReferrerResponse)) {
--                return true
--            }
--
--            if (isRedditAttribution(installReferrerResponse)) {
--                return true
--            }
--
--            return marketingPrefixes.any { installReferrerResponse.startsWith(it, ignoreCase = true) }
--        }
-     }
- }
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerWorker.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerWorker.kt
-index 6d861ee22931..3a1ab2c54e8c 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerWorker.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerWorker.kt
-@@ -9,8 +9,6 @@ import android.os.RemoteException
- import androidx.annotation.VisibleForTesting
- import androidx.work.CoroutineWorker
- import androidx.work.WorkerParameters
--import com.android.installreferrer.api.InstallReferrerClient
--import com.android.installreferrer.api.InstallReferrerStateListener
- import kotlinx.coroutines.suspendCancellableCoroutine
- import mozilla.components.support.base.log.logger.Logger
- import mozilla.telemetry.glean.GleanTimerId
-@@ -43,31 +41,7 @@ class InstallReferrerWorker(
-     private val settings = context.settings()
- 
-     override suspend fun doWork(): Result {
--        val referrerClient = DefaultInstallReferrerClient(applicationContext)
--        val (responseCode, referrerResponse) = fetchInstallReferrer(referrerClient)
--
--        return when (responseCode) {
--            InstallReferrerClient.InstallReferrerResponse.OK -> {
--                handleSuccess(referrerResponse, responseCode, settings)
--                Result.success()
--            }
--
--            InstallReferrerClient.InstallReferrerResponse.SERVICE_DISCONNECTED,
--            InstallReferrerClient.InstallReferrerResponse.SERVICE_UNAVAILABLE,
--            -> {
--                if (shouldRetry(runAttemptCount)) {
--                    Result.retry()
--                } else {
--                    markAsComplete(responseCode)
--                    Result.failure()
--                }
--            }
--
--            else -> {
--                markAsComplete(responseCode)
--                Result.failure()
--            }
--        }
-+        return Result.success()
-     }
- 
-     @VisibleForTesting
-@@ -76,109 +50,6 @@ class InstallReferrerWorker(
-         responseCode: Int,
-         settings: Settings,
-     ) {
--        if (!installReferrerResponse.isNullOrBlank()) {
--            PlayStoreAttribution.installReferrerResponse.set(installReferrerResponse)
--
--            val utmParams = UTMParams.parseUTMParameters(installReferrerResponse)
--            val metaParams = MetaParams.extractMetaAttribution(utmParams.content)
--            if (metaParams != null) {
--                settings.isUserMetaAttributed = true
--                metaParams.recordMetaAttribution()
--            } else {
--                settings.isUserMetaAttributed = false
--            }
--
--            settings.isUserTikTokAttributed =
--                InstallReferrerHandlingService.isTikTokAttribution(installReferrerResponse)
--
--            settings.isUserRedditAttributed =
--                InstallReferrerHandlingService.isRedditAttribution(installReferrerResponse)
--
--            utmParams.recordInstallReferrer(settings)
--        }
--
--        markAsComplete(responseCode)
--    }
--
--    private fun markAsComplete(responseCode: Int) {
--        settings.utmParamsKnown = true
--        PlayStoreAttribution.responseCode.set(responseCode.toString())
--        Pings.playStoreAttribution.submit()
--    }
--
--    companion object {
--        private val logger = Logger("InstallReferrerWorker")
--
--        @VisibleForTesting
--        internal fun shouldRetry(runAttemptCount: Int): Boolean {
--            return runAttemptCount < InstallReferrerMetricsService.MAX_RETRIES
--        }
--
--        @VisibleForTesting
--        internal suspend fun fetchInstallReferrer(
--            referrerClient: InstallReferrerClientWrapper,
--        ): Pair<Int, String?> {
--            val timerId = PlayStoreAttribution.attributionTime.start()
--
--            return suspendCancellableCoroutine { continuation ->
--                continuation.invokeOnCancellation {
--                    safelyEndConnection(referrerClient)
--                }
--
--                val listener = createReferrerStateListener(timerId, referrerClient, continuation)
--                referrerClient.startConnection(listener)
--            }
--        }
--
--        private fun createReferrerStateListener(
--            timerId: GleanTimerId,
--            referrerClient: InstallReferrerClientWrapper,
--            continuation: kotlin.coroutines.Continuation<Pair<Int, String?>>,
--        ) = object : InstallReferrerStateListener {
--            override fun onInstallReferrerSetupFinished(responseCode: Int) {
--                PlayStoreAttribution.attributionTime.stopAndAccumulate(timerId)
--                val referrerResponse = getReferrerResponseIfOk(responseCode, referrerClient)
--                safelyEndConnection(referrerClient)
--                continuation.resume(Pair(responseCode, referrerResponse))
--            }
--
--            override fun onInstallReferrerServiceDisconnected() {
--                continuation.resume(
--                    Pair(
--                        InstallReferrerClient.InstallReferrerResponse.SERVICE_UNAVAILABLE,
--                        null,
--                    ),
--                )
--            }
--        }
--
--        private fun getReferrerResponseIfOk(
--            responseCode: Int,
--            referrerClient: InstallReferrerClientWrapper,
--        ): String? {
--            if (responseCode != InstallReferrerClient.InstallReferrerResponse.OK) {
--                return null
--            }
--
--            return try {
--                referrerClient.getInstallReferrer()
--            } catch (e: RemoteException) {
--                logger.error("Failed to retrieve install referrer", e)
--                null
--            } catch (e: SecurityException) {
--                logger.error("Failed to retrieve install referrer", e)
--                null
--            }
--        }
--
--        @Suppress("TooGenericExceptionCaught")
--        private fun safelyEndConnection(referrerClient: InstallReferrerClientWrapper) {
--            try {
--                referrerClient.endConnection()
--            } catch (e: Exception) {
--                logger.error("Failed to end connection", e)
--            }
--        }
-     }
- }
- 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt
 index 456d814bdd9c..65b9971815a4 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt
