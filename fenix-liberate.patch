@@ -770,10 +770,10 @@ index 000000000000..b50a6f03a218
 +    }
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 9d95e5b6f1de..d70e2c85e035 100644
+index 7a166ddc83aa..930740d48fe8 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -440,7 +440,6 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+@@ -441,7 +441,6 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
          queueIncrementNumberOfAppLaunches(queue)
          queueRestoreLocale(queue)
          queueStorageMaintenance(queue)
@@ -781,7 +781,7 @@ index 9d95e5b6f1de..d70e2c85e035 100644
          queueNimbusFetchInForeground(queue)
          queueDownloadWallpapers(queue)
  
-@@ -575,18 +574,6 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+@@ -576,18 +575,6 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
          if (!BuildConfig.TELEMETRY) {
              return
          }
@@ -862,7 +862,7 @@ index c9e41120b397..158ec9c65354 100644
          /**
           * Convenience initializer that creates a [SharedPreferences] to be used by [ClientUUID].
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index 87a4f911c0cf..00e7132dd15d 100644
+index 89e36017bdc2..cb472e4191bd 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 @@ -12,7 +12,6 @@ import androidx.compose.runtime.ReadOnlyComposable
@@ -870,10 +870,10 @@ index 87a4f911c0cf..00e7132dd15d 100644
  import androidx.core.app.NotificationManagerCompat
  import androidx.core.content.getSystemService
 -import com.google.android.play.core.review.ReviewManagerFactory
+ import kotlinx.coroutines.MainScope
  import mozilla.components.concept.ai.controls.AIFeatureBlock
  import mozilla.components.concept.ai.controls.AIFeatureRegistry
- import mozilla.components.feature.addons.AddonManager
-@@ -25,10 +24,6 @@ import mozilla.components.feature.summarize.settings.SummarizationSettings
+@@ -28,10 +27,6 @@ import mozilla.components.lib.ai.controls.dataStore
  import mozilla.components.lib.ai.controls.default
  import mozilla.components.lib.crash.store.CrashAction
  import mozilla.components.lib.crash.store.CrashMiddleware
@@ -884,7 +884,7 @@ index 87a4f911c0cf..00e7132dd15d 100644
  import mozilla.components.lib.llm.mlpa.MlpaTokenStorage
  import mozilla.components.lib.publicsuffixlist.PublicSuffixList
  import mozilla.components.service.fxrelay.eligibility.RelayEligibilityStore
-@@ -277,7 +272,6 @@ class Components(private val context: Context) {
+@@ -280,7 +275,6 @@ class Components(private val context: Context) {
  
      val playStoreReviewPromptController by lazyMonitored {
          PlayStoreReviewPromptController(
@@ -892,7 +892,7 @@ index 87a4f911c0cf..00e7132dd15d 100644
              numberOfAppLaunches = { settings.numberOfAppLaunches },
          )
      }
-@@ -426,16 +420,6 @@ class Components(private val context: Context) {
+@@ -429,16 +423,6 @@ class Components(private val context: Context) {
          )
      }
  
@@ -909,7 +909,7 @@ index 87a4f911c0cf..00e7132dd15d 100644
      val termsOfUsePromptRepository by lazyMonitored {
          DefaultTermsOfUsePromptRepository(settings)
      }
-@@ -525,7 +509,6 @@ class Components(private val context: Context) {
+@@ -532,7 +516,6 @@ class Components(private val context: Context) {
              client = core.client,
              storage = MlpaTokenStorage.sharedPrefs(context),
              fxaTokenProvider = backgroundServices.accountManager.accessTokenProvider,
@@ -1150,10 +1150,10 @@ index b7b4c6d44e43..d07198551d2d 100644
              DebugDrawerAction.NavigateTo.TabProcessTools,
              DebugDrawerAction.NavigateTo.Logins,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/ui/FenixOverlay.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/ui/FenixOverlay.kt
-index 930ef2acbaa8..0e962b8bf74d 100644
+index 2f40c5f90291..be301e4a367e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/ui/FenixOverlay.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/ui/FenixOverlay.kt
-@@ -126,7 +126,6 @@ fun FenixOverlay(
+@@ -127,7 +127,6 @@ fun FenixOverlay(
          creditCardsAddressesStorage = context.components.core.autofillStorage,
          inactiveTabsEnabled = inactiveTabsEnabled,
          clientUUID = context.components.clientUUID,
@@ -1161,7 +1161,7 @@ index 930ef2acbaa8..0e962b8bf74d 100644
          tabGroupRepository = tabGroupRepository,
      )
  }
-@@ -142,7 +141,6 @@ fun FenixOverlay(
+@@ -143,7 +142,6 @@ fun FenixOverlay(
   * @param addressesDebugRegionRepository used to control storage for [AddressesTools].
   * @param creditCardsAddressesStorage used to access addresses for [AddressesTools].
   * @param clientUUID used to test an [IntegrityClient].
@@ -1169,7 +1169,7 @@ index 930ef2acbaa8..0e962b8bf74d 100644
   * @param tabGroupRepository [TabGroupRepository] used to access and modify tab groups for [TabGroupTools].
   * @param inactiveTabsEnabled Whether the inactive tabs feature is enabled.
   */
-@@ -157,7 +155,6 @@ private fun FenixOverlay(
+@@ -158,7 +156,6 @@ private fun FenixOverlay(
      addressesDebugRegionRepository: AddressesDebugRegionRepository,
      creditCardsAddressesStorage: CreditCardsAddressesStorage,
      clientUUID: ClientUUID,
@@ -1177,7 +1177,7 @@ index 930ef2acbaa8..0e962b8bf74d 100644
      tabGroupRepository: TabGroupRepository,
      inactiveTabsEnabled: Boolean,
  ) {
-@@ -192,7 +189,6 @@ private fun FenixOverlay(
+@@ -193,7 +190,6 @@ private fun FenixOverlay(
              addressesDebugRegionRepository = addressesDebugRegionRepository,
              creditCardsAddressesStorage = creditCardsAddressesStorage,
              clientUUID = clientUUID,
@@ -1185,7 +1185,7 @@ index 930ef2acbaa8..0e962b8bf74d 100644
              tabGroupRepository = tabGroupRepository,
          )
      }
-@@ -279,7 +275,6 @@ private fun FenixOverlayPreview() {
+@@ -269,7 +265,6 @@ private fun FenixOverlayPreview() {
          addressesDebugRegionRepository = FakeAddressesDebugRegionRepository(),
          creditCardsAddressesStorage = FakeCreditCardsAddressesStorage(),
          clientUUID = FakeClientUUID(),
@@ -1222,10 +1222,10 @@ index d211d3625dbf..0458e8704d5c 100644
      /**
       * Show Pocket sponsored stories in between Pocket recommended stories on home.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-index 47b6d4676695..6601369afa96 100644
+index a8a997445c27..7112e6e375de 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-@@ -477,8 +477,7 @@ class OnboardingFragment : Fragment() {
+@@ -342,8 +342,7 @@ class OnboardingFragment : Fragment() {
          }
  
          if (!settings.isTelemetryEnabled) {
@@ -1261,7 +1261,7 @@ index 63cee0ad25f3..62f85a7f6832 100644
      // This is locale-less on purpose so that the content negotiation happens on the AMO side because the current
      // user language might not be supported by AMO and/or the language might not be exactly what AMO is expecting
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 0cd83c37d991..e95a6a747b95 100644
+index e1eedc43d242..7a65c0b8d71f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -174,8 +174,7 @@ class Settings(
@@ -1300,7 +1300,7 @@ index 0cd83c37d991..e95a6a747b95 100644
  
      /**
       * Indicates whether or not the "Recently Visited" section should be shown on the home screen.
-@@ -586,12 +577,7 @@ class Settings(
+@@ -591,12 +582,7 @@ class Settings(
          default = false,
      )
  
@@ -1314,7 +1314,7 @@ index 0cd83c37d991..e95a6a747b95 100644
  
      var crashReportChoice by stringPreference(
          appContext.getPreferenceKey(R.string.pref_key_crash_reporting_choice),
-@@ -603,20 +589,11 @@ class Settings(
+@@ -608,20 +594,11 @@ class Settings(
          default = false,
      )
  
@@ -1338,7 +1338,7 @@ index 0cd83c37d991..e95a6a747b95 100644
  
      var hasAcceptedTermsOfService by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_terms_accepted),
-@@ -730,16 +707,9 @@ class Settings(
+@@ -735,16 +712,9 @@ class Settings(
       * sure that users who upgrade and had telemetry disabled don't start sending the
       * daily usage ping telemetry.
       */
@@ -1357,7 +1357,7 @@ index 0cd83c37d991..e95a6a747b95 100644
  
      /**
       * This lets us know if the user has disabled experimentation manually so that we know
-@@ -2177,10 +2147,7 @@ class Settings(
+@@ -2182,10 +2152,7 @@ class Settings(
      /**
       * Indicates if the Contile functionality should be visible.
       */
@@ -1369,7 +1369,7 @@ index 0cd83c37d991..e95a6a747b95 100644
  
      /**
       * Blocklist used to filter items from the home screen that have previously been removed.
-@@ -2541,7 +2508,7 @@ class Settings(
+@@ -2538,7 +2505,7 @@ class Settings(
       */
      var showHomepageSportsWidget by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_show_homepage_sports_widget),
