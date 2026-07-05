@@ -25,12 +25,10 @@ jobs:
       APP: ${{ inputs.app }}
 
     steps:
-      - name: Checkout the current branch
-        uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-          ref: ${{ inputs.ref }}
-          repository: https://gitlab.com/ironfox-oss/IronFox.git
+      - name: Checkout code
+        run: |
+          git clone https://gitlab.com/ironfox-oss/IronFox.git
+          cd IronFox
 
       - name: Get sources
         run: |
