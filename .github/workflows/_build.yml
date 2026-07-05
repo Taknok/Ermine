@@ -26,13 +26,13 @@ jobs:
 
     steps:
       - name: Checkout code
-        run: |
-          git clone https://gitlab.com/ironfox-oss/IronFox.git
-          pwd
+        uses: actions/checkout@v7
+        with:
+          depth: 0
+          repository: ironfox-oss/IronFox
 
       - name: Get sources
         run: |
-          ls -la
           ./scripts/get_sources.sh
 
       - name: Prebuilt
