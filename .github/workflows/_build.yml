@@ -28,7 +28,7 @@ jobs:
       - name: Checkout code
         run: |
           git clone https://gitlab.com/ironfox-oss/IronFox.git
-          cd IronFox
+          pwd
 
       - name: Get sources
         run: |
