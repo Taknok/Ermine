@@ -32,6 +32,7 @@ jobs:
 
       - name: Get sources
         run: |
+          ls -la
           ./scripts/get_sources.sh
 
       - name: Prebuilt
