@@ -18,127 +18,28 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: registry.gitlab.com/ironfox-oss/ironfox:latest
     timeout-minutes: 420
     env:
-      ANDROID_COMPILE_SDK: 34
-      ANDROID_BUILD_TOOLS: 35.0.1
-      ANDROID_SDK_TOOLS: 9477386
-      NDK_VERSION: 28.1.13356709
-      NDK_GLEAN_VERSION: 26.2.11394342
       APP: ${{ inputs.app }}
 
     steps:
       - name: Checkout the current branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
           ref: ${{ inputs.ref }}
+          repository: https://gitlab.com/ironfox-oss/IronFox.git
 
-      - name: Clean workspace
+      - name: Get sources
         run: |
-          df -h
-          sudo apt-get purge -y \
-              *-jdk \
-              openjdk-* \
-              '^dotnet-.*' \
-              '^llvm-.*' \
-              'php.*' \
-              '^mongodb-.*' \
-              '^mysql-.*' \
-              azure-cli \
-              google-chrome-stable \
-              firefox \
-              powershell \
-              mono-devel\
-              microsoft-edge-stable \
-              libgl1-mesa-dri
-          sudo rm -rf \
-              /usr/share/dotnet \
-              /usr/local/graalvm \
-              /usr/local/.ghcup \
-              /opt/hostedtoolcache/CodeQL \
-              /usr/local/share/powershell \
-              /usr/local/share/chromium \
-              /usr/local/lib/node_modules
-          sudo docker image prune --all --force
-          df -h
+          ./scripts/get_sources.sh
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-           java-version: '17'
-           distribution: 'oracle'
-
-      - name: Install dependencies
+      - name: Prebuilt
         run: |
-          sudo apt-get --quiet update --yes
-          sudo apt-get --quiet install --yes git jq
-          sudo apt-get autoremove --purge
-          sudo apt-get clean
-          sudo rm -rf /var/lib/apt/lists/*
+          ./scripts/prebuild.sh
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-        with:
-          packages: >
-            platforms;android-${{ env.ANDROID_COMPILE_SDK }}
-            platform-tools
-            build-tools;${{ env.ANDROID_BUILD_TOOLS }}
-            build-tools;34.0.0
-            ndk;${{ env.NDK_VERSION }}
-            ndk;${{ env.NDK_GLEAN_VERSION }}
-
-      - name: Ensure /etc/docker/daemon.json exists
+      - name: Build
         run: |
-          if [ ! -f /etc/docker/daemon.json ]; then
-            echo '{}' | sudo tee /etc/docker/daemon.json > /dev/null
-          fi
-
-      - name: Configure docker
-        run: |
-          sudo systemctl stop docker
-          sudo jq '. + {"data-root": "/mnt/docker"}' /etc/docker/daemon.json | sudo tee /etc/docker/daemon.json > /dev/null
-          sudo cat /etc/docker/daemon.json
-          sudo systemctl start docker
-
-      - name: Getting and patching fdroid
-        run: |
-          sudo mkdir -p /mnt/fdroidserver
-          sudo mkdir -p /mnt/fdroiddata
-          sudo chown $(id -u):$(id -g) /mnt/fdroidserver
-          sudo chown $(id -u):$(id -g) /mnt/fdroiddata
-          git clone --depth 1 https://gitlab.com/fdroid/fdroidserver.git /mnt/fdroidserver
-          git clone --depth 1 https://gitlab.com/fdroid/fdroiddata.git /mnt/fdroiddata
-          sed -i "s/if onserver:/if not onserver:/" /mnt/fdroidserver/fdroidserver/build.py
-          sed -i "s/p = FDroidPopen(\['sudo', 'SUDO_FORCE.*'\])/p = FDroidPopen(\['echo', '1'\])/" /mnt/fdroidserver/fdroidserver/build.py
-          sed -i -E "s/^(\s*)if server:/\1vcs.gotorevision(build.commit, refresh)\n\1if server:/" /mnt/fdroidserver/fdroidserver/build.py
-          sudo chown -R 1000:1000 /mnt/fdroidserver
-          sudo chown -R 1000:1000 /mnt/fdroiddata
-
-      - name: Overwrite with local files
-        run: |
-          if [ -f "./-fdroiddata/metadata/${{ env.APP }}.yml" ]; then
-            echo "Copy local metadata"
-            sudo cp ./-fdroiddata/metadata/${{ env.APP }}.yml /mnt/fdroiddata/metadata/${{ env.APP }}.yml
-            sudo chown -R 1000:1000 /mnt/fdroiddata
-          fi
-
-      - name: Adding swap
-        run: |
-          sudo fallocate -l 6G /swapfile_custom
-          sudo chmod 600 /swapfile_custom
-          sudo mkswap /swapfile_custom
-          sudo swapon /swapfile_custom
-
-      - name: Compiling
-        run: |
-          docker pull registry.gitlab.com/fdroid/docker-executable-fdroidserver:master
-          (while true; do df -h; sleep 60; done) &
-          sudo docker run --rm -u 1000:1000 -v $ANDROID_HOME:/opt/android-sdk -v /mnt/fdroiddata:/repo -v /mnt/fdroidserver:/home/vagrant/fdroidserver -e ANDROID_HOME:/opt/android-sdk registry.gitlab.com/fdroid/docker-executable-fdroidserver:master build --verbose ${{ env.APP }}:${{ inputs.version }}
-
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-outputs
-          if-no-files-found: error
-          path: /mnt/fdroiddata/build/srclib/MozFennec/obj/gradle/build/mobile/android/fenix/app/outputs/*
+          ./scripts/build.sh arm64
