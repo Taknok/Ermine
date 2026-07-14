@@ -576,13 +576,14 @@ index 000000000000..d6a2e9ebe16b
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/com/android/installreferrer/api/InstallReferrerClientImpl.java b/mobile/android/fenix/app/src/main/java/com/android/installreferrer/api/InstallReferrerClientImpl.java
 new file mode 100644
-index 000000000000..e177bbecebed
+index 000000000000..928751635b33
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/com/android/installreferrer/api/InstallReferrerClientImpl.java
 @@ -0,0 +1,30 @@
 +package com.android.installreferrer.api;
 +
 +import android.content.Context;
++import android.os.Bundle;
 +import android.os.RemoteException;
 +
 +final class InstallReferrerClientImpl extends InstallReferrerClient {
@@ -592,7 +593,6 @@ index 000000000000..e177bbecebed
 +
 +    @Override
 +    public void startConnection(InstallReferrerStateListener listener) {
-+        throw new UnsupportedOperationException();
 +    }
 +
 +    @Override
@@ -606,7 +606,7 @@ index 000000000000..e177bbecebed
 +
 +    @Override
 +    public ReferrerDetails getInstallReferrer() throws RemoteException {
-+        throw new UnsupportedOperationException();
++        return new ReferrerDetails(new Bundle());
 +    }
 +
 +}
