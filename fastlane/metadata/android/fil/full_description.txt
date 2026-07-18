@@ -8,4 +8,4 @@
 <li>Pag-sync ng mga tab, bookmark, password, atbp. sa mga maraming device sa pamamagitan ng Firefox Sync.</li>
 <li>Picture-in-picture mode.</li>
 </ul>
-<p>Ang Fennec F-Droid ay nakabase sa napapanahong bersyon ng Mozilla Firefox. May mga proprietary na bahagi na tinanggal, ngunit kumokonekta pa rin sa ilang mga serbisyo ng Mozilla na maaaring subaybayan ang mga user.</p>
+<p>Ang Ermine F-Droid ay nakabase sa napapanahong bersyon ng Mozilla Firefox. May mga proprietary na bahagi na tinanggal, ngunit kumokonekta pa rin sa ilang mga serbisyo ng Mozilla na maaaring subaybayan ang mga user.</p>

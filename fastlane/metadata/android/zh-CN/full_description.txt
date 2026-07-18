@@ -8,4 +8,4 @@
   <li>通过 Firefox Sync 在多台设备间同步标签页、书签、密码等。</li>
   <li>画中画模式。</li>
 </ul>
-<p>Fennec F-Droid 浏览器基于最新的 Mozilla Firefox 版本，移除了专有组件和遥测功能，但仍连接到可以跟踪用户的各种 Mozilla 服务。</p>
+<p>Ermine F-Droid 浏览器基于最新的 Mozilla Firefox 版本，移除了专有组件和遥测功能，但仍连接到可以跟踪用户的各种 Mozilla 服务。</p>
