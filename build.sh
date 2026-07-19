@@ -32,7 +32,7 @@ sdkmanager 'cmdline-tools;20.0'
 sdkmanager 'platforms;android-37.0'
 
 # Set up Rust
-cargo install --force --vers 0.29.2 cbindgen
+cargo install --force --vers 0.29.4 cbindgen
 
 # Build LLVM
 pushd "$llvm"

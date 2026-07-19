@@ -191,7 +191,7 @@ localize_maven
 # Set A-C version
 echo "mozilla.version=${1%.0}" >> local.properties
 # Set A-S version
-echo 'as.version=152.0.1' >> local.properties
+echo 'as.version=153.0' >> local.properties
 popd
 
 #
@@ -285,6 +285,9 @@ sed -i 's/mozconfigSubsts?.get("MOZ_APPSERVICES_IN_TREE").isTruthy()/true/' mobi
 sed -i \
     -e "s/singleVariant('debug')/singleVariant('release')/" \
     mobile/android/geckoview/build.gradle
+
+# Remove unneeded GeckoView Gradle tasks
+apply_patch "$patches/gecko-remove-irrelevant-gradle-tasks.patch"
 
 # Hack the timeout for
 # geckoview:generateJNIWrappersForGeneratedWithGeckoBinariesDebug

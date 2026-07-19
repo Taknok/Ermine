@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index 87a4f911c0cf..13f26fbdfc28 100644
+index 93b95ae48855..a2d739c32900 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-@@ -262,7 +262,7 @@ class Components(private val context: Context) {
+@@ -268,7 +268,7 @@ class Components(private val context: Context) {
      val publicSuffixList by lazyMonitored { PublicSuffixList(context) }
      val clipboardHandler by lazyMonitored { ClipboardHandler(context) }
      val performance by lazyMonitored { PerformanceComponent() }
@@ -12,7 +12,7 @@ index 87a4f911c0cf..13f26fbdfc28 100644
  
      val strictMode by lazyMonitored {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt
-index 98a10159bff3..63c189a82256 100644
+index 1caab673268c..e23091791ea9 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt
 @@ -31,7 +31,7 @@ class Push(val context: Context, val strictMode: StrictModeManager = context.com
@@ -20,7 +20,7 @@ index 98a10159bff3..63c189a82256 100644
      val feature: Pusher?
          get() = strictMode.allowViolation(StrictMode::allowThreadDiskReads) {
 -            if (context.settings().ironfox.useUnifiedPush) {
-+            if (context.settings().useUnifiedPush) {
++            if (context.components.settings.useUnifiedPush) {
                  unifiedPushFeature.also { feature ->
                      if (feature.isAvailable(context)) {
                          logger.info("Using UnifiedPush")
@@ -29,39 +29,39 @@ index 98a10159bff3..63c189a82256 100644
                              notification = notification
                          )
 -                        context.settings().ironfox.useUnifiedPush = false
-+                        context.settings().useUnifiedPush = false
++                        context.components.settings.useUnifiedPush = false
                      }
                  }
              } else {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index 57e2bf8f7241..72d7db9d7894 100644
+index bcf30637b845..24ab8b93f40b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-@@ -175,6 +175,12 @@ class SecretSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFra
+@@ -176,6 +176,12 @@ class SecretSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFra
              onPreferenceChangeListener = SharedPreferenceUpdater()
          }
  
 +        requirePreference<SwitchPreferenceCompat>(R.string.pref_key_enable_unifiedpush).apply {
 +            isVisible = true
-+            isChecked = context.settings().enableUnifiedPush
++            isChecked = settings.enableUnifiedPush
 +            onPreferenceChangeListener = SharedPreferenceUpdater()
 +        }
 +
          requirePreference<SwitchPreferenceCompat>(R.string.pref_key_enable_address_sync).apply {
              isVisible = Config.channel.isNightlyOrDebug
-             isChecked = context.settings().isAddressSyncEnabled
+             isChecked = settings.isAddressSyncEnabled
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index b9c948180af6..412609dc8c5a 100644
+index 0730e7a96bc8..230bf096a649 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-@@ -474,6 +474,48 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment
+@@ -478,6 +478,48 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment
                  null
              }
  
 +            // Only displayed when UnifiedPush is enabled
 +            resources.getString(R.string.pref_key_use_unifiedpush) -> {
 +                val context = requireActivity()
-+                context.settings().apply { useUnifiedPush = !useUnifiedPush }
++                context.components.settings.apply { useUnifiedPush = !useUnifiedPush }
 +                val alert = MaterialAlertDialogBuilder(context).apply {
 +                    setTitle(context.getString(R.string.preferences_unifiedpush))
 +                    setMessage(context.getString(R.string.quit_application))
@@ -85,10 +85,10 @@ index b9c948180af6..412609dc8c5a 100644
 +                    }
 +                    create().withCenterAlignedButtons()
 +                }
-+                if (context.settings().useUnifiedPush) {
++                if (context.components.settings.useUnifiedPush) {
 +                    requireComponents.push.switchToUnifiedPush(context) { success ->
 +                        if (!success) {
-+                            context.settings().useUnifiedPush = false
++                            context.components.settings.useUnifiedPush = false
 +                        } else {
 +                            alert.show()
 +                        }
@@ -117,10 +117,10 @@ index b9c948180af6..412609dc8c5a 100644
                  getPreferenceKey(R.string.pref_key_nimbus_experiments),
              )?.isVisible = showSecretDebugMenuThisSession
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 0cd83c37d991..dc3be9d5f7b0 100644
+index d4bf7f210f9d..a7e282e748d3 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2333,6 +2333,22 @@ class Settings(
+@@ -2296,6 +2296,22 @@ class Settings(
          }
      }
  
@@ -144,7 +144,7 @@ index 0cd83c37d991..dc3be9d5f7b0 100644
       * Get the current mode for cookie banner handling
       */
 diff --git a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-index 3534ce963d15..cdcb73d99328 100644
+index fe54d857432b..3b5e0da100fc 100644
 --- a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
 +++ b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
 @@ -460,6 +460,8 @@
@@ -153,14 +153,14 @@ index 3534ce963d15..cdcb73d99328 100644
      <!-- Secret Info Setting Keys -->
 +    <string name="pref_key_enable_unifiedpush" translatable="false">pref_key_enable_unifiedpush</string>
 +    <string name="pref_key_use_unifiedpush" translatable="false">pref_key_use_unifiedpush</string>
-     <string name="pref_key_secret_debug_info" translatable="false">pref_key_secret_debug_info</string>
      <string name="pref_key_start_profiler" translatable="false">pref_key_start_profiler</string>
  
+     <!-- Secret Settings -->
 diff --git a/mobile/android/fenix/app/src/main/res/values/static_strings.xml b/mobile/android/fenix/app/src/main/res/values/static_strings.xml
-index 659089860e21..073e6ff5dc11 100644
+index c732f143d510..6acb7ddffbdc 100644
 --- a/mobile/android/fenix/app/src/main/res/values/static_strings.xml
 +++ b/mobile/android/fenix/app/src/main/res/values/static_strings.xml
-@@ -73,6 +73,8 @@
+@@ -71,6 +71,8 @@
      <string name="preferences_nimbus_experiments_inactive">Inactive Experiments</string>
      <!-- Label for using the nimbus collections preview -->
      <string name="preferences_nimbus_use_preview_collection">Use Nimbus Preview Collection (requires restart)</string>
@@ -170,10 +170,10 @@ index 659089860e21..073e6ff5dc11 100644
      <string name="preferences_debug_settings_custom_glean_server_url" translatable="false">Custom Glean server URL (requires restart)</string>
      <!-- Title of preference for sync debugging (only shown in the when the secret debug menu is enabled) -->
 diff --git a/mobile/android/fenix/app/src/main/res/values/strings.xml b/mobile/android/fenix/app/src/main/res/values/strings.xml
-index b931f4a9121f..a347b4d5100a 100644
+index 8fa480ab620e..ecf4f10258c1 100644
 --- a/mobile/android/fenix/app/src/main/res/values/strings.xml
 +++ b/mobile/android/fenix/app/src/main/res/values/strings.xml
-@@ -997,6 +997,13 @@
+@@ -924,6 +924,13 @@
      <!-- Message to indicate users that we are quitting the application to apply the changes -->
      <string name="quit_application">Quitting the application to apply changes…</string>
  
@@ -188,10 +188,10 @@ index b931f4a9121f..a347b4d5100a 100644
      <string name="preferences_extensions">Extensions</string>
      <!-- Preference for installing a local extension -->
 diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-index 5daf2f0a80ee..d9eeeda34770 100644
+index 2691e3053f3f..3f6834b5f519 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-@@ -218,6 +218,13 @@
+@@ -214,6 +214,13 @@
              app:isPreferenceVisible="false"
              android:title="@string/firefox_labs_title" />
  
@@ -206,10 +206,10 @@ index 5daf2f0a80ee..d9eeeda34770 100644
              android:key="@string/pref_key_leakcanary"
              android:title="@string/preference_leakcanary"
 diff --git a/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
-index d7c1e87ae1b2..5a330f2c07e0 100644
+index 6f2fbf7f975a..71b44cd05a66 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
-@@ -174,6 +174,11 @@
+@@ -178,6 +178,11 @@
        android:key="@string/pref_key_nimbus_use_preview"
        android:title="@string/preferences_nimbus_use_preview_collection"
        app:iconSpaceReserved="false" />
