@@ -281,10 +281,8 @@ sed -i 's|https://|hxxps://|' mobile/android/gradle/plugins/nimbus-gradle-plugin
 # nimbus-fml from Mozilla.
 sed -i 's/mozconfigSubsts?.get("MOZ_APPSERVICES_IN_TREE").isTruthy()/true/' mobile/android/gradle/plugins/nimbus-gradle-plugin/src/main/kotlin/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.kt
 
-# Fix v125 aar output not including native libraries
-sed -i \
-    -e "s/singleVariant('debug')/singleVariant('release')/" \
-    mobile/android/geckoview/build.gradle
+# Build the release artifacts
+apply_patch "$patches/gecko-release-artifacts.patch"
 
 # Remove unneeded GeckoView Gradle tasks
 apply_patch "$patches/gecko-remove-irrelevant-gradle-tasks.patch"

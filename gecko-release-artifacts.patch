@@ -1,0 +1,52 @@
+diff --git a/mobile/android/geckoview/build.gradle b/mobile/android/geckoview/build.gradle
+index c2e19e45d814..98e033a5f114 100644
+--- a/mobile/android/geckoview/build.gradle
++++ b/mobile/android/geckoview/build.gradle
+@@ -151,7 +151,7 @@ android {
+     }
+ 
+     publishing {
+-        singleVariant('debug')
++        singleVariant('release')
+     }
+ 
+     namespace = 'org.mozilla.geckoview'
+@@ -407,10 +407,10 @@ publishing {
+     }
+ }
+ 
+-// Declared in afterEvaluate so the `debug` software component (from singleVariant('debug')) exists.
++// Declared in afterEvaluate so the `release` software component (from singleVariant('release')) exists.
+ afterEvaluate {
+-    publishing.publications.create('debug', MavenPublication) {
+-        from components.debug
++    publishing.publications.create('release', MavenPublication) {
++        from components.release
+         artifactId = computeArtifactId()
+ 
+         pom {
+diff --git a/mobile/android/gradle.configure b/mobile/android/gradle.configure
+index cd654ec647d4..daf635aa178f 100644
+--- a/mobile/android/gradle.configure
++++ b/mobile/android/gradle.configure
+@@ -65,16 +65,16 @@ def gradle_android_build_config():
+ 
+     return namespace(
+         geckoview=namespace(
+-            variant=variant("debug"),
++            variant=variant("release"),
+         ),
+         geckoview_example=namespace(
+-            variant=variant("debug"),
++            variant=variant("release"),
+         ),
+         fenix=namespace(
+-            variant=variant("debug"),
++            variant=variant("release"),
+         ),
+         focus=namespace(
+-            variant=variant("debug"),
++            variant=variant("release"),
+         ),
+     )
+ 
