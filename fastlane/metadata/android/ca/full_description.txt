@@ -1,5 +1,5 @@
 <ul>
-  <li>Amplia col·lecció de complements, inclosos els bloquejadors d'anuncis.</li>
+  <li>Amplia col·lecció de complements, incloent els bloquejadors d'anuncis.</li>
   <li>Protecció de seguiment millorada.</li>
   <li>Mode privat disponible amb un sol toc.</li>
   <li>Disposició personalitzable de la pantalla d'inici i posició de la barra de navegació (superior o inferior).</li>
@@ -8,4 +8,4 @@
   <li>Sincronització de pestanyes, adreces d'interès, contrasenyes, etc. en diversos dispositius mitjançant Firefox Sync.</li>
   <li>Mode d'imatge en imatge.</li>
 </ul>
-<p>Fennec F-Droid es basa en l'última versió de Mozilla Firefox.  S'han eliminat els bits propietaris i la telemetria, però encara es connecta a diversos serveis de Mozilla que poden fer un seguiment dels usuaris.</p>
+<p>Fennec F-Droid es basa en l'última versió de Mozilla Firefox. S'han eliminat els bits propietaris i la telemetria, però encara es connecta a diversos serveis de Mozilla que poden rastrejar als usuaris.</p>
