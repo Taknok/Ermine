@@ -1,0 +1,11 @@
+<ul>
+  <li>Bộ sưu tập phong phú các tiện ích mở rộng, bao gồm các trình chặn quảng cáo.</li>
+  <li>Tính năng bảo vệ chống theo dõi được cải thiện.</li>
+  <li>Chế độ riêng tư có thể kích hoạt chỉ bằng một lần chạm.</li>
+  <li>Có thể tùy chỉnh bố cục màn hình khởi động và vị trí thanh điều hướng (trên hoặc dưới).</li>
+  <li>Chế độ giao diện tối.</li>
+  <li>Tập hợp các tab.</li>
+  <li>Đồng bộ hóa tab, dấu trang, mật khẩu, v.v. trên nhiều thiết bị thông qua Firefox Sync.</li>
+  <li>Chế độ Picture-in-picture.</li>
+</ul>
+<p>Trình duyệt Fennec F-Droid được phát triển dựa trên phiên bản mới nhất của Mozilla Firefox. Các thành phần độc quyền và tính năng thu thập dữ liệu từ xa đã được loại bỏ, nhưng trình duyệt này vẫn kết nối với nhiều dịch vụ của Mozilla có khả năng theo dõi người dùng.</p>
