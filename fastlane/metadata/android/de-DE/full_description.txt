@@ -1,5 +1,5 @@
 <ul>
-  <li>Große Sammlung von Add-ons, einschließlich Werbeblockern</li>
+  <li>Große Sammlung von Add-ons, einschließlich Werbeblockern.</li>
   <li>Verbesserter Schutz vor Tracking.</li>
   <li>Privater Modus – nur einen Fingertipp entfernt.</li>
   <li>Anpassbares Layout des Startbildschirms und Position der Navigationsleiste (oben oder unten).</li>
