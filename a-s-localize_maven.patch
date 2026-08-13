@@ -1,8 +1,8 @@
 diff --git a/build.gradle b/build.gradle
-index da57c17e1..61d67b5a4 100644
+index 253e744f3..3574ff9b0 100644
 --- a/build.gradle
 +++ b/build.gradle
-@@ -20,22 +20,7 @@ buildscript {
+@@ -16,22 +16,7 @@ buildscript {
          maven {
              url "https://plugins.gradle.org/m2/"
          }
@@ -26,7 +26,7 @@ index da57c17e1..61d67b5a4 100644
      }
  
      dependencies {
-@@ -62,22 +47,7 @@ allprojects {
+@@ -58,22 +43,7 @@ allprojects {
      repositories {
          google()
          mavenCentral()
@@ -136,6 +136,26 @@ index be15dd740..47afad31d 100644
 +++ b/components/places/android/build.gradle
 @@ -2,14 +2,7 @@ buildscript {
      // in mozilla-central there's no build.gradle suitable for the maven/glean config, so each component gets it.
+     if (gradle.hasProperty("mozconfig")) {
+         repositories {
+-            gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
+-                maven {
+-                    url = repository
+-                    if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
+-                        allowInsecureProtocol = true
+-                    }
+-                }
+-            }
++            mavenLocal()
+         }
+ 
+         dependencies {
+diff --git a/components/remote_settings/android/build.gradle b/components/remote_settings/android/build.gradle
+index b837884e0..18788d555 100644
+--- a/components/remote_settings/android/build.gradle
++++ b/components/remote_settings/android/build.gradle
+@@ -1,14 +1,7 @@
+ buildscript {
      if (gradle.hasProperty("mozconfig")) {
          repositories {
 -            gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->

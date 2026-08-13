@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index 93b95ae48855..a2d739c32900 100644
+index 4bca1242d025..d0f797ca25aa 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-@@ -268,7 +268,7 @@ class Components(private val context: Context) {
+@@ -266,7 +266,7 @@ class Components(private val context: Context) {
      val publicSuffixList by lazyMonitored { PublicSuffixList(context) }
      val clipboardHandler by lazyMonitored { ClipboardHandler(context) }
      val performance by lazyMonitored { PerformanceComponent() }
@@ -12,29 +12,29 @@ index 93b95ae48855..a2d739c32900 100644
  
      val strictMode by lazyMonitored {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt
-index 1caab673268c..e23091791ea9 100644
+index 30e579766fa6..622ed8e12b4e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt
-@@ -31,7 +31,7 @@ class Push(val context: Context, val strictMode: StrictModeManager = context.com
+@@ -30,7 +30,7 @@ class Push(val context: Context, val strictMode: StrictModeManager = context.com
      private val logger = Logger("Push")
      val feature: Pusher?
          get() = strictMode.allowViolation(StrictMode::allowThreadDiskReads) {
--            if (context.settings().ironfox.useUnifiedPush) {
+-            if (context.components.settings.ironfox.useUnifiedPush) {
 +            if (context.components.settings.useUnifiedPush) {
                  unifiedPushFeature.also { feature ->
                      if (feature.isAvailable(context)) {
                          logger.info("Using UnifiedPush")
-@@ -50,7 +50,7 @@ class Push(val context: Context, val strictMode: StrictModeManager = context.com
+@@ -49,7 +49,7 @@ class Push(val context: Context, val strictMode: StrictModeManager = context.com
                              notificationId = notificationId,
                              notification = notification
                          )
--                        context.settings().ironfox.useUnifiedPush = false
+-                        context.components.settings.ironfox.useUnifiedPush = false
 +                        context.components.settings.useUnifiedPush = false
                      }
                  }
              } else {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index bcf30637b845..24ab8b93f40b 100644
+index 3f277080f481..fd6715508fb7 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 @@ -176,6 +176,12 @@ class SecretSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFra
@@ -117,10 +117,10 @@ index 0730e7a96bc8..230bf096a649 100644
                  getPreferenceKey(R.string.pref_key_nimbus_experiments),
              )?.isVisible = showSecretDebugMenuThisSession
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index d4bf7f210f9d..a7e282e748d3 100644
+index b34c8c1f78a3..3f97473caff1 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2296,6 +2296,22 @@ class Settings(
+@@ -2374,6 +2374,22 @@ class Settings(
          }
      }
  
@@ -144,11 +144,11 @@ index d4bf7f210f9d..a7e282e748d3 100644
       * Get the current mode for cookie banner handling
       */
 diff --git a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-index fe54d857432b..3b5e0da100fc 100644
+index 45d0710eea73..a25946a7fbfb 100644
 --- a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
 +++ b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-@@ -460,6 +460,8 @@
-     <string name="pref_key_pocket_sponsored_stories" translatable="false">pref_key_pocket_sponsored_stories</string>
+@@ -463,6 +463,8 @@
+     <string name="pref_key_deleted_legacy_pocket_database" translatable="false">pref_key_deleted_legacy_pocket_database</string>
  
      <!-- Secret Info Setting Keys -->
 +    <string name="pref_key_enable_unifiedpush" translatable="false">pref_key_enable_unifiedpush</string>
@@ -157,10 +157,10 @@ index fe54d857432b..3b5e0da100fc 100644
  
      <!-- Secret Settings -->
 diff --git a/mobile/android/fenix/app/src/main/res/values/static_strings.xml b/mobile/android/fenix/app/src/main/res/values/static_strings.xml
-index c732f143d510..6acb7ddffbdc 100644
+index 8f644f7b6b19..485fa0f7f7e1 100644
 --- a/mobile/android/fenix/app/src/main/res/values/static_strings.xml
 +++ b/mobile/android/fenix/app/src/main/res/values/static_strings.xml
-@@ -71,6 +71,8 @@
+@@ -73,6 +73,8 @@
      <string name="preferences_nimbus_experiments_inactive">Inactive Experiments</string>
      <!-- Label for using the nimbus collections preview -->
      <string name="preferences_nimbus_use_preview_collection">Use Nimbus Preview Collection (requires restart)</string>
@@ -170,10 +170,10 @@ index c732f143d510..6acb7ddffbdc 100644
      <string name="preferences_debug_settings_custom_glean_server_url" translatable="false">Custom Glean server URL (requires restart)</string>
      <!-- Title of preference for sync debugging (only shown in the when the secret debug menu is enabled) -->
 diff --git a/mobile/android/fenix/app/src/main/res/values/strings.xml b/mobile/android/fenix/app/src/main/res/values/strings.xml
-index 8fa480ab620e..ecf4f10258c1 100644
+index 05c5f312f575..761dc04086ff 100644
 --- a/mobile/android/fenix/app/src/main/res/values/strings.xml
 +++ b/mobile/android/fenix/app/src/main/res/values/strings.xml
-@@ -924,6 +924,13 @@
+@@ -887,6 +887,13 @@
      <!-- Message to indicate users that we are quitting the application to apply the changes -->
      <string name="quit_application">Quitting the application to apply changes…</string>
  
@@ -188,10 +188,10 @@ index 8fa480ab620e..ecf4f10258c1 100644
      <string name="preferences_extensions">Extensions</string>
      <!-- Preference for installing a local extension -->
 diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-index 2691e3053f3f..3f6834b5f519 100644
+index e1510b19d370..d19accfc69bc 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-@@ -214,6 +214,13 @@
+@@ -219,6 +219,13 @@
              app:isPreferenceVisible="false"
              android:title="@string/firefox_labs_title" />
  
@@ -206,10 +206,10 @@ index 2691e3053f3f..3f6834b5f519 100644
              android:key="@string/pref_key_leakcanary"
              android:title="@string/preference_leakcanary"
 diff --git a/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
-index 6f2fbf7f975a..71b44cd05a66 100644
+index 45fafa6956ae..3ce56a0f269c 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
-@@ -178,6 +178,11 @@
+@@ -200,6 +200,11 @@
        android:key="@string/pref_key_nimbus_use_preview"
        android:title="@string/preferences_nimbus_use_preview_collection"
        app:iconSpaceReserved="false" />

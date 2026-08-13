@@ -28,8 +28,24 @@ source "$(dirname "$0")/paths.sh"
 
 # Set up Android SDK for GeckoView
 sdkmanager 'build-tools;37.0.0'
-sdkmanager 'cmdline-tools;20.0'
-sdkmanager 'platforms;android-37.0'
+sdkmanager 'platform-tools;37.0.0'
+
+# Install some Android SDK components manually, see
+# https://gitlab.com/fdroid/sdkmanager/-/work_items/31
+if [ ! -e /opt/android-sdk/cmdline-tools/21.0 ]; then
+    curl --silent -O https://dl.google.com/android/repository/commandlinetools-linux-15641748_latest.zip
+    echo 'a66d5ef0238fc0162e9c1446602ce0dd41702d4dd7a94d2ce42d12b7f80baf7e  commandlinetools-linux-15641748_latest.zip' | shasum -c
+    unzip -q commandlinetools-linux-15641748_latest.zip
+    mkdir -p /opt/android-sdk/cmdline-tools/
+    mv cmdline-tools /opt/android-sdk/cmdline-tools/21.0
+fi
+if [ ! -e /opt/android-sdk/platforms/android-37.1 ]; then
+    curl --silent -O https://dl.google.com/android/repository/platform-37.1_r01.zip
+    echo 'cadf0a541847820ea3d8ffc5c192562a18376cf9ba510bf9659c772f9a442184  platform-37.1_r01.zip' | shasum -c
+    unzip -q platform-37.1_r01.zip
+    mkdir -p /opt/android-sdk/platforms/
+    mv android-37.1 /opt/android-sdk/platforms/android-37.1
+fi
 
 # Set up Rust
 cargo install --force --vers 0.29.4 cbindgen
@@ -86,12 +102,14 @@ gradle -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal
 popd
 
 pushd "$android_components"
-# Required by A-S
+# Viaduct from A-S requires concept-fetch 150.0.3 built with compileSdk 36.1.
+# Build such a copy of concept-fetch from the current A-C source code
+echo 150.0.3 > ../version.txt
+sed -i -e '/compileSdkMajorVersion/s/37/36/' .config.yml
 gradle :components:concept-fetch:publishToMavenLocal
+git checkout .config.yml ../version.txt
 # Required by UnifiedPush
-gradle :components:concept-base:publishToMavenLocal
-gradle :components:support-base:publishToMavenLocal
-gradle :components:ui-icons:publishToMavenLocal
+gradle :components:{concept-base,concept-fetch,support-base,ui-icons}:publishToMavenLocal
 popd
 
 pushd "$application_services"
