@@ -225,13 +225,14 @@ popd
 
 pushd "$mozilla_release"
 
-# Remove unneeded dependecies
+# Remove unneeded dependencies
 apply_patch "$patches/gecko-dependencies.patch"
 
 # Remove Mozilla repositories substitution and explicitly add the required ones
 apply_patch "$patches/gecko-localize_maven.patch"
 
 # Replace GMS with microG client library
+apply_patch "$patches/m-c-liberate.patch"
 apply_patch "$patches/gecko-liberate.patch"
 
 # Prevent websites from being able to detect that a user is using Fennec F-Droid
@@ -250,6 +251,7 @@ apply_patch "$unifiedpush_ac/patches/a-c-unifiedpush.patch"
 apply_patch "$unifiedpush_ac/patches/fenix-unifiedpush.patch"
 
 # Patch the use of proprietary and tracking libraries
+apply_patch "$patches/a-c-liberate.patch"
 apply_patch "$patches/fenix-liberate.patch"
 
 # Disable search engines configuration fetching from a Mozilla server
