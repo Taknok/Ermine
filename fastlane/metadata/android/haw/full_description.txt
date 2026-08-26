@@ -1,0 +1,11 @@
+<ul>
+<li>Hōʻiliʻili nui o nā addons, me nā mea pale hoʻolaha.</li>
+<li>Hoʻomaikaʻi ʻia ka pale hahai ʻana.</li>
+<li>Loaʻa ke ʻano pilikino ma kahi pā hoʻokahi.</li>
+<li>Hoʻonohonoho pale hoʻomaka hiki ke hoʻopilikino ʻia a me ke kūlana o ka papa hoʻokele (luna a lalo paha).</li>
+<li>Kumumanaʻo pōʻeleʻele.</li>
+<li>Nā hōʻiliʻili o nā tabs.</li>
+<li>Hoʻonohonoho ʻana o nā tabs, nā bookmarks, nā ʻōlelo huna, a pēlā aku ma nā polokalamu he nui ma o Firefox Sync.</li>
+<li>ʻAno kiʻi-i-ke-kiʻi.</li>
+</ul>
+<p>Hoʻokumu ʻia ka polokalamu kele pūnaewele Fennec F-Droid ma ka hoʻokuʻu hou loa ʻana o Mozilla Firefox. Ua wehe ʻia nā ʻāpana ponoʻī a me nā telemetry, akā pili mau i nā lawelawe Mozilla like ʻole e hiki ke hahai i nā mea hoʻohana.</p>
