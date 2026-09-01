@@ -1,5 +1,5 @@
 diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
-index b888498acce5..5b8e83be5b71 100644
+index 75abbfbdbcea..a4a67c769ce3 100644
 --- a/gradle/libs.versions.toml
 +++ b/gradle/libs.versions.toml
 @@ -55,17 +55,10 @@ work = "2.11.2"
@@ -8,26 +8,26 @@ index b888498acce5..5b8e83be5b71 100644
  accompanist = "0.37.3"
 -firebase-messaging = "25.0.2"
 -installreferrer = "2.2"
- ksp = "2.3.10"
+ ksp = "2.3.11"
  material = "1.14.0"
- mlkit-prompt = "1.0.0-beta2"
+ mlkit-prompt = "1.0.0-beta4"
  osslicenses-plugin = "0.13.0"
 -play-integrity = "1.6.0"
 -play-review = "2.0.2"
 -play-services-ads-id = "18.3.0"
 -play-services-base = "18.10.0"
 -play-services-fido = "21.3.0"
- protobuf = "4.35.0" # Keep Protobuf in sync with the version used by AppServices.
+ protobuf = "4.35.1"
  
  # Gradle plugins
-@@ -113,6 +106,7 @@ jna = "5.18.1"
- json = "20260522"
- jsoup = "1.22.2"
+@@ -113,6 +106,7 @@ jna = "5.19.1"
+ json = "20260719"
+ jsoup = "1.23.1"
  lottie = "6.7.1"
 +microg = "0.3.16.252432"
  okhttp = "5.4.0"
- okio = "3.17.0"
- sentry = "8.48.0"
+ okio = "3.18.1"
+ sentry = "8.52.0"
 @@ -130,7 +124,6 @@ kotlin-serialization = { module = "org.jetbrains.kotlin.plugin.serialization:org
  kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
  kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }

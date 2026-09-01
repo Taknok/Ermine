@@ -1,8 +1,8 @@
 diff --git a/mobile/android/android-components/.buildconfig.yml b/mobile/android/android-components/.buildconfig.yml
-index 41fc14356669..e2c57a0ce6da 100644
+index bdec0f362b1b..b4178d6fd644 100644
 --- a/mobile/android/android-components/.buildconfig.yml
 +++ b/mobile/android/android-components/.buildconfig.yml
-@@ -2122,17 +2122,6 @@ projects:
+@@ -2171,17 +2171,6 @@ projects:
      - components:support-base
      - components:support-test
      - components:tooling-lint
@@ -21,7 +21,7 @@ index 41fc14356669..e2c57a0ce6da 100644
      description: A library to detect shake gestures from accelerometer data
      path: components/lib/shake
 diff --git a/mobile/android/android-components/components/feature/ipprotection/src/main/java/mozilla/components/feature/ipprotection/IPProtectionFeature.kt b/mobile/android/android-components/components/feature/ipprotection/src/main/java/mozilla/components/feature/ipprotection/IPProtectionFeature.kt
-index 82ccf2e2f19b..cc484fa68edc 100644
+index c3af5a0ee0eb..9f6bfc0f8e00 100644
 --- a/mobile/android/android-components/components/feature/ipprotection/src/main/java/mozilla/components/feature/ipprotection/IPProtectionFeature.kt
 +++ b/mobile/android/android-components/components/feature/ipprotection/src/main/java/mozilla/components/feature/ipprotection/IPProtectionFeature.kt
 @@ -49,14 +49,12 @@ import mozilla.components.support.base.log.logger.Logger
@@ -39,7 +39,7 @@ index 82ccf2e2f19b..cc484fa68edc 100644
      private val mainDispatcher: CoroutineDispatcher = Dispatchers.Main,
  ) {
      private val logger = Logger("IPP:Feature")
-@@ -192,7 +190,6 @@ class IPProtectionFeature(
+@@ -197,7 +195,6 @@ class IPProtectionFeature(
                      }
                  },
              )
@@ -48,15 +48,16 @@ index 82ccf2e2f19b..cc484fa68edc 100644
              // We do need to register our listeners first to avoid dropping a message because,
              // as a side effect, the init call triggers `IPProtectionController#onServiceStateChanged`
 diff --git a/mobile/android/android-components/components/lib/integrity-googleplay/build.gradle b/mobile/android/android-components/components/lib/integrity-googleplay/build.gradle
-index 94309dd293c6..b9abcdd85e7e 100644
+index 94309dd293c6..afd0024668ca 100644
 --- a/mobile/android/android-components/components/lib/integrity-googleplay/build.gradle
 +++ b/mobile/android/android-components/components/lib/integrity-googleplay/build.gradle
-@@ -36,8 +36,7 @@ dependencies {
+@@ -36,8 +36,8 @@ dependencies {
      // if it wants to collect GeckoView telemetry through the Glean SDK.
      compileOnly libs.mozilla.glean
  
 -    implementation libs.kotlinx.coroutines.play.services
 -    implementation libs.play.integrity
++    implementation libs.kotlinx.coroutines
 +    implementation libs.play.services.tasks
  
      testImplementation project(':components:support-test')

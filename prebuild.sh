@@ -45,7 +45,7 @@ function apply_patch {
 }
 
 # Set up Rust
-rustup default 1.94.0
+rustup default 1.95.0
 
 #
 # Fenix
@@ -191,7 +191,7 @@ localize_maven
 # Set A-C version
 echo "mozilla.version=${1%.0}" >> local.properties
 # Set A-S version
-echo 'as.version=154.0.1' >> local.properties
+echo 'as.version=155.0' >> local.properties
 popd
 
 #
