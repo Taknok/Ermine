@@ -8,4 +8,4 @@
   <li>Synchronizacja kart, zakładek, haseł itp. pomiędzy wieloma urządzeniami za pomocą Firefox Sync.</li>
   <li>Funkcja obraz w obrazie.</li>
 </ul>
-<p>Przeglądarka Fennec F-Droid jest oparta na najnowszym wydaniu Mozilla Firefox. Usunięto z niej własnościowe części kodu i zbieranie danych telemetrycznych, ale nadal łączy się z różnymi usługami Mozilli, które mogą śledzić użytkowników.</p>
+<p>Przeglądarka Ermine F-Droid jest oparta na najnowszym wydaniu Mozilla Firefox. Usunięto z niej własnościowe części kodu i zbieranie danych telemetrycznych, ale nadal łączy się z różnymi usługami Mozilli, które mogą śledzić użytkowników.</p>

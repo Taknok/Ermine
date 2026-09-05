@@ -8,4 +8,4 @@
   <li>Synchronisation des onglets, des marques-pages, des mots de passe, etc. sur plusieurs appareils grâce à Firefox Sync.</li>
   <li>Mode d'incrustation vidéo (picture-in-picture).</li>
 </ul>
-<p>Fennec F-Droid est basé sur la dernière version de Mozilla Firefox. Les éléments propriétaires et la télémétrie ont été retirés, mais il se connecte quand même aux services Mozilla qui peuvent pister les utilisateurs.</p>
+<p>Ermine F-Droid est basé sur la dernière version de Mozilla Firefox. Les éléments propriétaires et la télémétrie ont été retirés, mais il se connecte quand même aux services Mozilla qui peuvent pister les utilisateurs.</p>

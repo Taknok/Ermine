@@ -8,4 +8,4 @@
  <li>Sinhronizacija zavihkov, zaznamkov, gesel itd. v več napravah prek Firefox Sync.</li>
  <li>Način slika v sliki.</li>
 </ul>
-<p>Fennec F-Droid temelji na najnovejši izdaji brskalnika Mozilla Firefox. Ima lastniški bitovi in telemetrija odstranjeni, vendar se še vedno povezuje z različnimi Mozillami storitve, ki lahko sledijo uporabnikom.</p>
+<p>Ermine F-Droid temelji na najnovejši izdaji brskalnika Mozilla Firefox. Ima lastniški bitovi in telemetrija odstranjeni, vendar se še vedno povezuje z različnimi Mozillami storitve, ki lahko sledijo uporabnikom.</p>
