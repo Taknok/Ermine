@@ -1,8 +1,8 @@
 diff --git a/mobile/android/android-components/.buildconfig.yml b/mobile/android/android-components/.buildconfig.yml
-index bdec0f362b1b..b4178d6fd644 100644
+index cb3ae67a9602..64b01b486f53 100644
 --- a/mobile/android/android-components/.buildconfig.yml
 +++ b/mobile/android/android-components/.buildconfig.yml
-@@ -2171,17 +2171,6 @@ projects:
+@@ -2201,17 +2201,6 @@ projects:
      - components:support-base
      - components:support-test
      - components:tooling-lint
@@ -21,7 +21,7 @@ index bdec0f362b1b..b4178d6fd644 100644
      description: A library to detect shake gestures from accelerometer data
      path: components/lib/shake
 diff --git a/mobile/android/android-components/components/feature/ipprotection/src/main/java/mozilla/components/feature/ipprotection/IPProtectionFeature.kt b/mobile/android/android-components/components/feature/ipprotection/src/main/java/mozilla/components/feature/ipprotection/IPProtectionFeature.kt
-index c3af5a0ee0eb..9f6bfc0f8e00 100644
+index a763725ee0f5..7fa85ccb5218 100644
 --- a/mobile/android/android-components/components/feature/ipprotection/src/main/java/mozilla/components/feature/ipprotection/IPProtectionFeature.kt
 +++ b/mobile/android/android-components/components/feature/ipprotection/src/main/java/mozilla/components/feature/ipprotection/IPProtectionFeature.kt
 @@ -49,14 +49,12 @@ import mozilla.components.support.base.log.logger.Logger
@@ -39,14 +39,14 @@ index c3af5a0ee0eb..9f6bfc0f8e00 100644
      private val mainDispatcher: CoroutineDispatcher = Dispatchers.Main,
  ) {
      private val logger = Logger("IPP:Feature")
-@@ -197,7 +195,6 @@ class IPProtectionFeature(
+@@ -199,7 +197,6 @@ class IPProtectionFeature(
+                         }
                      }
-                 },
-             )
--            extraAuthProvider?.configure(this, mainScope)
-             // Initialization needs to be done ASAP whether we are using the service or not to avoid start-up delays.
-             // We do need to register our listeners first to avoid dropping a message because,
-             // as a side effect, the init call triggers `IPProtectionController#onServiceStateChanged`
+                 )
+-                extraAuthProvider?.configure(this, mainScope)
+                 // Initialization needs to be done ASAP whether we are using the service or not to avoid start-up
+                 // delays.
+                 // We do need to register our listeners first to avoid dropping a message because,
 diff --git a/mobile/android/android-components/components/lib/integrity-googleplay/build.gradle b/mobile/android/android-components/components/lib/integrity-googleplay/build.gradle
 index 94309dd293c6..afd0024668ca 100644
 --- a/mobile/android/android-components/components/lib/integrity-googleplay/build.gradle
