@@ -8,4 +8,4 @@
   <li>Đồng bộ hóa tab, dấu trang, mật khẩu, v.v. trên nhiều thiết bị thông qua Firefox Sync.</li>
   <li>Chế độ Picture-in-picture.</li>
 </ul>
-<p>Trình duyệt Fennec F-Droid được phát triển dựa trên phiên bản mới nhất của Mozilla Firefox. Các thành phần độc quyền và tính năng thu thập dữ liệu từ xa đã được loại bỏ, nhưng trình duyệt này vẫn kết nối với nhiều dịch vụ của Mozilla có khả năng theo dõi người dùng.</p>
+<p>Trình duyệt Ermine F-Droid được phát triển dựa trên phiên bản mới nhất của Mozilla Firefox. Các thành phần độc quyền và tính năng thu thập dữ liệu từ xa đã được loại bỏ, nhưng trình duyệt này vẫn kết nối với nhiều dịch vụ của Mozilla có khả năng theo dõi người dùng.</p>

@@ -8,4 +8,4 @@
 <li>透過 Firefox Sync 在多個裝置間同步標籤頁、書籤、密碼等。</li>
 <li>子母畫面模式。</li>
 </ul>
-<p>Fennec F-Droid 瀏覽器基於最新的 Mozilla Firefox 版本，移除了專有元件和遙測功能，但仍連接到各種可能會追蹤使用者的 Mozilla 服務。</p>
+<p>Ermine F-Droid 瀏覽器基於最新的 Mozilla Firefox 版本，移除了專有元件和遙測功能，但仍連接到各種可能會追蹤使用者的 Mozilla 服務。</p>

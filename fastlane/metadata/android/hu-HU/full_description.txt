@@ -8,4 +8,4 @@
   <li>fülek, könyvjelzők, jelszavak stb. több eszközön keresztül Firefox Sync.</li>
   <li>kép a képben mód.</li>
 </ul>
-<p>Fennec F-Droid alapul a legújabb Mozilla Firefox kiadás. Védett biteket és telemetriát távolítottak el, de továbbra is csatlakozik a Mozilla különféle szolgáltatásaihoz, amelyek nyomon követhetik a felhasználókat.</p>
+<p>Ermine F-Droid alapul a legújabb Mozilla Firefox kiadás. Védett biteket és telemetriát távolítottak el, de továbbra is csatlakozik a Mozilla különféle szolgáltatásaihoz, amelyek nyomon követhetik a felhasználókat.</p>
