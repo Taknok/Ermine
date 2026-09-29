@@ -1,0 +1,8 @@
+{
+    "cc": "/usr/lib/llvm-19/bin/clang",
+    "cxx": "/usr/lib/llvm-19/bin/clang++",
+    "as": "/usr/lib/llvm-19/bin/clang",
+    "ar": "/usr/lib/llvm-19/bin/llvm-ar",
+    "ranlib": "/usr/lib/llvm-19/bin/llvm-ranlib",
+    "libtool": "/usr/lib/llvm-19/bin/llvm-libtool-darwin"
+}

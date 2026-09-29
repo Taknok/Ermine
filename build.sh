@@ -46,13 +46,82 @@ cargo install --force --vers 0.29.4 cbindgen
 
 # Build LLVM
 pushd "$llvm"
-llvmtarget=$(cat "$llvm/targets_to_build")
-cmake -S llvm -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=out -DCMAKE_C_COMPILER=clang \
-    -DCMAKE_CXX_COMPILER=clang++ -DLLVM_ENABLE_PROJECTS="clang" -DLLVM_TARGETS_TO_BUILD="$llvmtarget" \
-    -DLLVM_USE_LINKER=lld -DLLVM_BINUTILS_INCDIR=/usr/include -DLLVM_ENABLE_PLUGINS=FORCE_ON \
-    -DLLVM_DEFAULT_TARGET_TRIPLE="x86_64-unknown-linux-gnu"
-cmake --build build -j"$(nproc)"
-cmake --build build --target install -j"$(nproc)"
+
+triplet=$(cat "$patches/target-triplet.txt")
+
+python3 "$mozilla_release/build/build-clang/build-clang.py" \
+    -c "$patches/use-system-clang-19.json" \
+    -c "$mozilla_release/build/build-clang/clang-22.json" \
+    -c "$patches/stage-1-${triplet%-*-*}.json" \
+    --skip-tar
+
+mkdir -p build-compiler-rt
+pushd build-compiler-rt
+touch libgcc.a # Only needed to pass CMake tests
+cmake "$llvm/compiler-rt" \
+    -GNinja \
+    -DCMAKE_C_COMPILER="$llvm/build/stage1/clang/bin/clang" \
+    -DCMAKE_CXX_COMPILER="$llvm/build/stage1/clang/bin/clang++" \
+    -DCMAKE_ASM_COMPILER="$llvm/build/stage1/clang/bin/clang" \
+    -DCMAKE_AR="$llvm/build/stage1/clang/bin/llvm-ar" \
+    -DCMAKE_RANLIB="$llvm/build/stage1/clang/bin/llvm-ranlib" \
+    -DCMAKE_C_COMPILER_TARGET="${triplet}26" \
+    -DCMAKE_CXX_COMPILER_TARGET="${triplet}26" \
+    -DCMAKE_ASM_COMPILER_TARGET="${triplet}26" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX="$llvm/build/stage1/clang" \
+    -DCOMPILER_RT_INSTALL_LIBRARY_DIR:PATH=lib/clang/22/lib \
+    -DLLVM_ENABLE_ASSERTIONS=OFF \
+    -DLLVM_CONFIG_PATH="$llvm/build/stage1/clang/bin/llvm-config" \
+    -DCMAKE_SYSROOT="$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/sysroot" \
+    -DCMAKE_LINKER="$llvm/build/stage1/clang/bin/lld" \
+    -DCMAKE_EXE_LINKER_FLAGS="-fuse-ld=lld --rtlib=libgcc -L$PWD" \
+    -DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=lld \
+    -DANDROID=1 \
+    -DANDROID_NATIVE_API_LEVEL=26 \
+    -DSANITIZER_ALLOW_CXXABI=OFF \
+    -DLLVM_DEFAULT_TARGET_TRIPLE="${triplet%-*-*}-unknown-linux-android" \
+    -DCOMPILER_RT_DEFAULT_TARGET_ONLY=ON \
+    -DLLVM_ENABLE_PER_TARGET_RUNTIME_DIR=ON \
+    -DCOMPILER_RT_BUILD_LIBFUZZER=OFF \
+    -DCOMPILER_RT_BUILD_ORC=OFF \
+    -DCOMPILER_RT_BUILTINS_HIDE_SYMBOLS=OFF
+ninja -v install
+popd
+
+mkdir -p build-runtimes
+pushd build-runtimes
+cmake "$llvm/runtimes" \
+    -GNinja \
+    -DCMAKE_C_COMPILER="$llvm/build/stage1/clang/bin/clang" \
+    -DCMAKE_CXX_COMPILER="$llvm/build/stage1/clang/bin/clang++" \
+    -DCMAKE_ASM_COMPILER="$llvm/build/stage1/clang/bin/clang" \
+    -DCMAKE_AR="$llvm/build/stage1/clang/bin/llvm-ar" \
+    -DCMAKE_RANLIB="$llvm/build/stage1/clang/bin/llvm-ranlib" \
+    -DCMAKE_C_COMPILER_TARGET="${triplet}26" \
+    -DCMAKE_CXX_COMPILER_TARGET="${triplet}26" \
+    -DCMAKE_ASM_COMPILER_TARGET="${triplet}26" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX="$llvm/build/stage1/clang" \
+    -DLLVM_ENABLE_ASSERTIONS=OFF \
+    -DLLVM_CONFIG_PATH="$llvm/build/stage1/clang/bin/llvm-config" \
+    -DCMAKE_SYSROOT="$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/sysroot" \
+    -DCMAKE_LINKER="$llvm/build/stage1/clang/bin/lld" \
+    -DCMAKE_EXE_LINKER_FLAGS=-fuse-ld=lld \
+    -DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=lld \
+    -DANDROID=1 \
+    -DANDROID_NATIVE_API_LEVEL=26 \
+    -DSANITIZER_ALLOW_CXXABI=OFF \
+    -DLLVM_DEFAULT_TARGET_TRIPLE="${triplet%-*-*}-unknown-linux-android" \
+    -DLLVM_ENABLE_PER_TARGET_RUNTIME_DIR=ON \
+    -DCMAKE_C_COMPILER_WORKS=1 \
+    -DCMAKE_CXX_COMPILER_WORKS=1 \
+    -DCMAKE_ASM_COMPILER_WORKS=1 \
+    -DLLVM_ENABLE_RUNTIMES=libunwind \
+    -DLIBUNWIND_ENABLE_SHARED=OFF
+ninja -v install
+popd
+
 popd
 
 # Build WASI SDK

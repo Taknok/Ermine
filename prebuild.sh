@@ -111,32 +111,34 @@ echo 'https://gitlab.com/relan/fennecmedia/-/raw/master/wallpapers/android' > .w
 case $(echo "$2" | cut -c 6) in
     0)
         abi=armeabi-v7a
-        target=arm-linux-androideabi
-        echo "ARM" > "$llvm/targets_to_build"
+        target=armv7-linux-androideabi
         rusttarget=arm
         rustup target add thumbv7neon-linux-androideabi
-        rustup target add armv7-linux-androideabi
         ;;
     1)
         abi=x86_64
         target=x86_64-linux-android
-        echo "X86" > "$llvm/targets_to_build"
         rusttarget=x86_64
-        rustup target add x86_64-linux-android
         ;;
     2)
         abi=arm64-v8a
         target=aarch64-linux-android
-        echo "AArch64" > "$llvm/targets_to_build"
         rusttarget=arm64
-        rustup target add aarch64-linux-android
         ;;
     *)
         echo "Unknown target code in $2." >&2
         exit 1
     ;;
 esac
+
+# Download the toolchain
+rustup target add "$target"
+
+# Build for a single architecture only
 sed -i -e "s/include \".*\"/include \"$abi\"/" app/build.gradle
+
+# Save the triplet for use in the build.sh script
+echo "$target" > "$patches/target-triplet.txt"
 
 # Disable FUS Service or we'll get errors like:
 # Exception while loading configuration for :app: Could not load the value of field `__buildFusService__` of task `:app:compileFenixReleaseKotlin` of type `org.jetbrains.kotlin.gradle.tasks.KotlinCompile`.
@@ -328,13 +330,12 @@ ac_add_options --enable-update-channel=release
 ac_add_options --target=$target
 ac_add_options --with-android-ndk="$ANDROID_NDK"
 ac_add_options --with-android-sdk="$ANDROID_SDK"
-ac_add_options --with-libclang-path="$llvm/out/lib"
 ac_add_options --with-java-bin-path="/usr/bin"
 ac_add_options --with-gradle=$(command -v gradle)
 ac_add_options --with-wasi-sysroot="$wasi/build/install/wasi/share/wasi-sysroot"
-ac_add_options CC="$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang"
-ac_add_options CXX="$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++"
-ac_add_options STRIP="$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip"
+ac_add_options CC="$llvm/build/stage1/clang/bin/clang"
+ac_add_options CXX="$llvm/build/stage1/clang/bin/clang++"
+ac_add_options STRIP="$llvm/build/stage1/clang/bin/llvm-strip"
 ac_add_options WASM_CC="$wasi/build/install/wasi/bin/clang"
 ac_add_options WASM_CXX="$wasi/build/install/wasi/bin/clang++"
 mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj
