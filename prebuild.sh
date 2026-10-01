@@ -45,7 +45,7 @@ function apply_patch {
 }
 
 # Set up Rust
-rustup default 1.95.0
+rustup default 1.98.0
 
 #
 # Fenix
@@ -191,7 +191,7 @@ localize_maven
 # Set A-C version
 echo "mozilla.version=${1%.0}" >> local.properties
 # Set A-S version
-echo 'as.version=156.0' >> local.properties
+echo 'as.version=157.0.1' >> local.properties
 popd
 
 #
@@ -216,7 +216,7 @@ popd
 #
 
 pushd "$wasi"
-apply_patch "$mozilla_release/taskcluster/scripts/misc/wasi-sdk.patch"
+apply_patch "$patches/wasi-sdk-20.patch"
 popd
 
 #

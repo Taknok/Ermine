@@ -1,8 +1,8 @@
 diff --git a/mobile/android/android-components/.buildconfig.yml b/mobile/android/android-components/.buildconfig.yml
-index cb3ae67a9602..64b01b486f53 100644
+index f9a083a682db..97f42f801c22 100644
 --- a/mobile/android/android-components/.buildconfig.yml
 +++ b/mobile/android/android-components/.buildconfig.yml
-@@ -2201,17 +2201,6 @@ projects:
+@@ -2229,17 +2229,6 @@ projects:
      - components:support-base
      - components:support-test
      - components:tooling-lint
@@ -21,10 +21,10 @@ index cb3ae67a9602..64b01b486f53 100644
      description: A library to detect shake gestures from accelerometer data
      path: components/lib/shake
 diff --git a/mobile/android/android-components/components/feature/ipprotection/src/main/java/mozilla/components/feature/ipprotection/IPProtectionFeature.kt b/mobile/android/android-components/components/feature/ipprotection/src/main/java/mozilla/components/feature/ipprotection/IPProtectionFeature.kt
-index a763725ee0f5..7fa85ccb5218 100644
+index 6ea2c2fef7ee..aced4c9e1978 100644
 --- a/mobile/android/android-components/components/feature/ipprotection/src/main/java/mozilla/components/feature/ipprotection/IPProtectionFeature.kt
 +++ b/mobile/android/android-components/components/feature/ipprotection/src/main/java/mozilla/components/feature/ipprotection/IPProtectionFeature.kt
-@@ -49,14 +49,12 @@ import mozilla.components.support.base.log.logger.Logger
+@@ -51,14 +51,12 @@ import mozilla.components.support.base.log.logger.Logger
   * @param store [IPProtectionStore] that holds the feature state.
   * @param engine [Engine] used to register the IP protection delegate and obtain the handler.
   * @param accountManager [FxaAccountManager] used to supply FxA tokens to the proxy service.
@@ -39,7 +39,7 @@ index a763725ee0f5..7fa85ccb5218 100644
      private val mainDispatcher: CoroutineDispatcher = Dispatchers.Main,
  ) {
      private val logger = Logger("IPP:Feature")
-@@ -199,7 +197,6 @@ class IPProtectionFeature(
+@@ -222,7 +220,6 @@ class IPProtectionFeature(
                          }
                      }
                  )

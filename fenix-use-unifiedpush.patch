@@ -1,16 +1,3 @@
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index c1173b2ceb0f..a1c19df91698 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-@@ -252,7 +252,7 @@ class Components(
-     val publicSuffixList by lazyMonitored { PublicSuffixList(context) }
-     val clipboardHandler by lazyMonitored { ClipboardHandler(context) }
-     val performance by lazyMonitored { PerformanceComponent() }
--    val push by lazyMonitored { Push(context, analytics.crashReporter) }
-+    val push by lazyMonitored { Push(context) }
-     val wifiConnectionMonitor by lazyMonitored { WifiConnectionMonitor(context as Application) }
- 
-     val strictMode by lazyMonitored {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt
 index 464f8d42794d..4f08eeba3fcc 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt

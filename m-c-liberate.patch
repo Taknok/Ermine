@@ -1,5 +1,5 @@
 diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
-index a9c7e4494102..f8ab5e164913 100644
+index 4ef9dc15fd73..2fce57b3c065 100644
 --- a/gradle/libs.versions.toml
 +++ b/gradle/libs.versions.toml
 @@ -55,17 +55,10 @@ work = "2.11.2"
@@ -17,7 +17,7 @@ index a9c7e4494102..f8ab5e164913 100644
 -play-services-ads-id = "18.3.0"
 -play-services-base = "18.10.1"
 -play-services-fido = "21.3.1"
- protobuf = "4.36.0"
+ protobuf = "4.36.1"
  
  # Gradle plugins
 @@ -113,6 +106,7 @@ jna = "5.19.1"
@@ -26,8 +26,8 @@ index a9c7e4494102..f8ab5e164913 100644
  lottie = "6.7.1"
 +microg = "0.3.16.252432"
  okhttp = "5.5.0"
- okio = "3.18.1"
- sentry = "8.53.0"
+ okio = "3.18.2"
+ sentry = "8.55.0"
 @@ -130,7 +124,6 @@ kotlin-serialization = { module = "org.jetbrains.kotlin.plugin.serialization:org
  kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
  kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
