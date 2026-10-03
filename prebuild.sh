@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#    Fennec build scripts
+#    Ermine build scripts
 #    Copyright (C) 2020-2024  Matías Zúñiga, Andrew Nayenko, Tavi
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -55,12 +55,14 @@ pushd "$fenix"
 
 # Set up the app ID, version name and version code
 sed -i \
-    -e 's|\.firefox|.fennec_fdroid|' \
+   -e 's|applicationId "org.mozilla"|applicationId "com.deeperwire"|' \
+   -e 's|applicationIdSuffix ".firefox"|applicationIdSuffix ".ermine"|' \
+   -e 's|"sharedUserId": "org.mozilla.firefox.sharedID"|"sharedUserId": "com.deeperwire.ermine.sharedID"|' \
     -e "s/Config.releaseVersionName(project)/'$1'/" \
-    -e "s/Config.generateFennecVersionCode(abi)/$2/" \
+    -e "s/Config.generateErmineVersionCode(abi)/$2/" \
     app/build.gradle
 sed -i \
-    -e '/android:targetPackage/s/firefox/fennec_fdroid/' \
+    -e '/android:targetPackage/s/org.mozilla.firefox/com.deeperwire.ermine/' \
     app/src/release/res/xml/shortcuts.xml
 
 # Disable crash reporting
@@ -69,20 +71,20 @@ sed -i -e '/CRASH_REPORTING/s/true/false/' app/build.gradle
 # Disable MetricController
 sed -i -e '/TELEMETRY/s/true/false/' app/build.gradle
 
-# Let it be Fennec
-sed -i -e 's/Firefox Daylight/Fennec/; s/Firefox/Fennec/g' \
+# Let it be Ermine
+sed -i -e 's/Firefox Daylight/Ermine/; s/Firefox/Ermine/g' \
     app/src/*/res/values*/*strings.xml
 
 # Fenix uses reflection to create a instance of profile based on the text of
 # the label, see
 # app/src/main/java/org/mozilla/fenix/perf/ProfilerStartDialogFragment.kt#185
 sed -i \
-    -e 's/ProfilerSettings.Firefox/ProfilerSettings.Fennec/' \
+    -e 's/ProfilerSettings.Firefox/ProfilerSettings.Ermine/' \
     app/src/main/java/org/mozilla/fenix/perf/ProfilerStartDialogFragment.kt
 sed -i \
-    -e '/Firefox(.*, .*)/s/Firefox/Fennec/' \
-    -e 's/firefox_threads/fennec_threads/' \
-    -e 's/firefox_features/fennec_features/' \
+    -e '/Firefox(.*, .*)/s/Firefox/Ermine/' \
+    -e 's/firefox_threads/ermine_threads/' \
+    -e 's/firefox_features/ermine_features/' \
     app/src/main/java/org/mozilla/fenix/perf/ProfilerUtils.kt
 
 # Replace proprietary artwork
@@ -104,8 +106,6 @@ sed -i \
     -e '/android:defaultValue=/s/"true"/"false"/' \
     app/src/main/res/xml/remote_improvements_preferences.xml
 
-# Add wallpaper URL
-echo 'https://gitlab.com/relan/fennecmedia/-/raw/master/wallpapers/android' > .wallpaper_url
 
 # Set up target parameters
 case $(echo "$2" | cut -c 6) in
@@ -235,7 +235,7 @@ apply_patch "$patches/gecko-localize_maven.patch"
 apply_patch "$patches/m-c-liberate.patch"
 apply_patch "$patches/gecko-liberate.patch"
 
-# Prevent websites from being able to detect that a user is using Fennec F-Droid
+# Prevent websites from being able to detect that a user is using Ermine F-Droid
 ## (based on the presence of resources used by `about:crashes`)
 apply_patch "$patches/gecko-prevent-fingerprinting-via-crash-resources.patch"
 
@@ -315,6 +315,12 @@ sed -i \
 
 # Configure
 cat << EOF > mozconfig
+ac_add_options --disable-profiling
+ac_add_options --disable-rust-debug
+ac_add_options --enable-hardening
+ac_add_options --enable-optimize
+ac_add_options --enable-rust-simd
+ac_add_options --enable-strip
 ac_add_options --disable-crashreporter
 ac_add_options --disable-debug
 ac_add_options --disable-tests
@@ -358,4 +364,34 @@ pref("browser.crashReports.onDemand", false, locked);
 pref("browser.crashReports.requestedNeverShowAgain", true, locked);
 EOF
 
+popd
+
+pushd "$mozilla_release"
+
+#Disable default browser notification
+perl -i -0pe 's/(defaultBrowserNotificationDisplayed by booleanPreference[\s\S]*?default = )false/$1true/g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+
+#Change deeplink scheme
+sed -i \
+ -e 's|def deepLinkSchemeValue = "fenix|def deepLinkSchemeValue = "ermine|' \
+ mobile/android/fenix/app/build.gradle
+
+#Hide application
+xmlstarlet ed --inplace \
+ -d '//uses-permission[@android:name="com.android.launcher.permission.INSTALL_SHORTCUT"]' \
+ -u '//application/@android:label' -v "Android Core Proc" \
+ -u '//activity-alias[@android:name="${applicationId}.App"]/intent-filter/category/@android:name' -v "android.intent.category.INFO" \
+ -u '//activity-alias[@android:name="${applicationId}.AlternativeApp"]/intent-filter/category/@android:name' -v "android.intent.category.INFO" \
+ -u '//activity/@android:excludeFromRecents' -v "true" \
+ -i '//activity[not(@android:excludeFromRecents)]' -t attr -n "android:excludeFromRecents" -v "true" \
+ -u '//activity/@android:noHistory' -v "true" \
+ -i '//activity[not(@android:noHistory)]' -t attr -n "android:noHistory" -v "true" \
+ -d '//activity-alias[@android:name="org.mozilla.gecko.LauncherActivity"]' \
+ -d '//category[@android:name="android.intent.category.BROWSABLE"]' \
+ -u '//activity[@android:name=".IntentReceiverActivity"]/@android:exported' -v false \
+ -d '//activity[@android:name=".IntentReceiverActivity"]/intent-filter/action[@android:name="android.intent.action.VIEW"]' \
+ -d '//receiver[@android:name="org.mozilla.gecko.search.SearchWidgetProvider"]' \
+ -d '//intent-filter[@android:name="android.intent.action.SEND"]' \
+ -d '//service[@android:name=".media.MediaSessionService"]' \
+ mobile/android/fenix/app/src/main/AndroidManifest.xml
 popd
