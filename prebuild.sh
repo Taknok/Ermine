@@ -45,7 +45,7 @@ function apply_patch {
 }
 
 # Set up Rust
-rustup default 1.98.0
+rustup default 1.95.0
 
 #
 # Fenix
@@ -191,7 +191,7 @@ localize_maven
 # Set A-C version
 echo "mozilla.version=${1%.0}" >> local.properties
 # Set A-S version
-echo 'as.version=157.0.1' >> local.properties
+echo 'as.version=158.0' >> local.properties
 popd
 
 #
@@ -205,6 +205,8 @@ find "$patches/a-s-overlay" -type f | while read -r src; do
 done
 # Remove Mozilla repositories substitution and explicitly add the required ones
 apply_patch "$patches/a-s-localize_maven.patch"
+# Remove "recommendations" dependency on locale
+apply_patch "$patches/a-s-recommendations-locale.patch"
 # Configure default search engines
 apply_patch "$patches/a-s-configure-default-search-engines.patch"
 # Select only the required architectures
@@ -294,10 +296,11 @@ sed -i \
     mobile/android/gradle.py
 
 # Patch the LLVM source code
-# Search clang- in https://android.googlesource.com/platform/ndk/+/refs/tags/ndk-r28b/ndk/toolchains.py
-LLVM_SVN='530567'
-python3 "$toolchain_utils/llvm_tools/patch_manager.py" \
-    --svn_version "$LLVM_SVN" \
+# Search clang- in https://android.googlesource.com/platform/ndk/+/refs/tags/ndk-r30/ndk/toolchains.py
+# to find the proper --svn_version value
+PYTHONPATH="${PYTHONPATH:+$PYTHONPATH:}$toolchain_utils" \
+    python3 "$toolchain_utils/llvm_tools/patch_manager.py" \
+    --svn_version 574158 \
     --patch_metadata_file "$llvm_android/patches/PATCHES.json" \
     --src_path "$llvm"
 

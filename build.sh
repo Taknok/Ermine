@@ -28,9 +28,18 @@ source "$(dirname "$0")/paths.sh"
 
 # Set up Android SDK for GeckoView
 sdkmanager 'build-tools;37.0.0'
-sdkmanager 'cmdline-tools;21.0'
+sdkmanager 'cmdline-tools;23.0'
 sdkmanager 'platform-tools;37.0.0'
-sdkmanager 'platforms;android-37.1'
+
+if [ ! -e /opt/android-sdk/platforms/android-37.2 ]; then
+    curl --silent -O https://dl.google.com/android/repository/platform-37.2_r01.zip
+    echo '916410633df92a98da56aa7c87a1955f865f4d3b888373660794ef8173f72972  platform-37.2_r01.zip' | shasum -c
+    unzip -q platform-37.2_r01.zip
+    mkdir -p /opt/android-sdk/platforms/
+    mv android-37.2 /opt/android-sdk/platforms/android-37.2
+fi
+
+sdkmanager 'ndk;29.0.14206865' # for Glean
 
 # Set up Rust
 cargo install --force --vers 0.29.4 cbindgen
@@ -90,7 +99,8 @@ pushd "$android_components"
 # Viaduct from A-S requires concept-fetch 150.0.3 built with compileSdk 36.1.
 # Build such a copy of concept-fetch from the current A-C source code
 echo 150.0.3 > ../version.txt
-sed -i -e '/compileSdkMajorVersion/s/37/36/' .config.yml
+sed -i -e '/compileSdkMajorVersion/s/37/36/' \
+       -e '/compileSdkMinorVersion/s/2/1/' .config.yml
 gradle :components:concept-fetch:publishToMavenLocal
 git checkout .config.yml ../version.txt
 # Required by UnifiedPush
