@@ -126,13 +126,19 @@ popd
 
 # Build WASI SDK
 pushd "$wasi"
-mkdir -p build/install/wasi
-touch build/compiler-rt.BUILT # fool the build system
-make \
-    PREFIX=/wasi \
-    build/wasi-libc.BUILT \
-    build/libcxx.BUILT \
-    -j"$(nproc)"
+cmake -G Ninja -B build/sysroot -S . \
+    -DCMAKE_C_COMPILER="$llvm/build/stage1/clang/bin/clang" \
+    -DCMAKE_CXX_COMPILER="$llvm/build/stage1/clang/bin/clang++" \
+    -DCMAKE_INSTALL_PREFIX="$wasi/build/sysroot/install" \
+    -DWASI_SDK_TARGETS=wasm32-wasip1 \
+    -DWASI_SDK_LTO=OFF \
+    -DWASI_SDK_EXCEPTIONS=OFF \
+    -DWASI_SDK_BUILD_SHARED=OFF \
+    -DWASI_SDK_CPU_CFLAGS=
+cmake --build build/sysroot --target compiler-rt
+cmake --build build/sysroot --target install
+ln -s "$wasi/build/sysroot/install/wasi-resource-dir/lib/wasm32-unknown-wasip1" "$llvm/build/stage1/clang/lib/clang/22/lib/"
+test -f "$llvm/build/stage1/clang/lib/clang/22/lib/wasm32-unknown-wasip1/libclang_rt.builtins.a"
 popd
 
 # Build microG libraries

@@ -220,7 +220,14 @@ popd
 #
 
 pushd "$wasi"
-apply_patch "$patches/wasi-sdk-20.patch"
+apply_patch "$mozilla_release/taskcluster/scripts/misc/wasi-sdk-compat.patch"
+apply_patch "$mozilla_release/taskcluster/scripts/misc/wasi-sdk-no-llvm-patches.patch"
+pushd src/llvm-project
+# See "patches" variable in cmake/wasi-sdk-sysroot.cmake
+apply_patch ../llvm-pr-168449.patch
+apply_patch ../llvm-pr-186054.patch
+apply_patch ../llvm-undo-part-of-194317.patch
+popd
 popd
 
 #
@@ -242,10 +249,6 @@ apply_patch "$patches/gecko-liberate.patch"
 # Prevent websites from being able to detect that a user is using Fennec F-Droid
 ## (based on the presence of resources used by `about:crashes`)
 apply_patch "$patches/gecko-prevent-fingerprinting-via-crash-resources.patch"
-
-# Work-around upstream bug to fix compilation with WASI SDK 20, see
-# https://bugzilla.mozilla.org/show_bug.cgi?id=1994063
-apply_patch "$patches/gecko-unbreak-wasi-sdk-20-clang.patch"
 
 # Add "marionette.hide" option into about:config
 apply_patch "$patches/gecko-option-to-hide-marionette.patch"
@@ -332,12 +335,10 @@ ac_add_options --with-android-ndk="$ANDROID_NDK"
 ac_add_options --with-android-sdk="$ANDROID_SDK"
 ac_add_options --with-java-bin-path="/usr/bin"
 ac_add_options --with-gradle=$(command -v gradle)
-ac_add_options --with-wasi-sysroot="$wasi/build/install/wasi/share/wasi-sysroot"
+ac_add_options --with-wasi-sysroot="$wasi/build/sysroot/install/share/wasi-sysroot"
 ac_add_options CC="$llvm/build/stage1/clang/bin/clang"
 ac_add_options CXX="$llvm/build/stage1/clang/bin/clang++"
 ac_add_options STRIP="$llvm/build/stage1/clang/bin/llvm-strip"
-ac_add_options WASM_CC="$wasi/build/install/wasi/bin/clang"
-ac_add_options WASM_CXX="$wasi/build/install/wasi/bin/clang++"
 mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj
 EOF
 
