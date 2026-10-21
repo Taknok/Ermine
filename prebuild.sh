@@ -193,7 +193,7 @@ localize_maven
 # Set A-C version
 echo "mozilla.version=${1%.0}" >> local.properties
 # Set A-S version
-echo 'as.version=158.0' >> local.properties
+echo 'as.version=158.0.1' >> local.properties
 popd
 
 #
