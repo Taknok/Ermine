@@ -8,4 +8,4 @@
   <li>Sinkronisasi tab, penanda, kata sandi, dll. di beberapa perangkat melalui Firefox Sync.</li>
   <li>Mode gambar-dalam-gambar.</li>
 </ul>
-<p>Fennec F-Droid didasarkan pada rilis Mozilla Firefox terbaru. Bit dan telemetri yang dimiliki telah dihapus, tetapi masih terhubung ke berbagai layanan Mozilla yang dapat melacak pengguna.</p>
+<p>Ermine F-Droid didasarkan pada rilis Mozilla Firefox terbaru. Bit dan telemetri yang dimiliki telah dihapus, tetapi masih terhubung ke berbagai layanan Mozilla yang dapat melacak pengguna.</p>

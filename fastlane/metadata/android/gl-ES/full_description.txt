@@ -8,4 +8,4 @@
   <li>Sincronización de lapelas, marcadores, contrasinais, etc. a través de múltiples dispositivos vía Firefox Sync.</li>
   <li>Modo imaxe en imaxe.</li>
 </ul>
-<p>O navegador Fennec F-Droid browser está baseado no último lanzamento de Mozilla Firefox. Ten os bits propietarios e a telemetría eliminados, pero aínda se conecta a varios servizos de Mozilla que poden rastrexar aos usuarios.</p>
+<p>O navegador Ermine F-Droid browser está baseado no último lanzamento de Mozilla Firefox. Ten os bits propietarios e a telemetría eliminados, pero aínda se conecta a varios servizos de Mozilla que poden rastrexar aos usuarios.</p>
