@@ -11,10 +11,10 @@ index fd7e9309f2dc..f295a4a99a61 100644
      - components:lib-state
      - components:service-digitalassetlinks
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index fd141eca9d3f..ffb7687b6afa 100644
+index e8032b012046..784ca9c8badb 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -544,7 +544,6 @@ dependencies {
+@@ -569,7 +569,6 @@ dependencies {
      implementation project(':components:lib-crash')
      implementation project(':components:lib-crash-sentry')
      implementation project(':components:lib-dataprotect')
@@ -22,7 +22,7 @@ index fd141eca9d3f..ffb7687b6afa 100644
      implementation project(':components:lib-state')
      implementation project(':components:lib-accelerometer-sensormanager')
      implementation project(':components:lib-integrity-googleplay')
-@@ -555,7 +554,6 @@ dependencies {
+@@ -580,7 +579,6 @@ dependencies {
      implementation ComponentsDependencies.mozilla_appservices_syncmanager
  
      implementation libs.accompanist.drawablepainter
@@ -30,7 +30,7 @@ index fd141eca9d3f..ffb7687b6afa 100644
      implementation libs.androidx.activity
      implementation libs.androidx.annotation
      implementation libs.androidx.appcompat
-@@ -602,12 +600,9 @@ dependencies {
+@@ -627,12 +625,9 @@ dependencies {
      implementation libs.androidx.viewpager2
      implementation libs.androidx.work.runtime
      implementation libs.google.material
@@ -653,10 +653,10 @@ index 000000000000..b50a6f03a218
 +    }
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt
-index b8b893014df4..89087c5a8150 100644
+index ed334079e810..c2cb77237cdd 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt
-@@ -1370,20 +1370,17 @@ abstract class BaseBrowserFragment :
+@@ -1378,20 +1378,17 @@ abstract class BaseBrowserFragment :
              view = view,
          )
  
@@ -689,7 +689,7 @@ index b8b893014df4..89087c5a8150 100644
          screenOrientationFeature.set(
              feature =
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index 50d5ce2ac80c..ab3743638524 100644
+index 2dd5f3ea5425..59fc8facecdf 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 @@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
@@ -700,19 +700,25 @@ index 50d5ce2ac80c..ab3743638524 100644
  import java.util.concurrent.TimeUnit
  import kotlinx.coroutines.CoroutineScope
  import mozilla.components.concept.ai.controls.AIFeatureBlock
-@@ -283,7 +282,6 @@ class Components(
+@@ -281,13 +280,6 @@ class Components(
+     val settings by lazyMonitored { Settings(context) }
+     val fenixOnboarding by lazyMonitored { FenixOnboarding(context) }
  
-     val playStoreReviewPromptController by lazyMonitored {
-         PlayStoreReviewPromptController(
+-    val playStoreReviewPromptController by lazyMonitored {
+-        PlayStoreReviewPromptController(
 -            manager = ReviewManagerFactory.create(context),
-             numberOfAppLaunches = { settings.numberOfAppLaunches },
-         )
-     }
+-            numberOfAppLaunches = { settings.numberOfAppLaunches },
+-        )
+-    }
+-
+     val autofillConfiguration by lazyMonitored {
+         AutofillConfiguration(
+             storage = core.passwordsStorage,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/PlayStoreReviewPromptController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/PlayStoreReviewPromptController.kt
-index 73a80dd95941..1990c2ec5356 100644
+index 7ec39a4f9b57..2050f963b020 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/PlayStoreReviewPromptController.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/PlayStoreReviewPromptController.kt
-@@ -9,15 +9,11 @@ import android.content.ActivityNotFoundException
+@@ -9,14 +9,10 @@ import android.content.ActivityNotFoundException
  import android.content.Intent
  import androidx.annotation.VisibleForTesting
  import androidx.core.net.toUri
@@ -723,12 +729,11 @@ index 73a80dd95941..1990c2ec5356 100644
  import java.util.Date
  import java.util.Locale
  import kotlinx.coroutines.CancellationException
- import kotlinx.coroutines.Dispatchers
 -import kotlinx.coroutines.tasks.await
- import kotlinx.coroutines.withContext
  import mozilla.components.support.base.log.logger.Logger
  import org.mozilla.fenix.GleanMetrics.ReviewPrompt
-@@ -31,52 +27,13 @@ val logger = Logger("PlayStoreReviewPromptController")
+ import org.mozilla.fenix.components.ReviewPromptAttemptResult.Displayed
+@@ -29,52 +25,13 @@ val logger = Logger("PlayStoreReviewPromptController")
  
  /** Wraps the Play Store In-App Review API. */
  class PlayStoreReviewPromptController(
@@ -740,7 +745,7 @@ index 73a80dd95941..1990c2ec5356 100644
      @Suppress("TooGenericExceptionCaught")
      suspend fun tryPromptReview(activity: Activity): ReviewPromptAttemptResult {
 -        logger.info("tryPromptReview in progress...")
--        val reviewInfoTask = withContext(Dispatchers.IO) { manager.requestReviewFlow() }
+-        val reviewInfoTask = manager.requestReviewFlow()
 -
 -        val result =
 -            try {
@@ -782,7 +787,7 @@ index 73a80dd95941..1990c2ec5356 100644
  
          return result
      }
-@@ -86,20 +43,6 @@ class PlayStoreReviewPromptController(
+@@ -84,20 +41,6 @@ class PlayStoreReviewPromptController(
          activity: Activity,
          openInNewTab: (url: String) -> Unit,
      ) {
@@ -803,11 +808,45 @@ index 73a80dd95941..1990c2ec5356 100644
      }
  
      companion object {
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt
+index 63da045a8dfe..f71ff0617915 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt
+@@ -568,7 +568,6 @@ class HomeFragment : Fragment(), UserInteractionHandler, OnLongPressedListener {
+         initSwipeToSwitchTabs(view)
+         initHistoryMetadataFeature(view = view)
+         initThumbnailsFeature(view = view)
+-        initReviewPromptBinding(view = view)
+         initTabsCleanupFeature(view = view)
+         initSnackbarBinding(view = view)
+         initIpProtectionBindings(view = view)
+@@ -1416,21 +1415,6 @@ class HomeFragment : Fragment(), UserInteractionHandler, OnLongPressedListener {
+         )
+     }
+ 
+-    private fun initReviewPromptBinding(view: View) {
+-        showReviewPromptBinding.set(
+-            feature =
+-                ShowReviewPromptBinding(
+-                    appStore = requireComponents.appStore,
+-                    promptController = requireComponents.playStoreReviewPromptController,
+-                    activityRef = WeakReference(activity),
+-                    uiScope = viewLifecycleOwner.lifecycleScope,
+-                    showCustomReviewPrompt = { CustomReviewPromptBottomSheetFragment.showPrompt(this) },
+-                ),
+-            owner = viewLifecycleOwner,
+-            view = view,
+-        )
+-    }
+-
+     private fun initTabsCleanupFeature(view: View) {
+         tabsCleanupFeature.set(
+             feature =
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-index fe6d2583c6cf..a317c92cbe37 100644
+index 587faae07ca5..e20feb9d32cd 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-@@ -362,8 +362,7 @@ class OnboardingFragment : Fragment() {
+@@ -367,8 +367,7 @@ class OnboardingFragment : Fragment() {
          }
  
          if (!settings.isTelemetryEnabled) {
@@ -817,20 +856,68 @@ index fe6d2583c6cf..a317c92cbe37 100644
          }
  
          rtamoAttributionHandler.handleReferrer(InstallReferrerHandlingService.response)
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptBottomSheetFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptBottomSheetFragment.kt
+index 0f8709c8187a..457ffe8c829c 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptBottomSheetFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptBottomSheetFragment.kt
+@@ -81,27 +81,6 @@ class CustomReviewPromptBottomSheetFragment : BottomSheetDialogFragment() {
+ 
+     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+         super.onViewCreated(view, savedInstanceState)
+-        viewLifecycleOwner.lifecycleScope.launch {
+-            store.navigationEvents.collect { event ->
+-                when (event) {
+-                    CustomReviewPromptNavigationEvent.Dismiss -> dismissAllowingStateLoss()
+-
+-                    CustomReviewPromptNavigationEvent.OpenPlayStoreReviewPrompt -> {
+-                        val activity = activity ?: return@collect
+-                        with(requireComponents.playStoreReviewPromptController) {
+-                            val result = tryPromptReview(activity)
+-                            when (result) {
+-                                NotDisplayed,
+-                                is Error -> tryLaunchPlayStoreReview(activity, ::openInNewTab)
+-                                else -> {}
+-                            }
+-                        }
+-                    }
+-
+-                    is CustomReviewPromptNavigationEvent.OpenInNewTab -> openInNewTab(event.url)
+-                }
+-            }
+-        }
+     }
+ 
+     override fun onDismiss(dialog: DialogInterface) {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index 9a1ff6febcaf..20c9ee03dcd3 100644
+index 27584e309412..30aa0b05eacf 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-@@ -31,6 +31,7 @@ import androidx.navigation.fragment.findNavController
- import androidx.navigation.fragment.navArgs
+@@ -32,6 +32,7 @@ import androidx.navigation.fragment.navArgs
  import androidx.preference.Preference
+ import androidx.preference.PreferenceCategory
  import androidx.preference.PreferenceFragmentCompat
 +import androidx.preference.SwitchPreferenceCompat
  import androidx.recyclerview.widget.RecyclerView
  import com.google.android.material.dialog.MaterialAlertDialogBuilder
  import java.lang.ref.WeakReference
+@@ -573,15 +574,6 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment
+                     SettingsFragmentDirections.actionSettingsFragmentToSyncDebugFragment()
+                 }
+ 
+-                // About preferences
+-                resources.getString(R.string.pref_key_rate) -> {
+-                    components.playStoreReviewPromptController.tryLaunchPlayStoreReview(
+-                        requireActivity(),
+-                        ::openInNewTab,
+-                    )
+-                    null
+-                }
+-
+                 resources.getString(R.string.pref_key_about) -> {
+                     SettingsFragmentDirections.actionSettingsFragmentToAboutFragment()
+                 }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-index 1189780a19b0..93cc16d74c53 100644
+index 73e8b7f32e8c..f1574ae5dfeb 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 @@ -30,6 +30,8 @@ object SupportUtils {
@@ -843,10 +930,10 @@ index 1189780a19b0..93cc16d74c53 100644
      // This is locale-less on purpose so that the content negotiation happens on the AMO side because the current
      // user language might not be supported by AMO and/or the language might not be exactly what AMO is expecting
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 2cda5731a4bc..8e3ac53c031a 100644
+index 8a5b0deadddc..ca27ca1c5db1 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -174,8 +174,7 @@ class Settings(
+@@ -175,8 +175,7 @@ class Settings(
  
      private val logger = Logger("Settings")
  
@@ -856,7 +943,7 @@ index 2cda5731a4bc..8e3ac53c031a 100644
  
      override val preferences: SharedPreferences = appContext.getSharedPreferences(FENIX_PREFERENCES, MODE_PRIVATE)
  
-@@ -195,12 +194,7 @@ class Settings(
+@@ -196,12 +195,7 @@ class Settings(
  
      /** Indicates if the stories homescreen section should be shown. */
      @Suppress("DEPRECATION")
@@ -870,7 +957,7 @@ index 2cda5731a4bc..8e3ac53c031a 100644
  
      /** Indicates what simple toolbar shortcut key is currently selected. */
      var toolbarSimpleShortcutKey: String by
-@@ -238,12 +232,7 @@ class Settings(
+@@ -239,12 +233,7 @@ class Settings(
  
      /** Indicates if the Pocket recommendations homescreen section should also show sponsored stories. */
      @Suppress("DEPRECATION")
@@ -884,7 +971,7 @@ index 2cda5731a4bc..8e3ac53c031a 100644
  
      /** Indicates whether or not the "Recently Visited" section should be shown on the home screen. */
      var historyMetadataUIFeature by
-@@ -715,23 +704,11 @@ class Settings(
+@@ -722,23 +711,11 @@ class Settings(
              default = false,
          )
  
@@ -911,7 +998,7 @@ index 2cda5731a4bc..8e3ac53c031a 100644
  
      var hasAcceptedTermsOfService by
          booleanPreference(
-@@ -778,11 +755,7 @@ class Settings(
+@@ -785,11 +762,7 @@ class Settings(
          )
  
      /** Returns true if the terms of use feature flag is enabled */
@@ -924,7 +1011,7 @@ index 2cda5731a4bc..8e3ac53c031a 100644
  
      /** Returns true if the nimbus flag for showing the terms of use drag handle is true. */
      var shouldShowTermsOfUsePromptDragHandle by
-@@ -844,18 +817,9 @@ class Settings(
+@@ -851,18 +824,9 @@ class Settings(
       * because this setting was added in early 2025 and we want to make sure that users who upgrade and had telemetry
       * disabled don't start sending the daily usage ping telemetry.
       */
@@ -945,7 +1032,7 @@ index 2cda5731a4bc..8e3ac53c031a 100644
  
      /**
       * This lets us know if the user has disabled experimentation manually so that we know if we should re-enable
-@@ -2338,11 +2302,7 @@ class Settings(
+@@ -2371,11 +2335,7 @@ class Settings(
          )
  
      /** Indicates if the Contile functionality should be visible. */

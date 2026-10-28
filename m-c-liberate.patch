@@ -24,7 +24,7 @@ index 4ef9dc15fd73..2fce57b3c065 100644
  json = "20260814"
  jsoup = "1.23.2"
  lottie = "6.7.1"
-+microg = "0.3.16.252432"
++microg = "0.3.17.252432"
  okhttp = "5.5.0"
  okio = "3.18.2"
  sentry = "8.55.0"
