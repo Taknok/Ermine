@@ -8,4 +8,4 @@
 <li>Hoʻonohonoho ʻana o nā tabs, nā bookmarks, nā ʻōlelo huna, a pēlā aku ma nā polokalamu he nui ma o Firefox Sync.</li>
 <li>ʻAno kiʻi-i-ke-kiʻi.</li>
 </ul>
-<p>Hoʻokumu ʻia ka polokalamu kele pūnaewele Fennec F-Droid ma ka hoʻokuʻu hou loa ʻana o Mozilla Firefox. Ua wehe ʻia nā ʻāpana ponoʻī a me nā telemetry, akā pili mau i nā lawelawe Mozilla like ʻole e hiki ke hahai i nā mea hoʻohana.</p>
+<p>Hoʻokumu ʻia ka polokalamu kele pūnaewele Ermine F-Droid ma ka hoʻokuʻu hou loa ʻana o Mozilla Firefox. Ua wehe ʻia nā ʻāpana ponoʻī a me nā telemetry, akā pili mau i nā lawelawe Mozilla like ʻole e hiki ke hahai i nā mea hoʻohana.</p>

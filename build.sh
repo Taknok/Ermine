@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#    Fennec build scripts
+#    Ermine build scripts
 #    Copyright (C) 2020-2024  Matías Zúñiga, Andrew Nayenko, Tavi
 #
 #    This program is free software: you can redistribute it and/or modify
