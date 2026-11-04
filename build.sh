@@ -30,15 +30,7 @@ source "$(dirname "$0")/paths.sh"
 sdkmanager 'build-tools;37.0.0'
 sdkmanager 'cmdline-tools;23.0'
 sdkmanager 'platform-tools;37.0.0'
-
-if [ ! -e /opt/android-sdk/platforms/android-37.2 ]; then
-    curl --silent -O https://dl.google.com/android/repository/platform-37.2_r01.zip
-    echo '916410633df92a98da56aa7c87a1955f865f4d3b888373660794ef8173f72972  platform-37.2_r01.zip' | shasum -c
-    unzip -q platform-37.2_r01.zip
-    mkdir -p /opt/android-sdk/platforms/
-    mv android-37.2 /opt/android-sdk/platforms/android-37.2
-fi
-
+sdkmanager 'platforms;android-37.2'
 sdkmanager 'ndk;29.0.14206865' # for Glean
 
 # Set up Rust
