@@ -11,7 +11,7 @@ index fd7e9309f2dc..f295a4a99a61 100644
      - components:lib-state
      - components:service-digitalassetlinks
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index e8032b012046..784ca9c8badb 100644
+index e8032b012046..08874f9ad529 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
 @@ -569,7 +569,6 @@ dependencies {
@@ -30,7 +30,7 @@ index e8032b012046..784ca9c8badb 100644
      implementation libs.androidx.activity
      implementation libs.androidx.annotation
      implementation libs.androidx.appcompat
-@@ -627,12 +625,9 @@ dependencies {
+@@ -627,13 +625,11 @@ dependencies {
      implementation libs.androidx.viewpager2
      implementation libs.androidx.work.runtime
      implementation libs.google.material
@@ -41,8 +41,10 @@ index e8032b012046..784ca9c8badb 100644
 -    implementation libs.play.review
 -    implementation libs.play.review.ktx
      implementation libs.play.services.ads.id
++    implementation libs.play.services.tasks
      implementation libs.protobuf.javalite
      implementation libs.sentry
+     implementation libs.androidx.documentfile
 diff --git a/mobile/android/fenix/app/proguard-rules.pro b/mobile/android/fenix/app/proguard-rules.pro
 index 39a6df6fb62e..86ee82a027dc 100644
 --- a/mobile/android/fenix/app/proguard-rules.pro
@@ -527,6 +529,146 @@ index 000000000000..70cafeb1713e
 +     }
 +
 +}
+diff --git a/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/DummyReviewManager.java b/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/DummyReviewManager.java
+new file mode 100644
+index 000000000000..f275ea10d5c5
+--- /dev/null
++++ b/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/DummyReviewManager.java
+@@ -0,0 +1,40 @@
++package com.google.android.play.core.review;
++
++import android.app.Activity;
++import android.os.Parcel;
++import com.google.android.gms.tasks.Task;
++import com.google.android.gms.tasks.Tasks;
++
++/**
++ * Default no-op implementation used by these API dummies.
++ * It does not communicate with Google Play or display a review UI.
++ */
++final class DummyReviewManager implements ReviewManager {
++    @Override
++    public Task<ReviewInfo> requestReviewFlow() {
++        return Tasks.forResult(new DummyReviewInfo());
++    }
++
++    @Override
++    public Task<Void> launchReviewFlow(Activity activity, ReviewInfo reviewInfo) {
++        if (activity == null) {
++            throw new NullPointerException("activity");
++        }
++        if (reviewInfo == null) {
++            throw new NullPointerException("reviewInfo");
++        }
++        return Tasks.forResult(null);
++    }
++
++    private static final class DummyReviewInfo extends ReviewInfo {
++        @Override
++        public int describeContents() {
++            return 0;
++        }
++
++        @Override
++        public void writeToParcel(Parcel dest, int flags) {
++            // No state to parcel in this dummy implementation.
++        }
++    }
++}
+diff --git a/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/ReviewException.java b/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/ReviewException.java
+new file mode 100644
+index 000000000000..bfca670f0134
+--- /dev/null
++++ b/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/ReviewException.java
+@@ -0,0 +1,20 @@
++package com.google.android.play.core.review;
++
++import com.google.android.gms.common.api.ApiException;
++import com.google.android.gms.common.api.Status;
++
++/** Exception indicating an error from the Review API. */
++public class ReviewException extends ApiException {
++    public ReviewException(int errorCode) {
++        super(new Status(errorCode));
++    }
++
++    public ReviewException(Status status) {
++        super(status);
++    }
++
++    /** Returns the error code from {@code ReviewErrorCode}. */
++    public int getErrorCode() {
++        return getStatusCode();
++    }
++}
+diff --git a/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/ReviewInfo.java b/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/ReviewInfo.java
+new file mode 100644
+index 000000000000..646c19a2d587
+--- /dev/null
++++ b/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/ReviewInfo.java
+@@ -0,0 +1,13 @@
++package com.google.android.play.core.review;
++
++import android.os.Parcel;
++import android.os.Parcelable;
++
++/**
++ * Information needed to launch an in-app review flow.
++ * The real implementation's state is opaque to callers.
++ */
++public abstract class ReviewInfo implements Parcelable {
++    public ReviewInfo() {
++    }
++}
+diff --git a/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/ReviewManager.java b/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/ReviewManager.java
+new file mode 100644
+index 000000000000..384f0b13ae23
+--- /dev/null
++++ b/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/ReviewManager.java
+@@ -0,0 +1,11 @@
++package com.google.android.play.core.review;
++
++import android.app.Activity;
++import com.google.android.gms.tasks.Task;
++
++/** Manages operations for requesting and launching the in-app review flow. */
++public interface ReviewManager {
++    Task<ReviewInfo> requestReviewFlow();
++
++    Task<Void> launchReviewFlow(Activity activity, ReviewInfo reviewInfo);
++}
+diff --git a/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/ReviewManagerFactory.java b/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/ReviewManagerFactory.java
+new file mode 100644
+index 000000000000..28a13e71a4bd
+--- /dev/null
++++ b/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/ReviewManagerFactory.java
+@@ -0,0 +1,16 @@
++package com.google.android.play.core.review;
++
++import android.content.Context;
++
++/** Creates instances of {@link ReviewManager}. */
++public final class ReviewManagerFactory {
++    private ReviewManagerFactory() {
++    }
++
++    public static ReviewManager create(Context context) {
++        if (context == null) {
++            throw new NullPointerException("context");
++        }
++        return new DummyReviewManager();
++    }
++}
+diff --git a/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/model/ReviewErrorCode.java b/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/model/ReviewErrorCode.java
+new file mode 100644
+index 000000000000..46a9a1d4bf06
+--- /dev/null
++++ b/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/model/ReviewErrorCode.java
+@@ -0,0 +1,4 @@
++package com.google.android.play.core.review.model;
++
++public class ReviewErrorCode {
++}
 diff --git a/mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java b/mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java
 new file mode 100644
 index 000000000000..4d5fd8153d21
@@ -614,6 +756,175 @@ index 000000000000..9ad59a31e43c
 +    }
 +
 +}
+diff --git a/mobile/android/fenix/app/src/main/java/kotlinx/coroutines/tasks/Tasks.kt b/mobile/android/fenix/app/src/main/java/kotlinx/coroutines/tasks/Tasks.kt
+new file mode 100644
+index 000000000000..946449b9dfc1
+--- /dev/null
++++ b/mobile/android/fenix/app/src/main/java/kotlinx/coroutines/tasks/Tasks.kt
+@@ -0,0 +1,163 @@
++@file:Suppress("RedundantVisibilityModifier")
++
++package kotlinx.coroutines.tasks
++
++import com.google.android.gms.tasks.*
++import kotlinx.coroutines.*
++import java.lang.Runnable
++import java.util.concurrent.Executor
++import kotlin.coroutines.*
++
++/**
++ * Converts this deferred to the instance of [Task].
++ * If deferred is cancelled then resulting task will be cancelled as well.
++ */
++public fun <T> Deferred<T>.asTask(): Task<T> {
++    val cancellation = CancellationTokenSource()
++    val source = TaskCompletionSource<T>(cancellation.token)
++
++    invokeOnCompletion callback@{
++        if (it is CancellationException) {
++            cancellation.cancel()
++            return@callback
++        }
++
++        val t = getCompletionExceptionOrNull()
++        if (t == null) {
++            source.setResult(getCompleted())
++        } else {
++            source.setException(t as? Exception ?: RuntimeExecutionException(t))
++        }
++    }
++
++    return source.task
++}
++
++/**
++ * Converts this task to an instance of [Deferred].
++ * If task is cancelled then resulting deferred will be cancelled as well.
++ * However, the opposite is not true: if the deferred is cancelled, the [Task] will not be cancelled.
++ * For bi-directional cancellation, an overload that accepts [CancellationTokenSource] can be used.
++ */
++public fun <T> Task<T>.asDeferred(): Deferred<T> = asDeferredImpl(null)
++
++/**
++ * Converts this task to an instance of [Deferred] with a [CancellationTokenSource] to control cancellation.
++ * The cancellation of this function is bi-directional:
++ * - If the given task is cancelled, the resulting deferred will be cancelled.
++ * - If the resulting deferred is cancelled, the provided [cancellationTokenSource] will be cancelled.
++ *
++ * Providing a [CancellationTokenSource] that is unrelated to the receiving [Task] is not supported and
++ * leads to an unspecified behaviour.
++ */
++@ExperimentalCoroutinesApi // Since 1.5.1, tentatively until 1.6.0
++public fun <T> Task<T>.asDeferred(cancellationTokenSource: CancellationTokenSource): Deferred<T> =
++    asDeferredImpl(cancellationTokenSource)
++
++private fun <T> Task<T>.asDeferredImpl(cancellationTokenSource: CancellationTokenSource?): Deferred<T> {
++    val deferred = CompletableDeferred<T>()
++    if (isComplete) {
++        val e = exception
++        if (e == null) {
++            if (isCanceled) {
++                deferred.cancel()
++            } else {
++                @Suppress("UNCHECKED_CAST")
++                deferred.complete(result as T)
++            }
++        } else {
++            deferred.completeExceptionally(e)
++        }
++    } else {
++        // Run the callback directly to avoid unnecessarily scheduling on the main thread.
++        addOnCompleteListener(DirectExecutor) {
++            val e = it.exception
++            if (e == null) {
++                @Suppress("UNCHECKED_CAST")
++                if (it.isCanceled) deferred.cancel() else deferred.complete(it.result as T)
++            } else {
++                deferred.completeExceptionally(e)
++            }
++        }
++    }
++
++    if (cancellationTokenSource != null) {
++        deferred.invokeOnCompletion {
++            cancellationTokenSource.cancel()
++        }
++    }
++    // Prevent casting to CompletableDeferred and manual completion.
++    @OptIn(InternalForInheritanceCoroutinesApi::class)
++    return object : Deferred<T> by deferred {}
++}
++
++/**
++ * Awaits the completion of the task without blocking a thread.
++ *
++ * This suspending function is cancellable.
++ * If the [Job] of the current coroutine is cancelled while this suspending function is waiting, this function
++ * stops waiting for the completion stage and immediately resumes with [CancellationException].
++ *
++ * For bi-directional cancellation, an overload that accepts [CancellationTokenSource] can be used.
++ */
++public suspend fun <T> Task<T>.await(): T = awaitImpl(null)
++
++/**
++ * Awaits the completion of the task that is linked to the given [CancellationTokenSource] to control cancellation.
++ *
++ * This suspending function is cancellable and cancellation is bi-directional:
++ * - If the [Job] of the current coroutine is cancelled while this suspending function is waiting, this function
++ * cancels the [cancellationTokenSource] and throws a [CancellationException].
++ * - If the task is cancelled, then this function will throw a [CancellationException].
++ *
++ * Providing a [CancellationTokenSource] that is unrelated to the receiving [Task] is not supported and
++ * leads to an unspecified behaviour.
++ */
++@ExperimentalCoroutinesApi // Since 1.5.1, tentatively until 1.6.0
++public suspend fun <T> Task<T>.await(cancellationTokenSource: CancellationTokenSource): T =
++    awaitImpl(cancellationTokenSource)
++
++private suspend fun <T> Task<T>.awaitImpl(cancellationTokenSource: CancellationTokenSource?): T {
++    // fast path
++    if (isComplete) {
++        val e = exception
++        return if (e == null) {
++            if (isCanceled) {
++                throw CancellationException("Task $this was cancelled normally.")
++            } else {
++                @Suppress("UNCHECKED_CAST")
++                result as T
++            }
++        } else {
++            throw e
++        }
++    }
++
++    return suspendCancellableCoroutine { cont ->
++        // Run the callback directly to avoid unnecessarily scheduling on the main thread.
++        addOnCompleteListener(DirectExecutor) {
++            val e = it.exception
++            if (e == null) {
++                @Suppress("UNCHECKED_CAST")
++                if (it.isCanceled) cont.cancel() else cont.resume(it.result as T)
++            } else {
++                cont.resumeWithException(e)
++            }
++        }
++
++        if (cancellationTokenSource != null) {
++            cont.invokeOnCancellation {
++                cancellationTokenSource.cancel()
++            }
++        }
++    }
++}
++
++/**
++ * An [Executor] that just directly executes the [Runnable].
++ */
++private object DirectExecutor : Executor {
++    override fun execute(r: Runnable) {
++        r.run()
++    }
++}
 diff --git a/mobile/android/fenix/app/src/main/java/mozilla/components/lib/push/firebase/AbstractFirebasePushService.kt b/mobile/android/fenix/app/src/main/java/mozilla/components/lib/push/firebase/AbstractFirebasePushService.kt
 new file mode 100644
 index 000000000000..b50a6f03a218
@@ -688,160 +999,6 @@ index ed334079e810..c2cb77237cdd 100644
  
          screenOrientationFeature.set(
              feature =
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index 2dd5f3ea5425..59fc8facecdf 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
- import androidx.compose.runtime.ReadOnlyComposable
- import androidx.compose.ui.platform.LocalContext
- import androidx.core.app.NotificationManagerCompat
--import com.google.android.play.core.review.ReviewManagerFactory
- import java.util.concurrent.TimeUnit
- import kotlinx.coroutines.CoroutineScope
- import mozilla.components.concept.ai.controls.AIFeatureBlock
-@@ -281,13 +280,6 @@ class Components(
-     val settings by lazyMonitored { Settings(context) }
-     val fenixOnboarding by lazyMonitored { FenixOnboarding(context) }
- 
--    val playStoreReviewPromptController by lazyMonitored {
--        PlayStoreReviewPromptController(
--            manager = ReviewManagerFactory.create(context),
--            numberOfAppLaunches = { settings.numberOfAppLaunches },
--        )
--    }
--
-     val autofillConfiguration by lazyMonitored {
-         AutofillConfiguration(
-             storage = core.passwordsStorage,
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/PlayStoreReviewPromptController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/PlayStoreReviewPromptController.kt
-index 7ec39a4f9b57..2050f963b020 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/PlayStoreReviewPromptController.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/PlayStoreReviewPromptController.kt
-@@ -9,14 +9,10 @@ import android.content.ActivityNotFoundException
- import android.content.Intent
- import androidx.annotation.VisibleForTesting
- import androidx.core.net.toUri
--import com.google.android.play.core.review.ReviewException
--import com.google.android.play.core.review.ReviewInfo
--import com.google.android.play.core.review.ReviewManager
- import java.text.SimpleDateFormat
- import java.util.Date
- import java.util.Locale
- import kotlinx.coroutines.CancellationException
--import kotlinx.coroutines.tasks.await
- import mozilla.components.support.base.log.logger.Logger
- import org.mozilla.fenix.GleanMetrics.ReviewPrompt
- import org.mozilla.fenix.components.ReviewPromptAttemptResult.Displayed
-@@ -29,52 +25,13 @@ val logger = Logger("PlayStoreReviewPromptController")
- 
- /** Wraps the Play Store In-App Review API. */
- class PlayStoreReviewPromptController(
--    private val manager: ReviewManager,
-     private val numberOfAppLaunches: () -> Int,
- ) {
- 
-     /** Launch the in-app review flow, unless we've hit the quota. */
-     @Suppress("TooGenericExceptionCaught")
-     suspend fun tryPromptReview(activity: Activity): ReviewPromptAttemptResult {
--        logger.info("tryPromptReview in progress...")
--        val reviewInfoTask = manager.requestReviewFlow()
--
--        val result =
--            try {
--                val reviewInfo = reviewInfoTask.await()
--
--                logger.info("Review flow launched.")
--                // Launch the in-app flow.
--                manager.launchReviewFlow(activity, reviewInfo)
--
--                ReviewPromptAttemptResult.from(reviewInfo.toString())
--            } catch (e: CancellationException) {
--                throw e
--            } catch (e: Exception) {
--                Error(e)
--            }
--
--        when (result) {
--            NotDisplayed -> {
--                logger.warn("In-app review flow reported as not displayed, even though there was no error.")
--            }
--
--            is Error -> {
--                val reviewErrorCode = (result.exception as? ReviewException)?.errorCode ?: ERROR_CODE_UNEXPECTED
--                logger.warn("Failed to launch in-app review flow due to: $reviewErrorCode.")
--            }
--
--            Displayed,
--            Unknown -> {}
--        }
--
--        recordReviewPromptEvent(
--            promptAttemptResult = result,
--            numberOfAppLaunches = numberOfAppLaunches(),
--            now = Date(),
--        )
--
--        logger.info("tryPromptReview completed.")
-+        val result = Unknown
- 
-         return result
-     }
-@@ -84,20 +41,6 @@ class PlayStoreReviewPromptController(
-         activity: Activity,
-         openInNewTab: (url: String) -> Unit,
-     ) {
--        logger.info("tryLaunchPlayStoreReview in progress...")
--
--        try {
--            logger.info("Navigating to Play store listing.")
--            activity.startActivity(Intent(Intent.ACTION_VIEW, SupportUtils.RATE_APP_URL.toUri()))
--        } catch (e: ActivityNotFoundException) {
--            // Device without the play store installed.
--            // Opening the play store website.
--            openInNewTab(SupportUtils.FENIX_PLAY_STORE_URL)
--
--            logger.warn("Failed to launch play store review flow due to: $e.")
--        }
--
--        logger.info("tryLaunchPlayStoreReview completed.")
-     }
- 
-     companion object {
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt
-index 63da045a8dfe..f71ff0617915 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt
-@@ -568,7 +568,6 @@ class HomeFragment : Fragment(), UserInteractionHandler, OnLongPressedListener {
-         initSwipeToSwitchTabs(view)
-         initHistoryMetadataFeature(view = view)
-         initThumbnailsFeature(view = view)
--        initReviewPromptBinding(view = view)
-         initTabsCleanupFeature(view = view)
-         initSnackbarBinding(view = view)
-         initIpProtectionBindings(view = view)
-@@ -1416,21 +1415,6 @@ class HomeFragment : Fragment(), UserInteractionHandler, OnLongPressedListener {
-         )
-     }
- 
--    private fun initReviewPromptBinding(view: View) {
--        showReviewPromptBinding.set(
--            feature =
--                ShowReviewPromptBinding(
--                    appStore = requireComponents.appStore,
--                    promptController = requireComponents.playStoreReviewPromptController,
--                    activityRef = WeakReference(activity),
--                    uiScope = viewLifecycleOwner.lifecycleScope,
--                    showCustomReviewPrompt = { CustomReviewPromptBottomSheetFragment.showPrompt(this) },
--                ),
--            owner = viewLifecycleOwner,
--            view = view,
--        )
--    }
--
-     private fun initTabsCleanupFeature(view: View) {
-         tabsCleanupFeature.set(
-             feature =
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 index 587faae07ca5..e20feb9d32cd 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
@@ -856,40 +1013,8 @@ index 587faae07ca5..e20feb9d32cd 100644
          }
  
          rtamoAttributionHandler.handleReferrer(InstallReferrerHandlingService.response)
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptBottomSheetFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptBottomSheetFragment.kt
-index 0f8709c8187a..457ffe8c829c 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptBottomSheetFragment.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptBottomSheetFragment.kt
-@@ -81,27 +81,6 @@ class CustomReviewPromptBottomSheetFragment : BottomSheetDialogFragment() {
- 
-     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-         super.onViewCreated(view, savedInstanceState)
--        viewLifecycleOwner.lifecycleScope.launch {
--            store.navigationEvents.collect { event ->
--                when (event) {
--                    CustomReviewPromptNavigationEvent.Dismiss -> dismissAllowingStateLoss()
--
--                    CustomReviewPromptNavigationEvent.OpenPlayStoreReviewPrompt -> {
--                        val activity = activity ?: return@collect
--                        with(requireComponents.playStoreReviewPromptController) {
--                            val result = tryPromptReview(activity)
--                            when (result) {
--                                NotDisplayed,
--                                is Error -> tryLaunchPlayStoreReview(activity, ::openInNewTab)
--                                else -> {}
--                            }
--                        }
--                    }
--
--                    is CustomReviewPromptNavigationEvent.OpenInNewTab -> openInNewTab(event.url)
--                }
--            }
--        }
-     }
- 
-     override fun onDismiss(dialog: DialogInterface) {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index 27584e309412..30aa0b05eacf 100644
+index 27584e309412..a1ab950001ce 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 @@ -32,6 +32,7 @@ import androidx.navigation.fragment.navArgs
@@ -900,22 +1025,6 @@ index 27584e309412..30aa0b05eacf 100644
  import androidx.recyclerview.widget.RecyclerView
  import com.google.android.material.dialog.MaterialAlertDialogBuilder
  import java.lang.ref.WeakReference
-@@ -573,15 +574,6 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment
-                     SettingsFragmentDirections.actionSettingsFragmentToSyncDebugFragment()
-                 }
- 
--                // About preferences
--                resources.getString(R.string.pref_key_rate) -> {
--                    components.playStoreReviewPromptController.tryLaunchPlayStoreReview(
--                        requireActivity(),
--                        ::openInNewTab,
--                    )
--                    null
--                }
--
-                 resources.getString(R.string.pref_key_about) -> {
-                     SettingsFragmentDirections.actionSettingsFragmentToAboutFragment()
-                 }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 index 73e8b7f32e8c..f1574ae5dfeb 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
@@ -930,7 +1039,7 @@ index 73e8b7f32e8c..f1574ae5dfeb 100644
      // This is locale-less on purpose so that the content negotiation happens on the AMO side because the current
      // user language might not be supported by AMO and/or the language might not be exactly what AMO is expecting
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 8a5b0deadddc..ca27ca1c5db1 100644
+index 8d94dc962b33..258fc7533c2f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -175,8 +175,7 @@ class Settings(
