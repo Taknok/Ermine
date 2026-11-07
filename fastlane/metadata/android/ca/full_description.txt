@@ -8,4 +8,4 @@
   <li>Sincronització de pestanyes, adreces d'interès, contrasenyes, etc. en diversos dispositius mitjançant Firefox Sync.</li>
   <li>Mode d'imatge en imatge.</li>
 </ul>
-<p>Fennec F-Droid es basa en l'última versió de Mozilla Firefox. S'han eliminat els bits propietaris i la telemetria, però encara es connecta a diversos serveis de Mozilla que poden rastrejar als usuaris.</p>
+<p>Ermine F-Droid es basa en l'última versió de Mozilla Firefox. S'han eliminat els bits propietaris i la telemetria, però encara es connecta a diversos serveis de Mozilla que poden rastrejar als usuaris.</p>

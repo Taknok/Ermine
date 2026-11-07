@@ -8,4 +8,4 @@
  <li>Synchronizácia kariet, záložiek, hesiel atď. na viacerých zariadeniach prostredníctvom nástroja Firefox Sync.</li>
  <li>Režim obrazu v obraze.</li>
 </ul>
-<p>Fennec F-Droid je založený na najnovšom vydaní prehliadača Mozilla Firefox. Má proprietárne bity a telemetria boli odstránené, ale stále sa pripája k rôznym Mozille služby, ktoré môžu sledovať používateľov.</p>
+<p>Ermine F-Droid je založený na najnovšom vydaní prehliadača Mozilla Firefox. Má proprietárne bity a telemetria boli odstránené, ale stále sa pripája k rôznym Mozille služby, ktoré môžu sledovať používateľov.</p>
